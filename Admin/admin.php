@@ -10,7 +10,7 @@
 
 <body>
 	<header>
-		<h1>Tours and Travels</h1>
+		<h1>NEPTOURS</h1>
 		<nav>
 			<ul>
 				<li><a href="admin.php"

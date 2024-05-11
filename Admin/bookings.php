@@ -49,12 +49,16 @@
           <select name="state">
             <option value="pending" <?php if ($row['state'] == 'pending')
               echo 'selected'; ?>>Pending</option>
+
             <option value="confirmed" <?php if ($row['state'] == 'confirmed')
               echo 'selected'; ?>>Confirmed</option>
+
             <option value="cancelled" <?php if ($row['state'] == 'cancelled')
               echo 'selected'; ?>>Cancelled</option>
+
             <option value="completed" <?php if ($row['state'] == 'completed')
               echo 'selected'; ?>>Completed</option>
+              
           </select>
           <button type="submit">Update</button>
         </form>
