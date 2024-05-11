@@ -20,23 +20,25 @@
 	</header>
 
   <?php
-// Connect to the database
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'tat';
-$conn = mysqli_connect($host, $username, $password, $dbname);
+// // Connect to the database
+// $host = 'localhost';
+// $username = 'root';
+// $password = '';
+// $dbname = 'tat';
+// $conn = mysqli_connnect($host, $username, $password, $dbname);
+
+require'../connect.php';
 
 // Handle delete action if requested
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
   $query = "DELETE FROM user WHERE id=$id";
-  mysqli_query($conn, $query);
+  mysqli_query($con, $query);
 }
 
 // Query the database for user data
 $query = 'SELECT * FROM user';
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($con, $query);
 
 // Generate the HTML for the table
 $html = '<div class="user-list">
@@ -45,14 +47,9 @@ $html = '<div class="user-list">
   <thead>
     <tr>
       <th>Id</th>
-      <th>First name</th>
-      <th>Last name</th>
       <th>Username</th>
       <th>E-mail</th>
       <th>Password</th>
-      <th>Address</th>
-      <th>Added date</th>
-      <th>update date</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -66,14 +63,9 @@ while ($row = mysqli_fetch_assoc($result)) {
   }
   $html .= "<tr>";
   $html .= "<td>" . $id . "</td>";
-  $html .= "<td>" . $row['firstname'] . "</td>";
-  $html .= "<td>" . $row['lastname'] . "</td>";
   $html .= "<td>" . $row['username'] . "</td>";
   $html .= "<td>" . $row['email'] . "</td>";
   $html .= "<td>" . $row['password'] . "</td>";
-  $html .= "<td>" . $row['address'] . "</td>";
-  $html .= "<td>" . $row['date_added'] . "</td>";
-  $html .= "<td>" . $row['date_updated'] . "</td>";
   $html .= "<td>";
   $html .= "<a href='edit_user.php?id=" . $id . "' class='button edit'>Edit</a> ";
   $html .= "<a href='?delete=" . $id . "' class='button delete'>Delete</a>";
@@ -89,7 +81,7 @@ $html .= '</tbody>
 echo $html;
 
 // Close the database connection
-mysqli_close($conn);
+mysqli_close($con);
 ?>
 
 
