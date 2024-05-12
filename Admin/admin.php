@@ -98,17 +98,7 @@
 		<div class="box purple">
 			<h1>Total Issues</h1>
 			<?php
-			// // Connect to database
-			// $servername = "localhost";
-			// $username = "root";
-			// $password = "";
-			// $dbname = "tat";
-
-			// $conn = new mysqli($servername, $username, $password, $dbname);
-
-			// if ($conn->connect_error) {
-			// 	die("Connection failed: " . $conn->connect_error);
-			// }
+			
 
 			include'../connect.php';
 
@@ -133,17 +123,7 @@
 		<div class="box orange">
 			<h1>Total Packages</h1>
 			<?php
-			// // Connect to database
-			// $servername = "localhost";
-			// $username = "root";
-			// $password = "";
-			// $dbname = "tat";
-
-			// $conn = new mysqli($servername, $username, $password, $dbname);
-
-			// if ($conn->connect_error) {
-			// 	die("Connection failed: " . $conn->connect_error);
-			// }
+			
 
 			require'../connect.php';
 
