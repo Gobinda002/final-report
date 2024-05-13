@@ -3,40 +3,40 @@ $error = ""; // Initialize the error variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require ' ../../../../connect.php';
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    $username = mysqli_real_escape_string($con, $_POST['username']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
     $pass = $_POST['pass'];
     $cpass = $_POST['cpass'];
-
     // Check if password and confirm password match
     if ($pass !== $cpass) {
         $error = 'Password and Confirm Password do not match.';
     } else {
-        // Hash the password and confirm password
+        // Hash the password
         $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
-        $hashed_cpass = password_hash($cpass, PASSWORD_DEFAULT);
 
-        //check if user already exists
+        // Check if user already exists
         $check_query = "SELECT * FROM user WHERE username = '$username'";
         $check_result = mysqli_query($con, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
             $error = 'Username already taken';
         } else {
-            // inserting the user info into the database with hashed passwords
-            $sql = "INSERT INTO user (username, email, pass, cpass) VALUES ('$username', '$email', '$hashed_pass', '$hashed_cpass')";
+            // Insert the user info into the database with hashed password
+            $sql = "INSERT INTO user (username, email, password) VALUES ('$username', '$email', '$hashed_pass')";
             $result = mysqli_query($con, $sql);
 
             if ($result) {
-                header("location: ../index.php") ;
+                header("location: ../index.php");
                 exit; // Add an exit statement after redirection
             } else {
-                die(mysqli_error($con));
+                $error = 'Registration failed. Please try again.';
             }
         }
     }
 }
 ?>
+
+
 
 
 

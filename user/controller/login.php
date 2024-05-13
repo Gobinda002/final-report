@@ -1,39 +1,35 @@
 <?php
-
 session_start();
 
-// Check if the user is already  logged in,if yes,redirect to dashboard
-if(isset($_SESSION["email"])){
+if (isset($_SESSION["email"])) {
     header("Location: ../../Admin/index.php");
     exit;
 }
 
+require ' ../../../../connect.php';
+
+$error = "";
+$success_message = ""; // Initialize success message variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    require ' ../../../../connect.php';
-    $email = $_POST['email'];
-    $pass = $_POST['pass'];
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $password = $_POST['password'];
 
-    //check for admin 
-    $admin_sql = "SELECT * FROM admin WHERE email = '$email' AND pass='$pass' ";
-    $admin_result = mysqli_query($con,$admin_sql);
+    $user_sql = "SELECT * FROM user WHERE email='$email'";
+    $user_result = mysqli_query($con, $user_sql);
 
-    if($admin_result && mysqli_num_rows($admin_result)>0){
-        header("Location: ../../Admin/index.php");
-        exit;
-    }else{
-        $user_sql = "SELECT * FROM user WHERE email='$email' and pass ='$pass'";
-        $user_result = mysqli_query($con, $user_sql);
-        if ($user_result && mysqli_num_rows($user_result) > 0) {
-            
-            // Regular user credentials matched, redirect to index.php
-            $user_data = mysqli_fetch_assoc($user_result);
-            $_SESSION['username'] = $username; // Assuming username is a column in your user table
-            header("location: ../index.php") ;
-            exit;
-        }else{
+    if ($user_result && mysqli_num_rows($user_result) > 0) {
+        $user_data = mysqli_fetch_assoc($user_result);
+        if (password_verify($password, $user_data['password'])) {
+            $_SESSION['username'] = $user_data['username'];
+            $success_message = 'Login successful!';
+            // You might want to redirect to another page here instead of just setting the success message
+             header("location: ../index.php");
+        } else {
             $error = 'Invalid Username or Password';
         }
+    } else {
+        $error = 'Invalid Username or Password';
     }
 }
 ?>
@@ -62,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 300px;
-            margin: 10rem auto; /* Center the form horizontally */
+            margin: 10rem auto;
+            /* Center the form horizontally */
         }
 
         .login-container h2 {
@@ -130,6 +127,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-align: center;
         }
 
+        .success-message {
+            padding: 10px;
+            background-color: #04AA6D;
+            color: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+
+
         .switch-form {
             margin-top: 10px;
             text-align: center;
@@ -142,14 +150,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 
+
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <!-- Display error message if present -->
         <?php if (!empty($error)) { ?>
             <div class="error-message"><?php echo $error; ?></div>
         <?php } ?>
-        <!-- Login form -->
+        <?php if (!empty($success_message)) { ?>
+            <div class="success-message"><?php echo $success_message; ?></div> <!-- Print success message -->
+        <?php } ?>
         <form id="login-form" action="#" method="post">
             <div class="form-group">
                 <label for="login-email">Email:</label>
@@ -157,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label for="login-password">Password:</label>
-                <input type="password" id="login-password" name="pass" required>
+                <input type="password" id="login-password" name="password" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>
@@ -168,7 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>Don't have an account? <a href="register.php" id="switch-to-register">Register</a></p>
         </div>
     </div>
-
     <script>
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("login-password");
@@ -180,5 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </script>
 </body>
+
 
 </html>
