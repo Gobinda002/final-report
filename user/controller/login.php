@@ -21,16 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user_result && mysqli_num_rows($user_result) > 0) {
         $user_data = mysqli_fetch_assoc($user_result);
         if (password_verify($password, $user_data['password'])) {
+            echo "<script>alert('Login Successful');</script>"; // Display alert
             $_SESSION['username'] = $user_data['username'];
-            $success_message = 'Login successful!';
-            // You might want to redirect to another page here instead of just setting the success message
-             header("location: ../index.php");
+            echo "<script>setTimeout(function(){document.getElementsByClassName('alert')[0].style.display='none';}, 2000);</script>"; // Hide alert after 2 seconds
+            echo "<script>window.location.href = '../index.php';</script>"; // Redirect after alert
+            exit; // Exit to prevent further execution
         } else {
             $error = 'Invalid Username or Password';
         }
     } else {
         $error = 'Invalid Username or Password';
     }
+    
+    
 }
 ?>
 
@@ -45,20 +48,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url(../data/bg_login.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100%;
+            /* Set the height of the body to 100% of the viewport height */
             margin: 0;
+
         }
 
+
         .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: transparent;
+            border-radius: 12px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
             padding: 20px;
             width: 300px;
-            margin: 10rem auto;
+           margin: 1rem 20rem;
             /* Center the form horizontally */
         }
 
@@ -175,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn">Login</button>
         </form>
         <div class="switch-form">
-            <p>Don't have an account? <a href="register.php" id="switch-to-register">Register</a></p>
+            <p>Don't have an account? <a href="register1.php" id="switch-to-register">Register</a></p>
         </div>
     </div>
     <script>

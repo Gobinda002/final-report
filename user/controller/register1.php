@@ -1,3 +1,52 @@
+
+<?php
+        
+        include ' ../../../../connect.php';
+
+        $error = '';
+        if (isset($_POST['submit'])) {
+
+            $username = mysqli_real_escape_string($conn, $_POST['username']);
+
+            $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $pass = mysqli_real_escape_string($conn, $_POST['pass']);
+            $cpass = mysqli_real_escape_string($conn, $_POST['cpass']);
+
+            $password = password_hash($pass, PASSWORD_BCRYPT);
+            $cpassword = password_hash($cpass, PASSWORD_BCRYPT);
+
+            $emailquery = "SELECT * FROM user WHERE email = '$email' ";
+            $query = mysqli_query($conn, $emailquery);
+
+            $emailcount = mysqli_num_rows($query);
+            if ($emailcount > 0) {
+                $error = 'Email already exists';
+            } else {
+                if ($pass === $cpass) {
+                    $insertquery = "INSERT INTO user( username,phone, email, password) values('$username','phone', '$email', '$password')";
+                    $iquery = mysqli_query($conn, $insertquery);
+                    if ($iquery) {
+                        ?>
+                        <script>
+                            Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Your work has been saved",
+                            showConfirmButton: true,
+                            }).then(function() {
+                                window.location.href = "login.php";
+                            });
+                        </script>
+                        <?php
+                    }
+                } else {
+                    $error = 'Password and confirm password do not match';
+                }
+            }
+        }
+        ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +54,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    
 
     <style>
         body {
@@ -125,51 +174,7 @@
         <?php } ?>
         <!-- Registration form -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <?php
-        $error = '';
-        include ' ../../../../connect.php';
-        if (isset($_POST['submit'])) {
-
-            $username = mysqli_real_escape_string($conn, $_POST['username']);
-
-            $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-            $email = mysqli_real_escape_string($conn, $_POST['email']);
-            $pass = mysqli_real_escape_string($conn, $_POST['pass']);
-            $cpass = mysqli_real_escape_string($conn, $_POST['cpass']);
-
-            $password = password_hash($pass, PASSWORD_BCRYPT);
-            $cpassword = password_hash($cpass, PASSWORD_BCRYPT);
-
-            $emailquery = "SELECT * FROM user WHERE email = '$email' ";
-            $query = mysqli_query($conn, $emailquery);
-
-            $emailcount = mysqli_num_rows($query);
-            if ($emailcount > 0) {
-                $error = 'Email already exists';
-            } else {
-                if ($pass === $cpass) {
-                    $insertquery = "INSERT INTO user( username,phone, email, password) values('$username','phone', '$email', '$password')";
-                    $iquery = mysqli_query($conn, $insertquery);
-                    if ($iquery) {
-                        ?>
-                        <script>
-                            Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "Your work has been saved",
-                            showConfirmButton: true,
-                            }).then(function() {
-                                window.location.href = "login.php";
-                            });
-                        </script>
-                        <?php
-                    }
-                } else {
-                    $error = 'Password and confirm password do not match';
-                }
-            }
-        }
-        ?>
+        
         <form id="register-form" action="#" method="post">
             <div class="form-group">
                 <label for="register-username">Username</label>

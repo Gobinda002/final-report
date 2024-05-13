@@ -38,17 +38,22 @@ session_start();
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
                 <li><a href="#4">Review</a></li>
-                <li><a href="routes/contact.html">contact</a></li>
+                <li><a href="routes/contact.php">contact</a></li>
             </ul>
 
-            
-           
-                <ul class="inout">
+
+
+           <ul class="inout">
+                <?php if (isset($_SESSION['username'])) { ?>
+                    <li><?php echo $_SESSION['username']; ?></li>
+                    <li><a href="controller/logout.php">Logout</a></li>
+                <?php } else { ?>
                     <li><a href="controller/login.php">Login</a></li>
                     <li><a href="controller/register.php">Signup</a></li>
-                </ul>
-           
-           
+                <?php } ?>
+            </ul>
+
+
 
 
         </div>
@@ -57,7 +62,7 @@ session_start();
     <!--**********  Home Section *********--->
 
     <section class="home container" id="home">
-        
+
         <div class="con">
             <div class="home-text">
                 <h1>AROUND THE WORLD </h1>
@@ -201,7 +206,7 @@ session_start();
             <h2>Start Your Vacation <br> with lots of Services !</h2>
         </div>
         <div class="row-item grid-layout">
-            <a href="routes/treking.html" class="item">
+            <a href="routes/treking.php" class="item">
                 <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
                 <h2>Hiking</h2>
             </a>

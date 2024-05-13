@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,8 +39,13 @@
             </ul>
 
             <ul class="inout">
-                <li><a href="../controller/login.php">Login</a></li>
-                <li><a href="../controller/register.php"> Signup</a></li>
+                <?php if (isset($_SESSION['username'])) { ?>
+                    <li><?php echo $_SESSION['username']; ?></li>
+                    <li><a href="../controller/logout.php">Logout</a></li>
+                <?php } else { ?>
+                    <li><a href="../controller/login.php">Login</a></li>
+                    <li><a href="../controller/register.php">Signup</a></li>
+                <?php } ?>
             </ul>
         </div>
     </header>

@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,16 +29,21 @@
                 NepTours</a>
 
             <ul class="navbar">
-                <li><a href="../index.html">home</a></li>
+                <li><a href="../index.php">home</a></li>
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
                 <li><a href="#">Review</a></li>
-                <li><a href="../routes/contact.html">contact</a></li>
+                <li><a href="../routes/contact.php">contact</a></li>
             </ul>
 
             <ul class="inout">
-                <li><a href="../controller/login.php">Login</a></li>
-                <li><a href="../controller/register.php"> Signup</a></li>
+                <?php if (isset($_SESSION['username'])) { ?>
+                    <li><?php echo $_SESSION['username']; ?></li>
+                    <li><a href="../controller/logout.php">Logout</a></li>
+                <?php } else { ?>
+                    <li><a href="../controller/login.php">Login</a></li>
+                    <li><a href="../controller/register.php">Signup</a></li>
+                <?php } ?>
             </ul>
         </div>
     </header>
@@ -76,7 +86,7 @@
                     </div>                    
                     <h1 class="card-title">aanapurna circuit trek</h1>
                 </div>
-            </a>
+            </a>        
 
             <a href="#">
                 <div class="card">
@@ -85,36 +95,7 @@
                     </div>                    
                     <h1 class="card-title">aanapurna circuit trek</h1>
                 </div>
-            </a>
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>
-
-            
+            </a>        
 
 
         </div>
