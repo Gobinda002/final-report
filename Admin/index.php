@@ -1,12 +1,12 @@
 <?php
 session_start();
-
+// check if the email  is already login
 if (isset($_SESSION["email"])) {
-    header("Location: ../index.php");
+    header("Location: ../../Admin/index.php");
     exit;
 }
 
-require ' ../../../../connect.php';
+require'../connect.php';
 
 $error = "";
 $success_message = ""; // Initialize success message variable
@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
 
-    $user_sql = "SELECT * FROM user WHERE email='$email'";
-    $user_result = mysqli_query($conn, $user_sql);
+    $admin_sql = "SELECT * FROM admin WHERE email='$email'";
+    $admin_result = mysqli_query($conn, $admin_sql);
 
-    if ($user_result && mysqli_num_rows($user_result) > 0) {
-        $user_data = mysqli_fetch_assoc($user_result);
-        if (password_verify($password, $user_data['password'])) {
+    if ($admin_result && mysqli_num_rows($admin_result) > 0) {
+        $admin_data = mysqli_fetch_assoc($admin_result);
+        if (password_verify($password, $admin_data['password'])) {
             echo "<script>alert('Login Successful');</script>"; // Display alert
-            $_SESSION['username'] = $user_data['username'];
+            $_SESSION['username'] = $admin_data['username'];
             echo "<script>setTimeout(function(){document.getElementsByClassName('alert')[0].style.display='none';}, 2000);</script>"; // Hide alert after 2 seconds
             echo "<script>window.location.href = '../index.php';</script>"; // Redirect after alert
             exit; // Exit to prevent further execution
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url(../data/bg_login.png);
+            background-image: url(../user/data/bg_login.png);
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
