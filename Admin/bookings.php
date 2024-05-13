@@ -30,7 +30,7 @@
 
     // get the bookings from the bookings table
     $query = "SELECT * FROM bookings";
-    $result = mysqli_query($con, $query);
+    $result = mysqli_query($conn, $query);
 
     // display the bookings in a table
     echo "<table>";
@@ -69,7 +69,7 @@
     echo "</table>"; ?>
     <?php
     // close the database connection
-    mysqli_close($con);
+    mysqli_close($conn);
     ?>
   </div>
 </body>

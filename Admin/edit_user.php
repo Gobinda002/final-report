@@ -115,13 +115,13 @@ if (isset($_POST['submit'])) {
   $email = $_POST['email'];
   $password = $_POST['password'];
   $query = "UPDATE user SET username='$username', email='$email', password='$password'= NOW() WHERE id=$id";
-  mysqli_query($con, $query);
+  mysqli_query($conn, $query);
 
   // check if the update was successful
-  if (mysqli_affected_rows($con) > 0) {
+  if (mysqli_affected_rows($conn) > 0) {
     echo "Edited successfully";
   } else {
-    echo "Error updating record: " . mysqli_error($con);
+    echo "Error updating record: " . mysqli_error($conn);
   }
 
   header('location: user.php');
@@ -131,7 +131,7 @@ if (isset($_POST['submit'])) {
 // Query the database for user data
 $id = $_GET['id'];
 $query = "SELECT * FROM user WHERE id=$id";
-$result = mysqli_query($con, $query);
+$result = mysqli_query($conn, $query);
 $row = mysqli_fetch_assoc($result);
 
 // Display the HTML for the form or a success message
@@ -159,7 +159,7 @@ if (isset($message)) {
 }
 
 // Close the database connection
-mysqli_close($con);
+mysqli_close($conn);
 ?>
 
 </body>

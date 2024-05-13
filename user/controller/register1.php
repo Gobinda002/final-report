@@ -1,70 +1,31 @@
-<?php
-$error = ""; // Initialize the error variable
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    require ' ../../../../connect.php';
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $phone = $_POST['phone'];
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $pass = $_POST['pass'];
-    $cpass = $_POST['cpass'];
-    // Check if password and confirm password match
-    if ($pass !== $cpass) {
-        $error = 'Password and Confirm Password do not match.';
-    } else {
-        // Hash the password
-        $hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
-
-        // Check if user already exists
-        $check_query = "SELECT * FROM user WHERE username = '$username'";
-        $check_result = mysqli_query($conn, $check_query);
-
-        if (mysqli_num_rows($check_result) > 0) {
-            $error = 'Username already taken';
-        } else {
-            // Insert the user info into the database with hashed password
-            $sql = "INSERT INTO user (username,phone,email, password) VALUES ('$username', '$phone','$email', '$hashed_pass')";
-            $result = mysqli_query($conn, $sql);
-
-            if ($result) {
-                header("location: ../index.php");
-                exit; // Add an exit statement after redirection
-            } else {
-                $error = 'Registration failed. Please try again.';
-            }
-        }
-    }
-}
-?>
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url(../data/bg_login.png);
+            background-position: center;
+            background-size: cover;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100%;
             margin: 0;
         }
 
         .form-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: transparent;
+            border-radius: 12px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
             padding: 20px;
             width: 300px;
-            margin: 10rem auto; /* Center the form horizontally */
+            margin: 10rem 20rem; /* Center the form horizontally */
         }
 
         .form-container h2 {
@@ -153,26 +114,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-
     <div class="form-container">
         <h2>Register</h2>
         <!-- Display error message if present -->
         <?php if (!empty($error)) { ?>
             <div class="error-message">
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 <?php echo $error; ?>
             </div>
         <?php } ?>
         <!-- Registration form -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <?php
+        $error = '';
+        include ' ../../../../connect.php';
+        if (isset($_POST['submit'])) {
+
+            $username = mysqli_real_escape_string($conn, $_POST['username']);
+
+            $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $pass = mysqli_real_escape_string($conn, $_POST['pass']);
+            $cpass = mysqli_real_escape_string($conn, $_POST['cpass']);
+
+            $password = password_hash($pass, PASSWORD_BCRYPT);
+            $cpassword = password_hash($cpass, PASSWORD_BCRYPT);
+
+            $emailquery = "SELECT * FROM user WHERE email = '$email' ";
+            $query = mysqli_query($conn, $emailquery);
+
+            $emailcount = mysqli_num_rows($query);
+            if ($emailcount > 0) {
+                $error = 'Email already exists';
+            } else {
+                if ($pass === $cpass) {
+                    $insertquery = "INSERT INTO user( username,phone, email, password) values('$username','phone', '$email', '$password')";
+                    $iquery = mysqli_query($conn, $insertquery);
+                    if ($iquery) {
+                        ?>
+                        <script>
+                            Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Your work has been saved",
+                            showConfirmButton: true,
+                            }).then(function() {
+                                window.location.href = "login.php";
+                            });
+                        </script>
+                        <?php
+                    }
+                } else {
+                    $error = 'Password and confirm password do not match';
+                }
+            }
+        }
+        ?>
         <form id="register-form" action="#" method="post">
             <div class="form-group">
                 <label for="register-username">Username</label>
                 <input type="text" id="register-username" name="username" required>
             </div>
+
             <div class="form-group">
                 <label for="register-phone">Phone number</label>
                 <input type="int" id="register-phone" name="phone" required>
             </div>
+
             <div class="form-group">
                 <label for="register-email">Email</label>
                 <input type="email" id="email" name="email" required>
@@ -185,14 +193,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label for="confirm-password">Confirm Password</label>
                 <input type="password" id="confirm-password" name="cpass" required onkeyup="checkPasswordMatch()">
             </div>
-            <button type="submit" class="btn">Register</button>
+            <button type="submit" name="submit" class="btn">Register</button>
         </form>
         <div class="switch-form">
             <p>Already have an account? <a href="login.php" id="switch-to-login">Login</a></p>
         </div>
     </div>
-
-    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 </body>
 
 </html>

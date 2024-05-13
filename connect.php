@@ -5,11 +5,11 @@
     $dbname = "neptours";
 
     //create connection
-    $con = mysqli_connect($servername, $username, $password, $dbname);
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
     //check connection
-    if(!$con){
-        die(mysqli_error($con));
+    if(!$conn){
+        die(mysqli_error($conn));
     }
 
 ?>

@@ -5,3 +5,4 @@ session_destroy(); // Destroy the session
 header("Location: User/controller/login.sdphp"); // Redirect to login page after logout
 exit();
 ?>
+

@@ -46,7 +46,7 @@
 
 			// Query to retrieve total bookings
 			$sql = "SELECT COUNT(*) as total_bookings FROM bookings";
-			$result = $con->query($sql);
+			$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
 				// Output data of each row
@@ -57,7 +57,7 @@
 				echo "<p>No bookings found.</p>";
 			}
 
-			$con->close();
+			$conn->close();
 			?>
 		</div>
 
@@ -80,7 +80,7 @@
 
 			// Query to retrieve total users
 			$sql = "SELECT COUNT(*) as total_users FROM user";
-			$result = $con->query($sql);
+			$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
 				// Output data of each row
@@ -91,7 +91,7 @@
 				echo "<p>No users found.</p>";
 			}
 
-			$con->close();
+			$conn->close();
 			?>
 		</div>
 
@@ -104,7 +104,7 @@
 
 			// Query to retrieve total issues
 			$sql = "SELECT COUNT(*) as total_issues FROM inquiry";
-			$result = $con->query($sql);
+			$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
 				// Output data of each row
@@ -115,7 +115,7 @@
 				echo "<p>No issues found.</p>";
 			}
 
-			$con->close();
+			$conn->close();
 			?>
 		</div>
 	</div>
@@ -129,7 +129,7 @@
 
 			// Query to retrieve total packages
 			$sql = "SELECT COUNT(*) as total_packages FROM packages";
-			$result = $con->query($sql);
+			$result = $conn->query($sql);
 
 			if ($result->num_rows > 0) {
 				// Output data of each row
@@ -140,7 +140,7 @@
 				echo "<p>No packages found.</p>";
 			}
 
-			$con->close();
+			$conn->close();
 			?>
 		</div>
 

@@ -33,12 +33,12 @@ require'../connect.php';
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
   $query = "DELETE FROM user WHERE id=$id";
-  mysqli_query($con, $query);
+  mysqli_query($conn, $query);
 }
 
 // Query the database for user data
 $query = 'SELECT * FROM user';
-$result = mysqli_query($con, $query);
+$result = mysqli_query($conn, $query);
 
 // Generate the HTML for the table
 $html = '<div class="user-list">
@@ -81,7 +81,7 @@ $html .= '</tbody>
 echo $html;
 
 // Close the database connection
-mysqli_close($con);
+mysqli_close($conn);
 ?>
 
 

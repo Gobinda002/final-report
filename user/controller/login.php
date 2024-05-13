@@ -12,11 +12,11 @@ $error = "";
 $success_message = ""; // Initialize success message variable
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
 
     $user_sql = "SELECT * FROM user WHERE email='$email'";
-    $user_result = mysqli_query($con, $user_sql);
+    $user_result = mysqli_query($conn, $user_sql);
 
     if ($user_result && mysqli_num_rows($user_result) > 0) {
         $user_data = mysqli_fetch_assoc($user_result);
