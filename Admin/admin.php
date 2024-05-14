@@ -17,7 +17,6 @@
 						class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'active' : ''; ?>">Dashboard</a>
 				</li>
 				<li><a href="bookings.php">Bookings</a></li>
-				<li><a href="../inquiry/view_inquiry.php">Issues</a></li>
 				<li><a href="user.php">Users</a></li>
 				<li><a href="..\image\index.php">Packages</a></li>
 				<li><a href="../login.php">Logout</a></li>
@@ -89,30 +88,6 @@
 				}
 			} else {
 				echo "<p>No users found.</p>";
-			}
-
-			$conn->close();
-			?>
-		</div>
-
-		<div class="box purple">
-			<h1>Total Issues</h1>
-			<?php
-			
-
-			include'../connect.php';
-
-			// Query to retrieve total issues
-			$sql = "SELECT COUNT(*) as total_issues FROM inquiry";
-			$result = $conn->query($sql);
-
-			if ($result->num_rows > 0) {
-				// Output data of each row
-				while ($row = $result->fetch_assoc()) {
-					echo "<p>" . $row["total_issues"] . "</p>";
-				}
-			} else {
-				echo "<p>No issues found.</p>";
 			}
 
 			$conn->close();
