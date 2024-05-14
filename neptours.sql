@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2024 at 02:20 PM
+-- Generation Time: May 14, 2024 at 05:35 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -28,17 +28,43 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
+  `adminID` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `pass` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id`, `email`, `pass`) VALUES
+INSERT INTO `admin` (`adminID`, `email`, `password`) VALUES
 (1, 'admin321@gmail.com', 'admin321');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `booking_id` int(255) NOT NULL,
+  `user_id` int(255) NOT NULL,
+  `package_id` int(255) NOT NULL,
+  `booking_date` varchar(255) NOT NULL,
+  `booking_status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `packages`
+--
+
+CREATE TABLE `packages` (
+  `package_id` int(255) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `package_price` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -47,25 +73,21 @@ INSERT INTO `admin` (`id`, `email`, `pass`) VALUES
 --
 
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
+  `phone` int(10) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `pass` varchar(255) NOT NULL,
-  `cpass` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `email`, `pass`, `cpass`) VALUES
-(25, 'bcd', 'sd@gmail.com', '1234', '1234'),
-(26, '', 'asd@gmail.com', '123', '123'),
-(29, 'asdf', 'asdf@gmail.com', '123', '123'),
-(30, 'asdf1', 'asdf@gmail.com', '123', '123'),
-(31, 'qw', 'qw@gmail.com', '1234', '1234'),
-(32, 'zxc', 'zxc@gmail.com', '123', '123'),
-(38, 'asd', 'asd@gmail.com', '$2y$10$drmbr8DK7zDe15LdhZEbz.Dt8eIvycB1LGnczns1NoEzV1RJHNS82', '$2y$10$w9yo4mb4ZH3Vba828jxFgOA/V4WxFtL8SNpgyhoPHRNWdqyqjGSWO');
+INSERT INTO `user` (`user_id`, `username`, `phone`, `email`, `password`) VALUES
+(59, 'Gobinda', 2147483647, 'zxc@gmail.com', '$2y$10$vrYYHfyBJY1Be176Xkp4gOHQYyOyVL01R2AA3S6f5Kj3eREgzhpHG'),
+(60, 'qwe', 2147483647, 'qwe@gmail.com', '$2y$10$oWfxE/OJs2Pf9Ob93lNsMOugCk7XGQV3EMzRVlS3okCTH8p7vG6YW'),
+(61, 'asd', 2147483647, 'asd@gmail.com', '$2y$10$3/.ZFDCGKvDEkuHylB6OUeAb.9XINBtHDVJp2blr2gvGx..tHc./C');
 
 --
 -- Indexes for dumped tables
@@ -75,14 +97,27 @@ INSERT INTO `user` (`id`, `username`, `email`, `pass`, `cpass`) VALUES
 -- Indexes for table `admin`
 --
 ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`adminID`);
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `user_id_fk` (`user_id`),
+  ADD KEY `package_id_fk` (`package_id`);
+
+--
+-- Indexes for table `packages`
+--
+ALTER TABLE `packages`
+  ADD PRIMARY KEY (`package_id`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -92,13 +127,36 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `packages`
+--
+ALTER TABLE `packages`
+  MODIFY `package_id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`package_id`) REFERENCES `packages` (`package_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
