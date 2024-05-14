@@ -9,7 +9,7 @@ if (isset($_SESSION["email"])) {
 require ' ../../../../connect.php';
 
 $error = "";
-$success_message = ""; // Initialize success message variable
+$success_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -21,30 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user_result && mysqli_num_rows($user_result) > 0) {
         $user_data = mysqli_fetch_assoc($user_result);
         if (password_verify($password, $user_data['password'])) {
-            echo "<script>alert('Login Successful');</script>"; // Display alert
             $_SESSION['username'] = $user_data['username'];
-            echo "<script>setTimeout(function(){document.getElementsByClassName('alert')[0].style.display='none';}, 2000);</script>"; // Hide alert after 2 seconds
-            echo "<script>window.location.href = '../index.php';</script>"; // Redirect after alert
-            exit; // Exit to prevent further execution
+            $_SESSION['email'] = $user_data['email'];
+            $success_message = 'Login successful!';
         } else {
             $error = 'Invalid Username or Password';
         }
     } else {
         $error = 'Invalid Username or Password';
     }
-    
-    
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,11 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             align-items: center;
             height: 100%;
-            /* Set the height of the body to 100% of the viewport height */
             margin: 0;
-
         }
-
 
         .login-container {
             background: transparent;
@@ -67,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
             padding: 20px;
             width: 300px;
-           margin: 19rem 20rem;
-            /* Center the form horizontally */
+            margin: 19rem 20rem;
         }
 
         .login-container h2 {
@@ -136,17 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-align: center;
         }
 
-        .success-message {
-            padding: 10px;
-            background-color: #04AA6D;
-            color: white;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-
-
         .switch-form {
             margin-top: 10px;
             text-align: center;
@@ -158,18 +139,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
-
-
 <body>
     <div class="login-container">
         <h2>Login</h2>
         <?php if (!empty($error)) { ?>
             <div class="error-message"><?php echo $error; ?></div>
         <?php } ?>
-        <?php if (!empty($success_message)) { ?>
-            <div class="success-message"><?php echo $success_message; ?></div> <!-- Print success message -->
-        <?php } ?>
-        <form id="login-form" action="#" method="post">
+        <form id="login-form" action="" method="post">
             <div class="form-group">
                 <label for="login-email">Email:</label>
                 <input type="email" id="login-email" name="email" required>
@@ -196,8 +172,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 passwordField.type = "password";
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            <?php if (!empty($success_message)) { ?>
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "<?php echo $success_message; ?>",
+                    showConfirmButton: true,
+                }).then(function() {
+                    window.location.href = "../index.php";
+                });
+            <?php } ?>
+        });
     </script>
 </body>
-
-
 </html>

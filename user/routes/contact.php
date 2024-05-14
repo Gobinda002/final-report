@@ -44,9 +44,11 @@ session_start();
                     <li><a href="../controller/logout.php">Logout</a></li>
                 <?php } else { ?>
                     <li><a href="../controller/login.php">Login</a></li>
-                    <li><a href="../controller/register.php">Signup</a></li>
+                    <li><a href="../controller/register1.php">Signup</a></li>
                 <?php } ?>
             </ul>
+            </ul>
+
         </div>
     </header>
 

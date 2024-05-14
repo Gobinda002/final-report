@@ -45,11 +45,11 @@ session_start();
 
            <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
-                    <li><?php echo $_SESSION['username']; ?></li>
+                    <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;"><?php echo $_SESSION['username']; ?></li>
                     <li><a href="controller/logout.php">Logout</a></li>
                 <?php } else { ?>
                     <li><a href="controller/login.php">Login</a></li>
-                    <li><a href="controller/register.php">Signup</a></li>
+                    <li><a href="controller/register1.php">Signup</a></li>
                 <?php } ?>
             </ul>
 
@@ -421,7 +421,7 @@ session_start();
             </div>
             <div class="col">
                 <h3>Links</h3>
-                <ul>
+                <ul class="navi">
                     <li><a href="#home" style="color: #000;">Home</a></li>
                     <li><a href="#2" style="color: #000;">Packages</a></li>
                     <li><a href="#3" style="color: #000;">Services</a></li>

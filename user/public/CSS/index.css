@@ -206,6 +206,8 @@ header {
     }
 }
 
+
+
 .inout a:hover {
     color: var(--maincolor);
 }
@@ -690,7 +692,7 @@ footer {
     margin: 20px 0;
 }
 
-ul li {
+.navi li {
     list-style: none;
     margin-bottom: 12px;
 
