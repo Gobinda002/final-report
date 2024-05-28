@@ -12,17 +12,17 @@ $error = "";
 $success_message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password'];
+    $user_email = mysqli_real_escape_string($conn, $_POST['email']);
+    $user_password = $_POST['password'];
 
-    $user_sql = "SELECT * FROM user WHERE email='$email'";
+    $user_sql = "SELECT * FROM user WHERE user_email='$user_email'";
     $user_result = mysqli_query($conn, $user_sql);
 
     if ($user_result && mysqli_num_rows($user_result) > 0) {
         $user_data = mysqli_fetch_assoc($user_result);
-        if (password_verify($password, $user_data['password'])) {
+        if (password_verify($user_password , $user_data['user_password'])) {
             $_SESSION['username'] = $user_data['username'];
-            $_SESSION['email'] = $user_data['email'];
+            $_SESSION['email'] = $user_data['user_email'];
             $success_message = 'Login successful!';
         } else {
             $error = 'Invalid Username or Password';

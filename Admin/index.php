@@ -1,46 +1,55 @@
 <?php
+require '../connect.php';
 session_start();
-// check if the email  is already login
-if (isset($_SESSION["email"])) {
-    header("Location: ../../Admin/index.php");
-    exit;
-}
 
-require'../connect.php';
+if(isset($_POST['login'])){
+    $query = "Select * From 'admin' where 'admin_name' = '$_POST[admin_name]' AND 'admin_password'= $_POST[admmin_password]' " ;
+    $result = mysqli_query($conn,$query);
+    if(mysqli_num_rows($result)==1){
+        $_SESSION['adminID'] = $_POST['adminID'];
+        header("location: admin.php");
+        $ $success_message = "correct";
 
-$error = "";
-$success_message = ""; // Initialize success message variable
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password'];
-
-    $admin_sql = "SELECT * FROM admin WHERE email='$email'";
-    $admin_result = mysqli_query($conn, $admin_sql);
-
-    if ($admin_result && mysqli_num_rows($admin_result) > 0) {
-        $admin_data = mysqli_fetch_assoc($admin_result);
-        if (password_verify($password, $admin_data['password'])) {
-            echo "<script>alert('Login Successful');</script>"; // Display alert
-            $_SESSION['username'] = $admin_data['username'];
-            echo "<script>setTimeout(function(){document.getElementsByClassName('alert')[0].style.display='none';}, 2000);</script>"; // Hide alert after 2 seconds
-            echo "<script>window.location.href = '../index.php';</script>"; // Redirect after alert
-            exit; // Exit to prevent further execution
-        } else {
-            $error = 'Invalid Username or Password';
-        }
-    } else {
-        $error = 'Invalid Username or Password';
+    }else{
+        $error = "incorrect";
     }
-    
-    
+
 }
+// $error = "";
+// $success_message = "";
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//     if (isset($_POST['admin_email']) && isset($_POST['admin_password'])) {
+//         $admin_email = mysqli_real_escape_string($conn, $_POST['admin_email']);
+//         $admin_password = $_POST['admin_password'];
+
+//         $admin_sql = "SELECT * FROM admin WHERE admin_email='$admin_email'";
+//         $admin_result = mysqli_query($conn, $admin_sql);
+
+//         if ($admin_result && $admin_result->num_rows > 0) {
+//             $row = $admin_result->fetch_assoc();
+//             // Verify password (assuming it's hashed using password_hash)
+//             if (password_verify($admin_password, $row['admin_password'])) {
+//                 $_SESSION['adminID'] = $row['adminID'];
+//                 $_SESSION['admin_name'] = $row['admin_name'];
+//                 header("Location: abc.html");
+//                 exit();
+//             } else {
+//                 $error = "Invalid email or password.";
+//             }
+//         } else {
+//             $error = "Invalid email or password.";
+//         }
+//     } else {
+//         $error = "Email and Password are required.";
+//     }
+// }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <a href="admin.html"></a>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
@@ -55,11 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             align-items: center;
             height: 100%;
-            /* Set the height of the body to 100% of the viewport height */
             margin: 0;
-
         }
-
 
         .login-container {
             background: transparent;
@@ -67,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
             padding: 20px;
             width: 300px;
-           margin: 19rem 20rem;
-            /* Center the form horizontally */
+            margin: 19rem 20rem; 
         }
 
         .login-container h2 {
@@ -144,22 +149,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 10px;
             text-align: center;
         }
-
-
-
-        .switch-form {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .switch-form a {
-            color: #2a2185;
-            text-decoration: none;
-        }
     </style>
 </head>
-
-
 <body>
     <div class="login-container">
         <h2>Login</h2>
@@ -169,23 +160,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if (!empty($success_message)) { ?>
             <div class="success-message"><?php echo $success_message; ?></div> <!-- Print success message -->
         <?php } ?>
-        <form id="login-form" action="#" method="post">
+        <form id="login-form" action="login.php" method="post">
             <div class="form-group">
                 <label for="login-email">Email:</label>
-                <input type="email" id="login-email" name="email" required>
+                <input type="email" id="login-email" name="admin_email" required>
             </div>
             <div class="form-group">
                 <label for="login-password">Password:</label>
-                <input type="password" id="login-password" name="password" required>
+                <input type="password" id="login-password" name="admin_password" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>
             </div>
-            <button type="submit" class="btn">Login</button>
+            <button type="submit" class="btn" name="login">Login</button>
         </form>
-        <div class="switch-form">
-            <p>Don't have an account? <a href="register1.php" id="switch-to-register">Register</a></p>
-        </div>
     </div>
     <script>
         function togglePasswordVisibility() {
@@ -198,6 +186,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </script>
 </body>
-
-
 </html>

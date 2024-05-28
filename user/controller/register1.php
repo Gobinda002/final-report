@@ -6,22 +6,22 @@ include ' ../../../../connect.php';
 $error = '';
 if (isset($_POST['submit'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $pass = mysqli_real_escape_string($conn, $_POST['pass']);
+    $user_phone = mysqli_real_escape_string($conn, $_POST['phone']);
+    $user_email = mysqli_real_escape_string($conn, $_POST['email']);
+    $user_password = mysqli_real_escape_string($conn, $_POST['password']);
     $cpass = mysqli_real_escape_string($conn, $_POST['cpass']);
 
-    if ($pass !== $cpass) {
+    if ($user_password !== $cpass) {
         $error = 'Password and confirm password do not match';
     } else {
-        $emailquery = "SELECT * FROM user WHERE email = '$email' ";
+        $emailquery = "SELECT * FROM user WHERE user_email = '$user_email' ";
         $query = mysqli_query($conn, $emailquery);
 
         if (mysqli_num_rows($query) > 0) {
             $error = 'Email already exists';
         } else {
-            $password = password_hash($pass, PASSWORD_BCRYPT);
-            $insertquery = "INSERT INTO user (username, phone, email, password) VALUES ('$username', '$phone', '$email', '$password')";
+            $user_password = password_hash($user_password, PASSWORD_BCRYPT);
+            $insertquery = "INSERT INTO user (username, user_phone, user_email, user_password) VALUES ('$username', '$user_phone', '$user_email', '$user_password')";
             $iquery = mysqli_query($conn, $insertquery);
             if ($iquery) {
                  // Store user information in session
@@ -183,7 +183,7 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-group">
                 <label for="register-password">Password</label>
-                <input type="password" id="register-password" name="pass" required>
+                <input type="password" id="register-password" name="password" required>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password</label>
