@@ -1,55 +1,54 @@
 <?php
-require '../connect.php';
 session_start();
 
-if(isset($_POST['login'])){
-    $query = "Select * From 'admin' where 'admin_name' = '$_POST[admin_name]' AND 'admin_password'= $_POST[admmin_password]' " ;
-    $result = mysqli_query($conn,$query);
-    if(mysqli_num_rows($result)==1){
-        $_SESSION['adminID'] = $_POST['adminID'];
-        header("location: admin.php");
-        $ $success_message = "correct";
-
-    }else{
-        $error = "incorrect";
-    }
-
+if (isset($_SESSION["admin_email"])) {
+    header("Location: admin.html");
+    exit;
 }
-// $error = "";
-// $success_message = "";
 
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     if (isset($_POST['admin_email']) && isset($_POST['admin_password'])) {
-//         $admin_email = mysqli_real_escape_string($conn, $_POST['admin_email']);
-//         $admin_password = $_POST['admin_password'];
+require '../connect.php';
 
-//         $admin_sql = "SELECT * FROM admin WHERE admin_email='$admin_email'";
-//         $admin_result = mysqli_query($conn, $admin_sql);
+$error = "";
+$success_message = "";
 
-//         if ($admin_result && $admin_result->num_rows > 0) {
-//             $row = $admin_result->fetch_assoc();
-//             // Verify password (assuming it's hashed using password_hash)
-//             if (password_verify($admin_password, $row['admin_password'])) {
-//                 $_SESSION['adminID'] = $row['adminID'];
-//                 $_SESSION['admin_name'] = $row['admin_name'];
-//                 header("Location: abc.html");
-//                 exit();
-//             } else {
-//                 $error = "Invalid email or password.";
-//             }
-//         } else {
-//             $error = "Invalid email or password.";
-//         }
-//     } else {
-//         $error = "Email and Password are required.";
-//     }
-// }
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if the form fields are set
+    if (isset($_POST['email']) && isset($_POST['password'])) {
+        $admin_email = mysqli_real_escape_string($conn, $_POST['email']);
+        $admin_password = $_POST['password'];
+
+        // Use prepared statements to prevent SQL injection
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_email = ?");
+        $stmt->bind_param("s", $admin_email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows > 0) {
+            $admin_data = $result->fetch_assoc();
+            if (password_verify($admin_password, $admin_data['admin_password'])) {
+                $_SESSION['admin_name'] = $admin_data['admin_name'];
+                $_SESSION['admin_email'] = $admin_data['admin_email'];
+                header("Location: admin.html");
+                exit;
+            } else {
+                $error = 'Invalid Email or Password';
+            }
+        } else {
+            $error = 'Invalid Email or Password';
+        }
+
+        $stmt->close();
+    } else {
+        $error = 'Please fill in both fields.';
+    }
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <a href="admin.html"></a>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
@@ -73,7 +72,7 @@ if(isset($_POST['login'])){
             box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
             padding: 20px;
             width: 300px;
-            margin: 19rem 20rem; 
+            margin: 19rem 20rem;
         }
 
         .login-container h2 {
@@ -151,30 +150,31 @@ if(isset($_POST['login'])){
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Login</h2>
+        <!-- Display error message if present -->
         <?php if (!empty($error)) { ?>
             <div class="error-message"><?php echo $error; ?></div>
         <?php } ?>
-        <?php if (!empty($success_message)) { ?>
-            <div class="success-message"><?php echo $success_message; ?></div> <!-- Print success message -->
-        <?php } ?>
-        <form id="login-form" action="login.php" method="post">
+        <!-- Login form -->
+        <form id="login-form" action="admin.html" method="post">
             <div class="form-group">
                 <label for="login-email">Email:</label>
-                <input type="email" id="login-email" name="admin_email" required>
+                <input type="email" id="login-email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="login-password">Password:</label>
-                <input type="password" id="login-password" name="admin_password" required>
+                <input type="password" id="login-password" name="password" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>
             </div>
-            <button type="submit" class="btn" name="login">Login</button>
+            <button type="submit" class="btn">Login</button>
         </form>
     </div>
+
     <script>
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("login-password");
