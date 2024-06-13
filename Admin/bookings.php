@@ -36,10 +36,12 @@
     echo "<tr><th>ID</th><th>User ID</th><th>Package ID</th><th>Number of People</th><th>Total Cost</th><th>Payment Method</th><th>Status</th></tr>";
     while ($row = mysqli_fetch_array($result)) {
       echo "<tr>";
-      echo "<td>" . $row['id'] . "</td>";
+      echo "<td>" . $row['booking_id'] . "</td>";
       echo "<td>" . $row['user_id'] . "</td>";
       echo "<td>" . $row['package_id'] . "</td>";
       echo "<td>" . $row['num_people'] . "</td>";
+      echo "<td>" . $row['packageAvailable_id'] . "</td>";
+      
       echo "<td>" . $row['total_cost'] . "</td>";
       echo "<td>" . $row['payment_method'] . "</td>"; ?>
       <td>

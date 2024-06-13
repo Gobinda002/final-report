@@ -57,15 +57,15 @@ $html = '<div class="user-list">
 
 // Loop through query result and output user data in table rows
 while ($row = mysqli_fetch_assoc($result)) {
-  $id = $row['id'];
+  $id = $row['user_id'];
   if ($row['username'] == 'admin') {
     continue; // skip this row
   }
   $html .= "<tr>";
   $html .= "<td>" . $id . "</td>";
   $html .= "<td>" . $row['username'] . "</td>";
-  $html .= "<td>" . $row['email'] . "</td>";
-  $html .= "<td>" . $row['password'] . "</td>";
+  $html .= "<td>" . $row['user_email'] . "</td>";
+  $html .= "<td>" . $row['user_password'] . "</td>";
   $html .= "<td>";
   $html .= "<a href='edit_user.php?id=" . $id . "' class='button edit'>Edit</a> ";
   $html .= "<a href='?delete=" . $id . "' class='button delete'>Delete</a>";

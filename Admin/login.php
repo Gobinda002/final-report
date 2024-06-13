@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION["admin_email"])) {
-    header("Location: admin.php");
+    header("Location: admin.html");
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (password_verify($admin_password, $admin_data['admin_password'])) {
                 $_SESSION['admin_name'] = $admin_data['admin_name'];
                 $_SESSION['admin_email'] = $admin_data['admin_email'];
-                header("Location: admin.php");
+                header("Location: admin.html");
                 exit;
             } else {
                 $error = 'Invalid Email or Password';

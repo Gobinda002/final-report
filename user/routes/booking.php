@@ -1,21 +1,25 @@
 <?php
+session_start();
 
-require'../../connect.php';
+require '../../connect.php';
+
+// Retrieve package ID and name from query string
+$package_id = isset($_GET['package_id']) ? $_GET['package_id'] : '';
+$package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) : '';
+
+
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+
     // Retrieve form data
-    $destination = $_POST["destination"];
-    $date = $_POST["date"];
-    $participants = $_POST["participants"];
-    $package = $_POST["package"];
-    $preferences = $_POST["preferences"];
+    $destination = $_POST["package_id"];
+    $date = $_POST["packageAvailable_id"];
+    $participants = $_POST["num_people"];
+    $package_cost = $_POST["package_cost"];
 
- 
-
-    // Prepare SQL statement to insert data into the database (replace placeholders with actual table name and column names)
-    $sql = "INSERT INTO bookings (destination, date, participants, package, preferences) 
-            VALUES ('$destination', '$date', '$participants', '$package', '$preferences')";
+    // Prepare SQL statement to insert data into the database
+    $sql = "INSERT INTO bookings (package_id, num_people, PackageAvailable_id, package_cost) 
+            VALUES ('$destination', '$participants', '$date', '$package_cost')";
 
     // Execute the SQL statement
     if ($conn->query($sql) === TRUE) {
@@ -28,8 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,17 +44,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-
     <div class="container">
         <h1>Book Your Trek or Hike</h1>
-        <form action="booking_process.php" method="POST">
-            <div class="form-group">
+        <form action="" method="POST">
+        <div class="form-group">
                 <label for="destination">Destination:</label>
-                <input type="text" id="destination" name="destination" required>
+                <input type="text" id="destination" name="package_id" value="<?php echo $package_id; ?>" required readonly>
             </div>
             <div class="form-group">
                 <label for="date">Available Dates:</label>
-                <select id="date" name="date" required>
+                <select id="date" name="packageAvailable_id" required>
                     <option value="2024-04-19">April 19, 2024</option>
                     <option value="2024-04-20">April 20, 2024</option>
                     <option value="2024-04-21">April 21, 2024</option>
@@ -61,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="form-group">
                 <label for="participants">Number of Participants:</label>
-                <input type="number" id="participants" name="participants" min="1" required>
+                <input type="number" id="participants" name="num_people" min="1" value="1" required oninput="updatePrice()">
             </div>
             <div class="form-group">
                 <label>Trek or Hike Package:</label>
-                <p>$100</p>
-                <input type="hidden" name="package" value="standard">
+                <p id="total-price">$2000</p>
+                <input type="hidden" id="package_cost" name="package_cost" value="2000">
             </div>
             <div class="form-group">
                 <label for="preferences">Special Preferences or Comments:</label>
@@ -75,6 +76,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Book Now</button>
         </form>
     </div>
+    <script>
+        function updatePrice() {
+            const basePrice = 2000;
+            const participants = parseInt(document.getElementById('participants').value, 10) || 1;
+            const totalPrice = basePrice * participants;
+            document.getElementById('total-price').innerText = "$" + totalPrice;
+            document.getElementById('package_cost').value = totalPrice;
+        }
+    </script>
 
 </body>
 
