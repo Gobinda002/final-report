@@ -54,18 +54,6 @@
 		<div class="box green">
 			<h1>Total Users</h1>
 			<?php
-			// // Connect to database
-			// $servername = "localhost";
-			// $username = "root";
-			// $password = "";
-			// $dbname = "tat";
-
-			// $conn = new mysqli($servername, $username, $password, $dbname);
-
-			// if ($conn->connect_error) {
-			// 	die("Connection failed: " . $conn->connect_error);
-			// }
-
 			require'../connect.php';
 
 			// Query to retrieve total users

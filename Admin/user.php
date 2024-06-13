@@ -11,9 +11,8 @@
 			<ul>
 			<li><a href="admin.php">Dashboard</a></li>
             <li><a href="bookings.php">Bookings</a></li>
-            <li><a href="../inquiry/view_inquiry.php">Issues</a></li>
             <li><a href="user.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active' : ''; ?>">Users</a></li>
-            <li><a href="../image/index.php">Packages</a></li>
+            <li><a href="packages.php">Packages</a></li>
 			<li><a href="../Login.php">Logout</a></li>	
 			</ul>
 		</nav>

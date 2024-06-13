@@ -1,53 +1,49 @@
 <?php
+// Start the session 
 session_start();
 
-if (isset($_SESSION["admin_email"])) {
-    header("Location: admin.php");
-    exit;
-}
-
-require '../connect.php';
+// Include database connection
+require '../connect.php'; // Adjust the path to your connect file
 
 $error = "";
 $success_message = "";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form fields are set
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-        $admin_email = mysqli_real_escape_string($conn, $_POST['email']);
-        $admin_password = $_POST['password'];
 
-        // Use prepared statements to prevent SQL injection
-        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_email = ?");
-        $stmt->bind_param("s", $admin_email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $admin_email = $_POST['admin_email'];
+    $admin_password = $_POST['admin_password'];
 
-        if ($result && $result->num_rows > 0) {
-            $admin_data = $result->fetch_assoc();
-            if (password_verify($admin_password, $admin_data['admin_password'])) {
-                $_SESSION['admin_name'] = $admin_data['admin_name'];
-                $_SESSION['admin_email'] = $admin_data['admin_email'];
-                header("Location: admin.php");
-                exit;
-            } else {
-                $error = 'Invalid Email or Password';
-            }
-        } else {
-            $error = 'Invalid Email or Password';
-        }
-
-        $stmt->close();
-    } else {
-        $error = 'Please fill in both fields.';
+    // Prepare SQL statement
+    $stmt = $conn->prepare("SELECT adminID, admin_name, admin_password FROM admin WHERE admin_email = ?");
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
     }
-}
+    $stmt->bind_param("s", $admin_email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$conn->close();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if (password_verify($admin_password, $row['admin_password'])) { // Corrected variable name
+            $_SESSION['adminID'] = $row['adminID'];
+            $_SESSION['admin_name'] = $row['admin_name'];
+            header("Location: admin.php");
+
+            exit();
+        } else {
+            $error = "Invalid email or password.";
+        }
+    } else {
+        $error = "Invalid email or password.";
+    }
+    $stmt->close();
+    $conn->close();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -156,17 +152,18 @@ $conn->close();
         <h2>Login</h2>
         <!-- Display error message if present -->
         <?php if (!empty($error)) { ?>
-            <div class="error-message"><?php echo $error; ?></div>
+            <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
         <?php } ?>
+
         <!-- Login form -->
-        <form id="login-form" action="" method="post">
+        <form method="post" action="" id="login-form">
             <div class="form-group">
-                <label for="login-email">Email:</label>
-                <input type="email" id="login-email" name="email" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="admin_email" required><br>
             </div>
             <div class="form-group">
-                <label for="login-password">Password:</label>
-                <input type="password" id="login-password" name="password" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="admin_password" required><br>
                 <span class="toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>
@@ -175,6 +172,7 @@ $conn->close();
         </form>
     </div>
 
+    
     <script>
         function togglePasswordVisibility() {
             var passwordField = document.getElementById("login-password");
@@ -186,4 +184,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>
