@@ -1,0 +1,152 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    min-height: 102vh;
+    animation: body-animation 30s infinite;
+}
+
+.container {
+    width: 90%;
+    padding: 3rem 4rem;
+    align-items: center;
+}
+
+section{
+    width: 80%;
+}
+
+/* Header Styles */
+header {
+    background-color: #000000;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav ul li a.active {
+    color: #eb770a;
+    font-weight: bold;
+}
+
+header ul li a:hover {
+    background-color: #ddd;
+    color: black;
+    padding: 5px;
+}
+
+
+/* for cards */
+
+.popularPack {
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+    gap: 2rem;
+    margin: auto;
+}
+
+.card {
+    width: 450px;
+    height: 300px;
+    border: 6px solid var(--maincolor);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+
+
+.card-img {
+    width: 450px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: .5s ease-in;
+   
+}
+
+.card-body {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: -100%;
+    position: absolute;
+    background: #1f3d4738;
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: 1s;
+    overflow: hidden;
+
+    & h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--maincolor);
+    }
+
+    & p {
+        font-size: 1.5rem;
+        font-weight: 600;
+
+        overflow: hidden;
+    }
+}
+
+
+.card-title {
+    text-transform: uppercase;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.card .btn {
+    width: 8rem;
+}
+
+#see {
+    font-size: 2rem;
+    color: #fff;
+    background-color: #d66500;
+    padding: 1rem 17rem;
+    border-radius: 4rem;
+    margin-top: auto;
+
+    &:hover {
+        color: black;
+    }
+}
