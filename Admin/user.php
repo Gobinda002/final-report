@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>user</title>
-	<link rel="stylesheet" href="user.css">
+  <title>user</title>
+  <link rel="stylesheet" href="user.css">
 </head>
+
 <body>
-	<header>
-		<h1>Tours and Travels</h1>
-		<nav>
-			<ul>
-			<li><a href="admin.php">Dashboard</a></li>
-            <li><a href="bookings.php">Bookings</a></li>
-            <li><a href="user.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active' : ''; ?>">Users</a></li>
-            <li><a href="packages.php">Packages</a></li>
-			<li><a href="../Login.php">Logout</a></li>	
-			</ul>
-		</nav>
-	</header>
+  <header>
+    <h1>Tours and Travels</h1>
+    <nav>
+      <ul>
+        <li><a href="admin.php">Dashboard</a></li>
+        <li><a href="bookings.php">Bookings</a></li>
+        <li><a href="user.php"
+            class="<?php echo basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active' : ''; ?>">Users</a></li>
+        <li><a href="packages.php">Packages</a></li>
+        <li><a href="../Login.php">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <?php
-// // Connect to the database
+  // // Connect to the database
 // $host = 'localhost';
 // $username = 'root';
 // $password = '';
 // $dbname = 'tat';
 // $conn = mysqli_connnect($host, $username, $password, $dbname);
+  
+  require '../connect.php';
 
-require'../connect.php';
+  // Handle delete action if requested
+  if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    $query = "DELETE FROM user WHERE id=$id";
+    mysqli_query($conn, $query);
+  }
 
-// Handle delete action if requested
-if (isset($_GET['delete'])) {
-  $id = $_GET['delete'];
-  $query = "DELETE FROM user WHERE id=$id";
-  mysqli_query($conn, $query);
-}
+  // Query the database for user data
+  $query = 'SELECT * FROM user';
+  $result = mysqli_query($conn, $query);
 
-// Query the database for user data
-$query = 'SELECT * FROM user';
-$result = mysqli_query($conn, $query);
-
-// Generate the HTML for the table
-$html = '<div class="user-list">
+  // Generate the HTML for the table
+  $html = '<div class="user-list">
 <h2>User List</h2>
 <table>
   <thead>
@@ -54,42 +57,43 @@ $html = '<div class="user-list">
   </thead>
   <tbody>';
 
-// Loop through query result and output user data in table rows
-while ($row = mysqli_fetch_assoc($result)) {
-  $id = $row['user_id'];
-  if ($row['username'] == 'admin') {
-    continue; // skip this row
+  // Loop through query result and output user data in table rows
+  while ($row = mysqli_fetch_assoc($result)) {
+    $id = $row['user_id'];
+    if ($row['username'] == 'admin') {
+      continue; // skip this row
+    }
+    $html .= "<tr>";
+    $html .= "<td>" . $id . "</td>";
+    $html .= "<td>" . $row['username'] . "</td>";
+    $html .= "<td>" . $row['user_email'] . "</td>";
+    $html .= "<td>" . $row['user_password'] . "</td>";
+    $html .= "<td>";
+    $html .= "<a href='edit_user.php?id=" . $id . "' class='button edit'>Edit</a> ";
+    $html .= "<a href='?delete=" . $id . "' class='button delete'>Delete</a>";
+    $html .= "</td>";
+    $html .= "</tr>";
   }
-  $html .= "<tr>";
-  $html .= "<td>" . $id . "</td>";
-  $html .= "<td>" . $row['username'] . "</td>";
-  $html .= "<td>" . $row['user_email'] . "</td>";
-  $html .= "<td>" . $row['user_password'] . "</td>";
-  $html .= "<td>";
-  $html .= "<a href='edit_user.php?id=" . $id . "' class='button edit'>Edit</a> ";
-  $html .= "<a href='?delete=" . $id . "' class='button delete'>Delete</a>";
-  $html .= "</td>";
-  $html .= "</tr>";
-}
 
-$html .= '</tbody>
+  $html .= '</tbody>
 </table>
 </div>';
 
-// Display the HTML
-echo $html;
+  // Display the HTML
+  echo $html;
 
-// Close the database connection
-mysqli_close($conn);
-?>
+  // Close the database connection
+  mysqli_close($conn);
+  ?>
 
 
-</table>
-</div>';
+  </table>
+  </div>';
 
 
 
 
 </body>
+
 </html>
-<?php include('footer.php'); ?>
+<?php include ('footer.php'); ?>
