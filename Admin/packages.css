@@ -126,6 +126,31 @@ header ul li a:hover {
     font-weight: 500;
 }
 
+
+.card-buttons {
+    position: absolute;
+    top: 44%; /* Adjust top position for vertical alignment */
+    right: 35%; /* Adjust right position for horizontal alignment */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    align-items: center;
+}
+
+.card-buttons button {
+    margin-left: 5px; /* Adjust spacing between buttons if necessary */
+    padding: 8px 16px;
+    background-color: #d66500;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.card:hover .card-buttons {
+    opacity: 1;
+}
+
+
+
 .btn-field {
     display: flex;
     justify-content: center;
