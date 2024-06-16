@@ -7,7 +7,9 @@ if (isset($_GET['delete'])) {
     $delete_query = "DELETE FROM packages WHERE package_id = ?";
     if ($stmt = $conn->prepare($delete_query)) {
         $stmt->bind_param("i", $id);
-      
+        if (!$stmt->execute()) {
+            echo "Error executing statement: " . $stmt->error;
+        }
         $stmt->close();
     } else {
         echo "Error preparing statement: " . $conn->error;
@@ -66,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Query to fetch popular packages
-$query_popular = 'SELECT * FROM popularpackage LIMIT 3';
+$query_popular = 'SELECT * FROM popularpackage LIMIT 6';
 $result_popular = mysqli_query($conn, $query_popular);
 $popular_packages = [];
 
@@ -162,7 +164,7 @@ mysqli_close($conn);
                                 <td><?php echo $package['package_title']; ?></td>
                                 <td><img src="<?php echo $package['package_image']; ?>" alt="<?php echo $package['package_title']; ?>" style="width:100px;height:100px;"></td>
                                 <td><?php echo $package['package_description']; ?></td>
-                                <td><?php echo $package['package_duration']; ?></td>
+                                <td><?php echo $package['package_duration']; ?> Days</td>
                                 <td><?php echo $package['package_creator']; ?></td>
                                 <td>
                                     <a href="edit_package.php?id=<?php echo $package['package_id']; ?>" class="button edit">Edit</a>
