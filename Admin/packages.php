@@ -8,33 +8,32 @@ function handleError($message)
     exit;
 }
 
-// Handle delete request
-if (isset($_GET['delete_popular'])) {
-    $package_id = intval($_GET['delete_popular']);
-    $delete_query = "DELETE FROM popularpackage WHERE id = ?";
-    $stmt = $conn->prepare($delete_query);
-    if (!$stmt) {
+// Handle deletion of package
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    $delete_query = "DELETE FROM packages WHERE package_id = ?";
+    if ($stmt = $conn->prepare($delete_query)) {
+        $stmt->bind_param("i", $id);
+        if (!$stmt->execute()) {
+            handleError("Error executing statement: " . $stmt->error);
+        }
+        $stmt->close();
+        handleError("Package deleted successfully");
+    } else {
         handleError("Error preparing statement: " . $conn->error);
     }
-    $stmt->bind_param("i", $package_id);
-    if ($stmt->execute()) {
-        handleError("Popular package deleted successfully");
-    } else {
-        handleError("Error: " . $stmt->error);
-    }
-    $stmt->close();
 }
 
-// Handle form submission for new package
+/// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data and sanitize inputs
     $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
     $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
-    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : 0;
+    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "image/"; // Ensure this is the correct directory
+    $targetDir = "uploads/";
 
     // Create the upload directory if it doesn't exist
     if (!is_dir($targetDir)) {
@@ -85,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 }
 
+
 // Query to fetch popular packages
 $query_popular = 'SELECT * FROM popularpackage LIMIT 6';
 $result_popular = mysqli_query($conn, $query_popular);
@@ -114,7 +114,6 @@ if ($result_all) {
 // Close connection
 mysqli_close($conn);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
