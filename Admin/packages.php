@@ -1,6 +1,13 @@
 <?php
 require '../connect.php'; // Adjust this path based on your file structure and database connection method
 
+// Function to handle errors
+function handleError($message)
+{
+    echo "<script>alert('$message'); window.location.href='packages.php';</script>";
+    exit;
+}
+
 // Handle deletion of package
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
@@ -8,24 +15,25 @@ if (isset($_GET['delete'])) {
     if ($stmt = $conn->prepare($delete_query)) {
         $stmt->bind_param("i", $id);
         if (!$stmt->execute()) {
-            echo "Error executing statement: " . $stmt->error;
+            handleError("Error executing statement: " . $stmt->error);
         }
         $stmt->close();
+        handleError("Package deleted successfully");
     } else {
-        echo "Error preparing statement: " . $conn->error;
+        handleError("Error preparing statement: " . $conn->error);
     }
 }
 
-// Handle form submission
+/// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get form data
-    $package_title = isset($_POST['package_title']) ? $_POST['package_title'] : '';
-    $package_description = isset($_POST['package_description']) ? $_POST['package_description'] : '';
-    $package_duration = isset($_POST['package_duration']) ? $_POST['package_duration'] : '';
+    // Get form data and sanitize inputs
+    $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
+    $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
+    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "uploads/";
+    $targetDir = "image/"; // Updated target directory
 
     // Create the upload directory if it doesn't exist
     if (!is_dir($targetDir)) {
@@ -36,17 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
             $filename = basename($_FILES['images']['name'][$key]);
             $targetFile = $targetDir . $filename;
+            $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+            // Validate file type
+            $validExtensions = array('jpg', 'jpeg', 'png');
+            if (!in_array($fileType, $validExtensions)) {
+                handleError("Invalid file type: " . $filename);
+            }
 
             if (move_uploaded_file($tmp_name, $targetFile)) {
-                $imagePaths[] = $targetFile;
+                $imagePaths[] = "image/";
             } else {
-                echo "Error uploading file: " . $filename;
-                exit;
+                handleError("Error uploading file: " . $filename);
             }
         }
     } else {
-        echo "No images uploaded.";
-        exit;
+        handleError("No images uploaded.");
     }
 
     // Convert array of image paths to JSON string
@@ -54,18 +67,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare and bind
     $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image) VALUES (?, ?, ?, ?)");
+    if (!$stmt) {
+        handleError("Error preparing statement: " . $conn->error);
+    }
+
     $stmt->bind_param("ssis", $package_title, $package_description, $package_duration, $images_json);
 
     // Execute the statement
     if ($stmt->execute()) {
-        echo "New record created successfully";
+        handleError("New record created successfully");
     } else {
-        echo "Error: " . $stmt->error;
+        handleError("Error: " . $stmt->error);
     }
 
     // Close statement
     $stmt->close();
 }
+
 
 // Query to fetch popular packages
 $query_popular = 'SELECT * FROM popularpackage LIMIT 6';
@@ -77,7 +95,7 @@ if ($result_popular) {
         $popular_packages[] = $row;
     }
 } else {
-    echo "Error fetching popular packages: " . mysqli_error($conn);
+    handleError("Error fetching popular packages: " . mysqli_error($conn));
 }
 
 // Query to fetch all packages
@@ -90,7 +108,7 @@ if ($result_all) {
         $all_packages[] = $row;
     }
 } else {
-    echo "Error fetching all packages: " . mysqli_error($conn);
+    handleError("Error fetching all packages: " . mysqli_error($conn));
 }
 
 // Close connection
@@ -112,10 +130,14 @@ mysqli_close($conn);
         <h1>NEPTOURS</h1>
         <nav>
             <ul>
-                <li><a href="admin.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'active' : ''; ?>">Dashboard</a></li>
+                <li><a href="admin.php"
+                        class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'active' : ''; ?>">Dashboard</a>
+                </li>
                 <li><a href="bookings.php">Bookings</a></li>
                 <li><a href="user.php">Users</a></li>
-                <li><a href="packages.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'packages.php' ? 'active' : ''; ?>">Packages</a></li>
+                <li><a href="packages.php"
+                        class="<?php echo basename($_SERVER['PHP_SELF']) == 'packages.php' ? 'active' : ''; ?>">Packages</a>
+                </li>
                 <li><a href="../login.php">Logout</a></li>
             </ul>
         </nav>
@@ -123,23 +145,22 @@ mysqli_close($conn);
 
     <section class="packages container">
         <div class="popularPack">
-            <div class="row">
-                <?php foreach ($popular_packages as $package): ?>
-                    <a href="#" class="card">
-                        <div class="cimg">
-                            <img src="<?php echo $package['pimage']; ?>" alt="">
-                            <div class="card-body">
-                                <h1 class="card-title"><?php echo $package['package_name']; ?></h1>
-                            </div>
-                        </div>
-                        <div class="card-buttons">
-                            <button class="edit-button">Edit</button>
-                            <button class="delete-button">Delete</button>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+            <?php foreach ($popular_packages as $package): ?>
+                <a href="#" class="card">
+                    <div class="cimg">
+                        <img src="<?php echo $package['pimage']; ?>" alt="">
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title"><?php echo $package['package_name']; ?></h1>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="edit-button">Edit</button>
+                        <button class="delete-button">Delete</button>
+                    </div>
+                </a>
+            <?php endforeach; ?>
         </div>
+
 
         <div class="allpack" style="display: none;">
             <div class="package-list">
@@ -162,13 +183,18 @@ mysqli_close($conn);
                             <tr>
                                 <td><?php echo $package['package_id']; ?></td>
                                 <td><?php echo $package['package_title']; ?></td>
-                                <td><img src="<?php echo $package['package_image']; ?>" alt="<?php echo $package['package_title']; ?>" style="width:100px;height:100px;"></td>
+                                <td><img src="<?php echo $package['package_image']; ?>"
+                                        alt="<?php echo $package['package_title']; ?>" style="width:100px;height:100px;">
+                                </td>
                                 <td><?php echo $package['package_description']; ?></td>
                                 <td><?php echo $package['package_duration']; ?> Days</td>
                                 <td><?php echo $package['package_creator']; ?></td>
                                 <td>
-                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>" class="button edit">Edit</a>
-                                    <a href="packages.php?delete=<?php echo $package['package_id']; ?>" class="button delete" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
+                                        class="button edit">Edit</a>
+                                    <a href="packages.php?delete=<?php echo $package['package_id']; ?>"
+                                        class="button delete"
+                                        onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -182,11 +208,12 @@ mysqli_close($conn);
             <button type="button" class="packbutton packall">Packages</button>
         </div>
     </section>
+
     <!-- Pop up to add package-->
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <form id="loginForm" action="#" method="post" enctype="multipart/form-data">
+            <form id="loginForm" action="packages.php" method="post" enctype="multipart/form-data">
                 <div id="imageContainer">
                     <label for="packageImages">Package Images:</label>
                     <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required multiple>
@@ -196,57 +223,40 @@ mysqli_close($conn);
                 <input type="text" id="packageName" name="package_title" required>
 
                 <label for="description">Description:</label>
-                <textarea id="description" name="package_description" rows="4" required></textarea>
+                <textarea id="description" name="package_description" required></textarea>
 
-                <label for="packageDuration">Package Duration (days):</label>
-                <input type="number" id="packageDuration" name="package_duration" min="1" required>
+                <label for="duration">Duration:</label>
+                <input type="number" id="duration" name="package_duration" required>
 
-                <button type="submit" name="submit">Add Package</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const popularPack = document.querySelector('.popularPack');
-            const allPack = document.querySelector('.allpack');
-            const popularBtn = document.querySelector('.popular');
-            const packallBtn = document.querySelector('.packall');
-
-            // for popup
-            const modal = document.getElementById("myModal");
-            const addPackBtn = document.querySelector('.addpack');
-            const closeModal = document.querySelector(".close");
-
-            popularBtn.addEventListener('click', () => {
-                allPack.style.display = 'none';
-                popularPack.style.display = 'block';
-                popularBtn.classList.add('active');
-                packallBtn.classList.remove('active');
-            });
-
-            packallBtn.addEventListener('click', () => {
-                allPack.style.display = 'block';
-                popularPack.style.display = 'none';
-                packallBtn.classList.add('active');
-                popularBtn.classList.remove('active');
-            });
-
-            addPackBtn.addEventListener('click', () => {
-                modal.style.display = "block";
-            });
-
-            closeModal.addEventListener('click', () => {
-                modal.style.display = "none";
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
+        document.querySelector('.popular').addEventListener('click', function () {
+            document.querySelector('.popularPack').style.display = 'block';
+            document.querySelector('.allpack').style.display = 'none';
         });
+
+        document.querySelector('.packall').addEventListener('click', function () {
+            document.querySelector('.popularPack').style.display = 'none';
+            document.querySelector('.allpack').style.display = 'block';
+        });
+
+        document.querySelector('.addpack').addEventListener('click', function () {
+            document.getElementById('myModal').style.display = 'block';
+        });
+
+        document.querySelector('.close').addEventListener('click', function () {
+            document.getElementById('myModal').style.display = 'none';
+        });
+
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('myModal')) {
+                document.getElementById('myModal').style.display = 'none';
+            }
+        }
     </script>
 </body>
 

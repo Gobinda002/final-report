@@ -1,3 +1,13 @@
+* {
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    transition: all 0.2s linear;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -7,20 +17,22 @@ body {
     color: #333;
     background-size: cover;
     background-position: center;
-    overflow: hidden;
-    min-height: 102vh;
+    overflow-x: hidden;
+    min-height: 100vh;
     animation: body-animation 30s infinite;
 }
 
 .container {
     width: 90%;
     padding: 1rem;
-    align-items: center;
     margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 section {
-    width: 80%;
+    width: 100%;
     margin: auto;
 }
 
@@ -36,8 +48,6 @@ header {
 
 nav ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
     display: flex;
 }
 
@@ -55,92 +65,81 @@ nav ul li a.active {
     font-weight: bold;
 }
 
-header ul li a:hover {
+nav ul li a:hover {
     background-color: #ddd;
     color: black;
     padding: 5px;
 }
 
-/* for cards */
+/* Card Styles */
 .popularPack {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin: auto;
-    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
 }
 
 .card {
-    padding: 1rem;
-    border: 2px solid var(--maincolor);
-    border-radius: 20px;
+    background-color: #fff;
+    border-radius: 15px;
     overflow: hidden;
-    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    height: 320px; /* Adjusted height */
-    width: 245px; /* Adjusted width */
-}
-
-.cimg {
-    width: 100%;
-    height: auto;
     position: relative;
 }
 
-.cimg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
-.card-body {
-    position: absolute;
-    bottom: 0;
+
+.card img {
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    color: #fff;
-    padding: 10px;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #eb770a;
+}
+
+.card-body {
+    padding: 15px;
     text-align: center;
-    border-radius: 0 0 10px 10px;
 }
 
 .card-title {
-    text-transform: uppercase;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #333;
 }
 
 .card-buttons {
-    position: absolute;
-    top: 44%;
-    right: 35%;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .card-buttons button {
-    margin-left: 5px;
-    padding: 8px 16px;
+    padding: 10px 15px;
     background-color: #d66500;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.card:hover .card-buttons {
-    opacity: 1;
+.card-buttons button:hover {
+    background-color: #a75300;
 }
 
 .btn-field {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-top: 2rem;
 }
 
 .btn-field button {
@@ -150,16 +149,21 @@ header ul li a:hover {
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s;
 }
 
 .btn-field button.active {
     background-color: #d66500;
-    color: #fff;
 }
 
 .btn-field button:hover {
-    background-color: #555;
+    background-color: #333;
+}
+
+.allpack {
+    display: none;
+    width: 100%;
+    margin-top: 2rem;
 }
 
 .package-list {
@@ -208,33 +212,32 @@ header ul li a:hover {
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
-    border: none;
     cursor: pointer;
     font-size: 14px;
     margin: 4px 2px;
 }
 
 .button:hover {
-    background-color: #0069d9;
+    background-color: #0056b3;
 }
 
 .edit {
-    background-color: #005eff;
+    background-color: #28a745;
 }
 
 .edit:hover {
-    background-color: #0a0454;
+    background-color: #218838;
 }
 
 .delete {
-    background-color: red;
+    background-color: #dc3545;
 }
 
 .delete:hover {
-    background-color: #821a23;
+    background-color: #c82333;
 }
 
-/* The Modal (background) */
+/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -244,20 +247,18 @@ header ul li a:hover {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    border-radius: 10px;
 }
 
-/* The Close Button */
 .close {
     color: #aaa;
     float: right;
@@ -295,7 +296,6 @@ input[type="submit"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    float: right;
 }
 
 input[type="submit"]:hover {
