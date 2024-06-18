@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "image/"; // Updated target directory
+    $targetDir = "image/";
 
     // Create the upload directory if it doesn't exist
     if (!is_dir($targetDir)) {
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             if (move_uploaded_file($tmp_name, $targetFile)) {
-                $imagePaths[] = "image/";
+                $imagePaths[] = $filename; // Store only the filename in array
             } else {
                 handleError("Error uploading file: " . $filename);
             }
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         handleError("No images uploaded.");
     }
 
-    // Convert array of image paths to JSON string
+    // Convert array of image filenames to JSON string
     $images_json = json_encode($imagePaths);
 
     // Prepare and bind
@@ -183,7 +183,7 @@ mysqli_close($conn);
                             <tr>
                                 <td><?php echo $package['package_id']; ?></td>
                                 <td><?php echo $package['package_title']; ?></td>
-                                <td><img src="<?php echo $package['package_image']; ?>"
+                                <td><img src="image/<?php echo $package['package_image']; ?>"
                                         alt="<?php echo $package['package_title']; ?>" style="width:100px;height:100px;">
                                 </td>
                                 <td><?php echo $package['package_description']; ?></td>
