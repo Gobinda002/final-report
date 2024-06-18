@@ -24,7 +24,7 @@ body {
     width: 90%;
     padding: 1rem;
     margin: auto;
-    display: flex;
+   
     flex-direction: column;
     align-items: center;
 }
@@ -67,13 +67,14 @@ nav ul li a:hover {
 /* Card Styles */
 .popularPack {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap: 2rem;
     width: 100%;
     margin-top: 2rem;
 }
 
 .card {
+    position: relative;
     width: 400px;
     max-width: 400px;
     height: 300px;
@@ -83,7 +84,6 @@ nav ul li a:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    position: relative;
 }
 
 .card:hover {
@@ -91,46 +91,68 @@ nav ul li a:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.cimg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 .card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-bottom: 2px solid #eb770a;
 }
 
 .card-body {
-    padding: 15px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    padding: 10px;
     text-align: center;
+    border-radius: 0 0 10px 10px;
 }
 
 .card-title {
-    font-size: 1.5rem;
-    margin-top: 10px;
-    font-weight: 600;
-    color: #333;
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
+
 .card-buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.card:hover .card-buttons {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 2rem;
 }
 
 .card-buttons button {
-    padding: 10px 15px;
+    padding: 0.5rem 1rem;
+    border: none;
     background-color: #d66500;
     color: #fff;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: 0.3s;
 }
 
 .card-buttons button:hover {
     background-color: #a75300;
 }
 
+
+/* button to toogle between popular pack and all pack */
 .btn-field {
     display: flex;
     justify-content: center;
@@ -155,6 +177,7 @@ nav ul li a:hover {
 .btn-field button:hover {
     background-color: #333;
 }
+
 
 .allpack {
     display: none;
