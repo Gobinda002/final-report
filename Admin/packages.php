@@ -8,32 +8,33 @@ function handleError($message)
     exit;
 }
 
-// Handle deletion of package
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $delete_query = "DELETE FROM packages WHERE package_id = ?";
-    if ($stmt = $conn->prepare($delete_query)) {
-        $stmt->bind_param("i", $id);
-        if (!$stmt->execute()) {
-            handleError("Error executing statement: " . $stmt->error);
-        }
-        $stmt->close();
-        handleError("Package deleted successfully");
-    } else {
+// Handle delete request
+if (isset($_GET['delete_popular'])) {
+    $package_id = intval($_GET['delete_popular']);
+    $delete_query = "DELETE FROM popularpackage WHERE id = ?";
+    $stmt = $conn->prepare($delete_query);
+    if (!$stmt) {
         handleError("Error preparing statement: " . $conn->error);
     }
+    $stmt->bind_param("i", $package_id);
+    if ($stmt->execute()) {
+        handleError("Popular package deleted successfully");
+    } else {
+        handleError("Error: " . $stmt->error);
+    }
+    $stmt->close();
 }
 
-/// Handle form submission
+// Handle form submission for new package
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data and sanitize inputs
     $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
     $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
-    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
+    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : 0;
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "image/";
+    $targetDir = "image/"; // Ensure this is the correct directory
 
     // Create the upload directory if it doesn't exist
     if (!is_dir($targetDir)) {
@@ -84,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 }
 
-
 // Query to fetch popular packages
 $query_popular = 'SELECT * FROM popularpackage LIMIT 6';
 $result_popular = mysqli_query($conn, $query_popular);
@@ -114,6 +114,7 @@ if ($result_all) {
 // Close connection
 mysqli_close($conn);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -183,8 +184,15 @@ mysqli_close($conn);
                             <tr>
                                 <td><?php echo $package['package_id']; ?></td>
                                 <td><?php echo $package['package_title']; ?></td>
-                                <td><img src="image/<?php echo $package['package_image']; ?>"
-                                        alt="<?php echo $package['package_title']; ?>" style="width:100px;height:100px;">
+                                <td>
+                                    <?php
+                                    $images = json_decode($package['package_image'], true);
+                                    if (!empty($images)) {
+                                        foreach ($images as $image) {
+                                            echo "<img src='image/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
+                                        }
+                                    }
+                                    ?>
                                 </td>
                                 <td><?php echo $package['package_description']; ?></td>
                                 <td><?php echo $package['package_duration']; ?> Days</td>
@@ -199,6 +207,7 @@ mysqli_close($conn);
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+
                 </table>
             </div>
         </div>
