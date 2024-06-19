@@ -72,7 +72,6 @@ nav ul li a:hover {
     width: 100%;
     margin-top: 2rem;
 }
-
 .card {
     position: relative;
     width: 100%;
@@ -117,22 +116,13 @@ nav ul li a:hover {
     left: 50%;
     transform: translateX(-50%);
     display: none;
-    background-color: rgba(255, 255, 255, 0.8);
     padding: 10px;
     border-radius: 15px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-
+    gap: 20px;
 }
 
-.card:hover.card-buttons {
-    display: flex; /* show the buttons on hover */
-}
-
-.card.card-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 1rem;
+.card:hover .card-buttons {
+    display: flex; /* Show the buttons on hover */
 }
 
 .card-buttons button {
