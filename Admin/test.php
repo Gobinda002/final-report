@@ -166,7 +166,7 @@
                     <input type="text" id="package_name" name="package_name"><br><br>
                     <label for="package_description">Package Description:</label>
                     <textarea id="package_description" name="package_description"></textarea><br><br>
-                    <input type="submit" value="Add Package">
+                    <input type="submit" class="buton" value="Add Package">
                 </form>
             </div>
         </div>
@@ -175,6 +175,7 @@
 
 
 </body>
+
 <script>
     var modal = document.getElementById("myModal");
     var btn = document.querySelectorAll(".add-package a");
@@ -201,6 +202,8 @@
     function closeModal() {
         modal.style.display = "none";
     }
+
+    
 </script>
 
 </html>

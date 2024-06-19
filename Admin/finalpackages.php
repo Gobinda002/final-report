@@ -31,6 +31,29 @@
             <?php
             require '../connect.php';
 
+            // Handle delete request
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+                $package_id = $_POST['delete_id'];
+
+                // Delete the package from the database
+                $sql = "DELETE FROM popularpackage WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $package_id);
+                $stmt->execute();
+
+                // Display success message using SweetAlert
+                echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>';
+                echo '<script>
+                        Swal.fire("Deleted!", "Package has been deleted.", "success").then(function() {
+                            window.location.href = window.location.href; // Refresh the page
+                        });
+                      </script>';
+
+                // Close database connection
+                $conn->close();
+                exit;
+            }
+
             // Fetch data from the database
             $sql = "SELECT * FROM popularpackage";
             $result = $conn->query($sql);
@@ -43,6 +66,10 @@
                     echo '<div class="card">';
                     echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
                     echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
+                    echo ' <div class="card-buttons">
+                        <button class="edit-button">Edit</button>
+                        <button class="delete-button">Delete</button>
+                    </div>';
                     echo '</div>';
 
                 }
@@ -111,13 +138,18 @@
 
 
         <div class="allpack">
+            <div class="allpackages">
+                sdas
+            </div>
+
 
         </div>
 
         <div class="btn-field">
-            <button type="button" class="packbutton popular active">Popular Tour</button>
+            <button type="button" class="packbutton popular ">Popular Tour</button>
             <button type="button" class="packbutton packall">Packages</button>
         </div>
+
     </section>
 </body>
 
@@ -127,16 +159,25 @@
     var btn = document.querySelectorAll(".add-package a");
     var span = document.getElementsByClassName("close")[0];
 
+    //  for toogle
+    const packageBtn = document.querySelectorAll('.btn-field .packbutton');
+    const popularpack = document.querySelector('.popularpack');
+    const allpack = document.querySelector('.allpack');
+
+
     // When the user clicks the button, open the modal
     for (var i = 0; i < btn.length; i++) {
         btn[i].onclick = function () {
             openModal();
         }
     }
+
+    // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
         closeModal();
     }
 
+    // Open the modal
     function openModal() {
         modal.style.display = "block";
     }
@@ -145,6 +186,29 @@
     function closeModal() {
         modal.style.display = "none";
     }
+
+
+    // js to toogle between popular pack and all packages
+
+    packageBtn.forEach(Option => {
+        Option.addEventListener('click', () => {
+            document.querySelector('.btn-field.popular').classList.remove('popular');
+            Option.classList.add('popular');
+        })
+    })
+
+    document.querySelector('.popular').addEventListener('click', () => {
+        allpack.style.display = 'none';
+        popularpack.style.display = 'grid';
+    })
+
+    document.querySelector('.packall').addEventListener('click', () => {
+        allpack.style.display = 'grid';
+        popularpack.style.display = 'none';
+    })
+
+
+
 </script>
 
 </html>
