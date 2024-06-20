@@ -72,6 +72,7 @@ nav ul li a:hover {
     width: 100%;
     margin-top: 2rem;
 }
+
 .card {
     position: relative;
     width: 100%;
@@ -81,11 +82,11 @@ nav ul li a:hover {
     overflow: hidden;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-    &:hover{
-        transform: translateY(-10px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card img {
@@ -122,7 +123,7 @@ nav ul li a:hover {
 }
 
 .card:hover .card-buttons {
-    display: flex; /* Show the buttons on hover */
+    display: flex;
 }
 
 .card-buttons button {
@@ -140,7 +141,7 @@ nav ul li a:hover {
 }
 
 /* Add Packages Card */
-.add-package {
+.add-popular {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,14 +155,14 @@ nav ul li a:hover {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.add-package a {
+.add-popular a {
     text-align: center;
     color: #000;
     font-size: 18px;
     font-weight: 600;
 }
 
-.add-package i {
+.add-popular i {
     font-size: 30px;
     margin-bottom: 10px;
     color: #d66500;
@@ -190,7 +191,7 @@ nav ul li a:hover {
 }
 
 /* Styling for labels */
-#add-package-form label {
+label {
     font-weight: bold;
     display: block;
     margin-bottom: 8px;
@@ -213,9 +214,9 @@ nav ul li a:hover {
 }
 
 /* Styling for text input and textarea */
-#add-package-form input[type="text"],
-#add-package-form textarea,
-#add-package-form input[type="file"] {
+input[type="text"],
+textarea,
+input[type="file"] {
     width: 70%;
     padding: 8px;
     margin-bottom: 15px;
@@ -237,7 +238,7 @@ nav ul li a:hover {
     cursor: pointer;
 }
 
-/* button to toggle between popular pack and all pack */
+/* Button to toggle between popular pack and all pack */
 .btn-field {
     display: flex;
     justify-content: center;
@@ -265,6 +266,83 @@ nav ul li a:hover {
 
 .active {
     background-color: #007bff;
-    /* or any other color you prefer */
     color: #ffffff;
+}
+
+/* All packages styles */
+.allpack {
+    display: none;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.package-list {
+    margin: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.package-list h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.package-list table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.package-list th,
+.package-list td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    color: #444;
+}
+
+.package-list th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.package-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.package-list tr:hover {
+    background-color: #f1f1f1;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 4px 2px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.edit {
+    background-color: #28a745;
+}
+
+.edit:hover {
+    background-color: #218838;
+}
+
+.delete {
+    background-color: #dc3545;
+}
+
+.delete:hover {
+    background-color: #c82333;
 }

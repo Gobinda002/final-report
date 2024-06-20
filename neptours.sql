@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2024 at 02:28 PM
+-- Generation Time: Jun 20, 2024 at 11:32 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `neptour`
+-- Database: `neptours`
 --
 
 -- --------------------------------------------------------
@@ -39,7 +39,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`adminID`, `admin_name`, `admin_email`, `admin_password`) VALUES
-(7, 'Gobinda', 'asd@gmail.com', '$2y$10$eZO.ykx1NA6Gz7f35eMgzO8h0/fgDrjz8AGvIIEkaf4ELSCiBcLyy');
+(9, 'Gobinda', 'asd@gmail.com', '$2y$10$kDBi4RSCJrtw2VvAYOMmaeSJkRabj4yslRk/ykWMCfpEzRyNI9ic6');
 
 -- --------------------------------------------------------
 
@@ -86,13 +86,28 @@ CREATE TABLE `packages` (
   `package_creator` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `packages`
+-- Table structure for table `popularpackage`
 --
 
-INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `package_creator`) VALUES
-(12, 'gosaikunda', 'dsa', 'sd', 'sd', 1),
-(13, 'abc', 'aewrewr', 'qwqwf', 'wqeq', 2);
+CREATE TABLE `popularpackage` (
+  `id` int(11) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `pimage` varchar(255) NOT NULL,
+  `pdescription` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `popularpackage`
+--
+
+INSERT INTO `popularpackage` (`id`, `package_name`, `pimage`, `pdescription`) VALUES
+(2, 'asd', 'asd', 'asd'),
+(3, 'asda', 'asdasd', 'asdad'),
+(8, 'rere', 'er werwer', 'gfdgdfdfsdfsdfs'),
+(22, 'fgfgfdg', 'viber_image_2024-04-30_16-47-58-617.jpg', '');
 
 -- --------------------------------------------------------
 
@@ -113,9 +128,18 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `user_phone`, `user_email`, `user_password`) VALUES
-(1, 'apple', '650650650', 'asd@gmail.com', '123'),
-(2, 'mango', '12312312', 'qwe@gmail.com', '123'),
-(3, 'banana', '123123', 'zxc@gmail.com', '$2y$10$3lMw2p4bsOpMtdF6ApBD..NLSEw/LZtzGefg6G4aBt3VK/4voidfC');
+(3, 'banana', '123123', 'zxc@gmail.com', '$2y$10$3lMw2p4bsOpMtdF6ApBD..NLSEw/LZtzGefg6G4aBt3VK/4voidfC'),
+(4, 'gobinda', '9865329832', 'gobinda@gmail.com', '$2y$10$D1AJy7C.7H3Kp1wRLxKggeOQOTe4K1qDtpamZHzZqLSCu.0BRkPce');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userbook`
+--
+
+CREATE TABLE `userbook` (
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -152,11 +176,23 @@ ALTER TABLE `packages`
   ADD KEY `package_creator` (`package_creator`);
 
 --
+-- Indexes for table `popularpackage`
+--
+ALTER TABLE `popularpackage`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `user_email` (`user_email`);
+
+--
+-- Indexes for table `userbook`
+--
+ALTER TABLE `userbook`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -166,13 +202,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `packageavailable`
@@ -184,13 +220,25 @@ ALTER TABLE `packageavailable`
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
+-- AUTO_INCREMENT for table `popularpackage`
+--
+ALTER TABLE `popularpackage`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `userbook`
+--
+ALTER TABLE `userbook`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
