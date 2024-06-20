@@ -77,12 +77,12 @@
                 // Display "Add Package" button for remaining cards
                 $remainingCards = 6 - $result->num_rows;
                 for ($i = 0; $i < $remainingCards; $i++) {
-                    echo '<div class="add-package" id="addPackageButton"><a href="#" onclick="openModal()"><i class="fas fa-plus"></i> Add Package</a></div>';
+                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
                 }
             } else {
                 // Show 6 "Add Package" buttons if no data is found
                 for ($i = 0; $i < 6; $i++) {
-                    echo '<div class="add-package" id="addPackageButton"><a href="#" onclick="openModal()"><i class="fas fa-plus"></i> Add Package</a></div>';
+                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
                 }
             }
 
@@ -118,97 +118,121 @@
                     }
                     ?>
 
-
-                    <!-- popup to add popular package  -->
-                    <span class="close" onclick="closeModal()">&times;</span>
-                    <h2>Add Package</h2>
-                    <form id="add-package-form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post"
-                        enctype="multipart/form-data">
-                        <label for="pimage">Image:</label>
-                        <input type="file" id="pimage" name="pimage" required><br><br>
-                        <label for="package_name">Package Name:</label>
-                        <input type="text" id="package_name" name="package_name" required><br><br>
-                        <label for="package_name">Package Description:</label>
-                        <textarea id="package_description" name="package_description"></textarea><br><br>
-                        <input type="submit" class="button-submit" value="Add Package">
+                    <span class="close" onclick="closeModal('myModal')">&times;</span>
+                    <h2>Add Popular Package</h2>
+                    <form>
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description"></textarea>
+                        <input type="file" id="fileInput">
+                        <button type="submit" class="button-submit">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
+        </div>
+
+        </div>
 
 
         <div class="allpack">
-            <div class="allpackages">
-                sdas
+            <div class="package-list">
+                <h2>Package List</h2>
+                <button class="button addallpack" onclick="openModal('myModalAll')">Add Packages</button>
+
+                <!-- php code to show data -->
+                <?php
+                require '../connect.php';
+
+                // Retrieve all packages from the database
+                $sql = "SELECT * FROM packages";
+                $result = $conn->query($sql);
+
+                // Store the results in an array
+                $all_packages = array();
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $all_packages[] = $row;
+                    }
+                }
+
+                // Close the database connection
+                $conn->close();
+                ?>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Package Title</th>
+                            <th>Package Image</th>
+                            <th>Package Description</th>
+                            <th>Package Duration</th>
+                            <th>Package Creator</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($all_packages as $package): ?>
+                            <tr>
+                                <td><?php echo $package['package_id']; ?></td>
+                                <td><?php echo $package['package_title']; ?></td>
+                                <td>
+                                    <?php
+                                    $images = json_decode($package['package_image'], true);
+                                    if (!empty($images)) {
+                                        foreach ($images as $image) {
+                                            echo "<img src='image/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
+                                        }
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php echo $package['package_description']; ?></td>
+                                <td><?php echo $package['package_duration']; ?> Days</td>
+                                <td><?php echo $package['package_creator']; ?></td>
+                                <td>
+                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
+                                        class="button edit">Edit</a>
+                                    <a href="packages.php?delete=<?php echo $package['package_id']; ?>"
+                                        class="button delete"
+                                        onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- Pop up to add package-->
+            <div id="myModalAll" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('myModalAll')">&times;</span>
+                    <h2>Add All Package</h2>
+                    <form>
+                        <label for="nameAll">Name</label>
+                        <input type="text" id="nameAll" name="nameAll">
+                        <label for="descriptionAll">Description</label>
+                        <textarea id="descriptionAll" name="descriptionAll"></textarea>
+                        <input type="file" id="fileInputAll">
+                        <button type="submit" class="button-submit">Submit</button>
+                    </form>
+                </div>
             </div>
 
 
         </div>
 
+
         <div class="btn-field">
-            <button type="button" class="packbutton popular ">Popular Tour</button>
+            <button type="button" class="packbutton popular">Popular Tour</button>
             <button type="button" class="packbutton packall">Packages</button>
         </div>
 
     </section>
 </body>
 
-
-<script>
-    var modal = document.getElementById("myModal");
-    var btn = document.querySelectorAll(".add-package a");
-    var span = document.getElementsByClassName("close")[0];
-
-    //  for toogle
-    const packageBtn = document.querySelectorAll('.btn-field .packbutton');
-    const popularpack = document.querySelector('.popularpack');
-    const allpack = document.querySelector('.allpack');
-
-
-    // When the user clicks the button, open the modal
-    for (var i = 0; i < btn.length; i++) {
-        btn[i].onclick = function () {
-            openModal();
-        }
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        closeModal();
-    }
-
-    // Open the modal
-    function openModal() {
-        modal.style.display = "block";
-    }
-
-    // Close the modal
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
-
-    // js to toogle between popular pack and all packages
-
-    packageBtn.forEach(Option => {
-        Option.addEventListener('click', () => {
-            document.querySelector('.btn-field.popular').classList.remove('popular');
-            Option.classList.add('popular');
-        })
-    })
-
-    document.querySelector('.popular').addEventListener('click', () => {
-        allpack.style.display = 'none';
-        popularpack.style.display = 'grid';
-    })
-
-    document.querySelector('.packall').addEventListener('click', () => {
-        allpack.style.display = 'grid';
-        popularpack.style.display = 'none';
-    })
-
-
-
-</script>
+<script src="main.js"></script>
 
 </html>
