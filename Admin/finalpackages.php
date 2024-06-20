@@ -236,11 +236,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
                     <span class="close" onclick="closeModal('myModalAll')">&times;</span>
                     <h2>Add All Package</h2>
                     <form>
-                        <label for="nameAll">Name</label>
-                        <input type="text" id="nameAll" name="nameAll">
-                        <label for="descriptionAll">Description</label>
-                        <textarea id="descriptionAll" name="descriptionAll"></textarea>
-                        <input type="file" id="fileInputAll">
+                        <label for="packageTitle">Package Title</label>
+                        <input type="text" id="nameAll" name="packageTitle" required>
+                        
+                        <label for="packagedescription">Package_Description</label>
+                        <textarea id="packagedescription" name="packagedescription" required></textarea>
+                        
+                        <label for="packageTitle">Package Duration</label>
+                        <input type="number" id="packageduration" name="packageduration" required>
+                       
+                        <input type="file" id="packageimage" required>
                         <button type="submit" class="button-submit">Submit</button>
                     </form>
                 </div>

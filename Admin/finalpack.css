@@ -215,6 +215,7 @@ label {
 
 /* Styling for text input and textarea */
 input[type="text"],
+input[type="number"],
 textarea,
 input[type="file"] {
     width: 70%;
@@ -222,6 +223,7 @@ input[type="file"] {
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    height: 40px; 
 }
 
 .close {
