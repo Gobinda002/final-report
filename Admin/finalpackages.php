@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="finalpack.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -32,46 +33,86 @@
             require '../connect.php';
 
             // Handle delete request
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
-                $package_id = $_POST['delete_id'];
+            if (isset($_POST['id'])) {
+                $package_id = $_POST['id'];
+            
+                if (isset($_POST['confirm_delete']) && $_POST['confirm_delete'] === 'yes') {
+                    $sql = "DELETE FROM popularpackage WHERE id = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $package_id);
+                    if (!$stmt->execute()) {
+                        echo '<script>
+                            Swal.fire("Error!", "Failed to delete package.", "error");
+                        </script>';
+                        error_log("Failed to delete package: " . $stmt->error);
+                    } else {
+                        echo '<script>
+                            Swal.fire("Deleted!", "Package has been deleted!", "success").then(function() {
+                                window.location.href = window.location.href; // Refresh the page
+                            });
+                        </script>';
+                    }
+                }
+            }
 
-                // Delete the package from the database
-                $sql = "DELETE FROM popularpackage WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $package_id);
-                $stmt->execute();
+            // Handle add popular package request
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
+                $target_dir = "image/";
+                $target_file = $target_dir . basename($_FILES["pimage"]["name"]);
 
-                // Display success message using SweetAlert
-                echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>';
-                echo '<script>
-                        Swal.fire("Deleted!", "Package has been deleted.", "success").then(function() {
-                            window.location.href = window.location.href; // Refresh the page
-                        });
-                      </script>';
+                // Attempt to move the uploaded file to the designated folder
+                if (move_uploaded_file($_FILES["pimage"]["tmp_name"], $target_file)) {
+                    $package_name = $_POST["package_name"];
+                    $description = $_POST["pdescription"];
+                    $pimage = basename($_FILES["pimage"]["name"]);
 
-                // Close database connection
-                $conn->close();
-                exit;
+                    // Insert data into the database
+                    $sql = "INSERT INTO popularpackage (package_name, pdescription, pimage) VALUES (?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sss", $package_name, $description, $pimage);
+                    if ($stmt->execute()) {
+                        // Success message
+                        echo '
+                <script>
+                    Swal.fire("Success!", "Package added successfully!", "success").then(function() {
+                        window.location.href = window.location.href; // Refresh the page
+                    });
+                </script>';
+                    } else {
+                        // Error message
+                        echo '
+                <script>
+                    Swal.fire("Error!", "Failed to add package.", "error");
+                </script>';
+                        // Log the error
+                        error_log("Failed to add package: " . $stmt->error);
+                    }
+                }
             }
 
             // Fetch data from the database
-            $sql = "SELECT * FROM popularpackage";
+            $sql = "SELECT * FROM popularpackage LIMIT 6";
             $result = $conn->query($sql);
 
             // Display data in cards
             if ($result->num_rows > 0) {
                 // Output data of each row
                 while ($row = $result->fetch_assoc()) {
-
                     echo '<div class="card">';
                     echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
                     echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
-                    echo ' <div class="card-buttons">
-                        <button class="edit-button">Edit</button>
-                        <button class="delete-button">Delete</button>
-                    </div>';
-                    echo '</div>';
+                    echo '<div class="card-buttons">';
+                    echo '<button class="edit-button">Edit</button>';
 
+                    // Add confirmation dialog to delete button
+                    echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
+                    echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
+                    echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
+                    echo '<button type="submit" class="delete-button">Delete</button>';
+                    echo '</form>';
+
+                    echo '</div>';
+                    echo '</div>';
                 }
 
                 // Display "Add Package" button for remaining cards
@@ -93,48 +134,36 @@
             <!-- The Modal -->
             <div id="myModal" class="modal">
                 <div class="modal-content">
-                    <?php
-                    require '../connect.php';
-                    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        $pimage = $_FILES["pimage"]["name"];
-                        $package_name = $_POST["package_name"];
-
-                        // Insert data into the database
-                        $sql = "INSERT INTO popularpackage (package_name, pimage) VALUES (?,?)";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("ss", $package_name, $pimage);
-                        $stmt->execute();
-
-                        // Close database connection
-                        $conn->close();
-
-                        // Display success message using SweetAlert
-                        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>';
-                        echo '<script>Swal.fire("Success!", "Package added successfully!", "success").then(function() {
-                              window.location.href = window.location.href; // Refresh the page
-                          });</script>';
-                        exit;
-
-                    }
-                    ?>
-
                     <span class="close" onclick="closeModal('myModal')">&times;</span>
                     <h2>Add Popular Package</h2>
-                    <form>
+                    <form action="#" method="POST" enctype="multipart/form-data">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name">
+                        <input type="text" id="name" name="package_name" required>
                         <label for="description">Description</label>
-                        <textarea id="description" name="description"></textarea>
-                        <input type="file" id="fileInput">
+                        <textarea id="description" name="pdescription" required></textarea>
+                        <input type="file" id="fileInput" name="pimage" required>
                         <button type="submit" class="button-submit">Submit</button>
                     </form>
                 </div>
             </div>
-        </div>
+
+            <!-- JavaScript function for confirmation dialog -->
+            <script>
+                function confirmDelete() {
+                    // Show confirmation dialog
+                    var result = confirm("Are you sure you want to delete this package?");
+                    if (result) {
+                        document.getElementById('confirm_delete').value = 'yes'; // Set confirmation value
+                        return true; // Allow form submission
+                    } else {
+                        return false; // Cancel form submission
+                    }
+                }
+            </script>
         </div>
 
-        </div>
 
+        <!-- all package section  -->
 
         <div class="allpack">
             <div class="package-list">
@@ -192,16 +221,14 @@
                                 <td><?php echo $package['package_duration']; ?> Days</td>
                                 <td><?php echo $package['package_creator']; ?></td>
                                 <td>
-                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
+                                    <a href="edit_package.php?id=<?php echo $package['id']; ?>"
                                         class="button edit">Edit</a>
-                                    <a href="packages.php?delete=<?php echo $package['package_id']; ?>"
-                                        class="button delete"
-                                        onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                                    <a href="packages.php?delete=<?php echo $package['id']; ?>"
+                                        class="button delete">Delete</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
 
@@ -220,19 +247,14 @@
                     </form>
                 </div>
             </div>
-
-
         </div>
-
 
         <div class="btn-field">
             <button type="button" class="packbutton popular">Popular Tour</button>
             <button type="button" class="packbutton packall">Packages</button>
         </div>
-
     </section>
 </body>
-
 <script src="main.js"></script>
 
 </html>
