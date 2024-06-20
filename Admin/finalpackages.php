@@ -32,28 +32,27 @@
             <?php
             require '../connect.php';
 
-            // Handle delete request
-            if (isset($_POST['id'])) {
-                $package_id = $_POST['id'];
             
-                if (isset($_POST['confirm_delete']) && $_POST['confirm_delete'] === 'yes') {
-                    $sql = "DELETE FROM popularpackage WHERE id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $package_id);
-                    if (!$stmt->execute()) {
-                        echo '<script>
-                            Swal.fire("Error!", "Failed to delete package.", "error");
-                        </script>';
-                        error_log("Failed to delete package: " . $stmt->error);
-                    } else {
-                        echo '<script>
-                            Swal.fire("Deleted!", "Package has been deleted!", "success").then(function() {
-                                window.location.href = window.location.href; // Refresh the page
-                            });
-                        </script>';
-                    }
-                }
-            }
+// Handle delete popular package request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+    $delete_id = $_POST['delete_id'];
+
+    // Delete the package from the database
+    $sql_delete = "DELETE FROM popularpackage WHERE id =?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    $stmt_delete->bind_param("i", $delete_id);
+
+    if ($stmt_delete->execute()) {
+        // Success message
+        echo '<p>Package deleted successfully!</p>';
+        header('Location: '. $_SERVER['PHP_SELF']);
+        exit;
+    } else {
+        // Error message
+        echo '<p>Failed to delete package.</p>';
+        error_log("Failed to delete package: ". $stmt_delete->error);
+    }
+}
 
             // Handle add popular package request
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
@@ -221,8 +220,7 @@
                                 <td><?php echo $package['package_duration']; ?> Days</td>
                                 <td><?php echo $package['package_creator']; ?></td>
                                 <td>
-                                    <a href="edit_package.php?id=<?php echo $package['id']; ?>"
-                                        class="button edit">Edit</a>
+                                    <a href="edit_package.php?id=<?php echo $package['id']; ?>" class="button edit">Edit</a>
                                     <a href="packages.php?delete=<?php echo $package['id']; ?>"
                                         class="button delete">Delete</a>
                                 </td>
