@@ -32,27 +32,27 @@
             <?php
             require '../connect.php';
 
-            
-// Handle delete popular package request
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
-    $delete_id = $_POST['delete_id'];
 
-    // Delete the package from the database
-    $sql_delete = "DELETE FROM popularpackage WHERE id =?";
-    $stmt_delete = $conn->prepare($sql_delete);
-    $stmt_delete->bind_param("i", $delete_id);
+            // Handle delete popular package request
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+                $delete_id = $_POST['delete_id'];
 
-    if ($stmt_delete->execute()) {
-        // Success message
-        echo '<p>Package deleted successfully!</p>';
-        header('Location: '. $_SERVER['PHP_SELF']);
-        exit;
-    } else {
-        // Error message
-        echo '<p>Failed to delete package.</p>';
-        error_log("Failed to delete package: ". $stmt_delete->error);
-    }
-}
+                // Delete the package from the database
+                $sql_delete = "DELETE FROM popularpackage WHERE id =?";
+                $stmt_delete = $conn->prepare($sql_delete);
+                $stmt_delete->bind_param("i", $delete_id);
+
+                if ($stmt_delete->execute()) {
+                    // Success message
+                    echo '<p>Package deleted successfully!</p>';
+                    header('Location: ' . $_SERVER['PHP_SELF']);
+                    exit;
+                } else {
+                    // Error message
+                    echo '<p>Failed to delete package.</p>';
+                    error_log("Failed to delete package: " . $stmt_delete->error);
+                }
+            }
 
             // Handle add popular package request
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
@@ -147,18 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
             </div>
 
             <!-- JavaScript function for confirmation dialog -->
-            <script>
-                function confirmDelete() {
-                    // Show confirmation dialog
-                    var result = confirm("Are you sure you want to delete this package?");
-                    if (result) {
-                        document.getElementById('confirm_delete').value = 'yes'; // Set confirmation value
-                        return true; // Allow form submission
-                    } else {
-                        return false; // Cancel form submission
-                    }
-                }
-            </script>
+
         </div>
 
 
@@ -184,6 +173,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
                         $all_packages[] = $row;
                     }
                 }
+
+
+                // Handle deletion of package
+                if (isset($_GET['delete'])) {
+                    $id = $_GET['delete'];
+                    $delete_query = "DELETE FROM packages WHERE package_id = ?";
+                    if ($stmt = $conn->prepare($delete_query)) {
+                        $stmt->bind_param("i", $id);
+                        if (!$stmt->execute()) {
+                            handleError("Error executing statement: " . $stmt->error);
+                        }
+                        $stmt->close();
+                        handleError("Package deleted successfully");
+                    } else {
+                        handleError("Error preparing statement: " . $conn->error);
+                    }
+                }
+                
+
 
                 // Close the database connection
                 $conn->close();
@@ -220,10 +228,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
                                 <td><?php echo $package['package_duration']; ?> Days</td>
                                 <td><?php echo $package['package_creator']; ?></td>
                                 <td>
-                                    <a href="edit_package.php?id=<?php echo $package['id']; ?>" class="button edit">Edit</a>
-                                    <a href="packages.php?delete=<?php echo $package['id']; ?>"
-                                        class="button delete">Delete</a>
+                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
+                                        class="button edit">Edit
+                                    </a>
+
+                                    <button class="button delete" onclick="return confirm('Are you sure you want to delete this package?');">Delete</button>
+
+
                                 </td>
+
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -238,13 +251,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
                     <form>
                         <label for="packageTitle">Package Title</label>
                         <input type="text" id="nameAll" name="packageTitle" required>
-                        
+
                         <label for="packagedescription">Package_Description</label>
                         <textarea id="packagedescription" name="packagedescription" required></textarea>
-                        
+
                         <label for="packageTitle">Package Duration</label>
                         <input type="number" id="packageduration" name="packageduration" required>
-                       
+
                         <input type="file" id="packageimage" required>
                         <button type="submit" class="button-submit">Submit</button>
                     </form>
@@ -259,5 +272,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
     </section>
 </body>
 <script src="main.js"></script>
+
+<script>
+    function confirmDelete() {
+        // Show confirmation dialog
+        var result = confirm("Are you sure you want to delete this package?");
+        if (result) {
+            document.getElementById('confirm_delete').value = 'yes'; // Set confirmation value
+            return true; // Allow form submission
+        } else {
+            return false; // Cancel form submission
+        }
+    }
+</script>
 
 </html>
