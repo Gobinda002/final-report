@@ -25,6 +25,7 @@
 	</header>
 
 	<div class="content">
+		remove
 		<div class="box blue">
 			<h1>Total Bookings</h1>
 			
