@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 
@@ -27,12 +25,9 @@
 	<div class="content">
 		<div class="box blue">
 			<h1>Total Bookings</h1>
-			
-				<?php
-			
-			
 
-			require'../connect.php';
+			<?php
+			require '../connect.php';
 
 			// Query to retrieve total bookings
 			$sql = "SELECT COUNT(*) as total_bookings FROM bookings";
@@ -54,7 +49,7 @@
 		<div class="box green">
 			<h1>Total Users</h1>
 			<?php
-			require'../connect.php';
+			require '../connect.php';
 
 			// Query to retrieve total users
 			$sql = "SELECT COUNT(*) as total_users FROM user";
@@ -77,9 +72,9 @@
 		<div class="box orange">
 			<h1>Total Packages</h1>
 			<?php
-			
 
-			require'../connect.php';
+
+			require '../connect.php';
 
 			// Query to retrieve total packages
 			$sql = "SELECT COUNT(*) as total_packages FROM packages";
