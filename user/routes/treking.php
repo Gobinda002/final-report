@@ -5,7 +5,6 @@ require '../../connect.php'; // Adjust the path as necessary
 $sql = "SELECT package_id, package_title, package_image FROM packages"; // Adjust the query to include package_image
 $result = $conn->query($sql);
 ?>
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -106,11 +105,11 @@ $result = $conn->query($sql);
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">'; // Adjust the link as necessary
+                    $image_path = '../../packagesimage/' . $row["package_image"]; // Construct the image path
+                    echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">';
                     echo '<div class="card">';
                     echo '<div class="card-img">';
-                    $image_path = '../../packagesimage' . $row["package_image"]; // Construct the image path
-                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_title"]) . '" style="height: 100%;">'; // Display the image
+                    echo "<img src='{$image_path}' alt='" . htmlspecialchars($row["package_title"]) . "' style='width:100%;height:100px;'>";
                     echo '</div>';
                     echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
                     echo '</div>';
@@ -121,7 +120,6 @@ $result = $conn->query($sql);
             }
             $conn->close();
             ?>
-
         </div>
 
 

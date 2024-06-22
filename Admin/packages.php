@@ -283,7 +283,7 @@ if ($result_popular) {
                                     $images = json_decode($package['package_image'], true);
                                     if (!empty($images)) {
                                         foreach ($images as $image) {
-                                            echo "<img src='uploads/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
+                                            echo "<img src='../packagesimage/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
                                         }
                                     }
                                     ?>

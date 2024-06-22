@@ -161,7 +161,7 @@ mysqli_close($conn);
 
             // Handle add popular package request
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
-                $target_dir = "image/";
+                $target_dir = "../packagesimage/";
                 $target_file = $target_dir . basename($_FILES["pimage"]["name"]);
 
                 // Attempt to move the uploaded file to the designated folder
