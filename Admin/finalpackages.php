@@ -24,6 +24,7 @@ if (isset($_GET['delete'])) {
     }
 }
 
+
 /// Handle form submission
 // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //     // Get form data and sanitize inputs
@@ -194,46 +195,51 @@ mysqli_close($conn);
             }
 
             // Fetch data from the database
-            $sql = "SELECT * FROM popularpackage LIMIT 6";
-            $result = $conn->query($sql);
+            
+$sql = "SELECT * FROM popularpackage LIMIT 6";
+$result = $conn->query($sql);
+$popular_packages = [];
 
-            // Display data in cards
-            if ($result->num_rows > 0) {
-                // Output data of each row
-                while ($row = $result->fetch_assoc()) {
-                    echo '<div class="card">';
-                    echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
-                    echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
-                    echo '<div class="card-buttons">';
-                    echo '<button class="edit-button">Edit</button>';
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $popular_packages[] = $row;
+    }
+}
 
-                    // Add confirmation dialog to delete button
-                    echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
-                    echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
-                    echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
-                    echo '<button type="submit" class="delete-button">Delete</button>';
-                    echo '</form>';
+// Display data in cards
+if (!empty($popular_packages)) {
+    foreach ($popular_packages as $row) {
+        echo '<div class="card">';
+        echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
+        echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
+        echo '<div class="card-buttons">';
+        echo '<button class="edit-button">Edit</button>';
 
-                    echo '</div>';
-                    echo '</div>';
-                }
+        // Add confirmation dialog to delete button
+        echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
+        echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
+        echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
+        echo '<button type="submit" class="delete-button">Delete</button>';
+        echo '</form>';
 
-                // Display "Add Package" button for remaining cards
-                $remainingCards = 6 - $result->num_rows;
-                for ($i = 0; $i < $remainingCards; $i++) {
-                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-                }
-            } else {
-                // Show 6 "Add Package" buttons if no data is found
-                for ($i = 0; $i < 6; $i++) {
-                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-                }
-            }
+        echo '</div>';
+        echo '</div>';
+    }
 
-            // Close database connection
-            $conn->close();
+    // Display "Add Package" button for remaining cards
+    $remainingCards = 6 - count($popular_packages);
+    for ($i = 0; $i < $remainingCards; $i++) {
+        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+    }
+} else {
+    // Show 6 "Add Package" buttons if no data is found
+    for ($i = 0; $i < 6; $i++) {
+        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+    }
+}
+?>
 
-            ?>
+
 
             <!-- The Modal -->
             <div id="myModal" class="modal">
@@ -254,7 +260,6 @@ mysqli_close($conn);
             <!-- JavaScript function for confirmation dialog -->
 
         </div>
-f
 
         <!-- all package section  -->
 
@@ -310,12 +315,8 @@ f
             <!-- Pop up to add package-->
             <div id="myModalAll" class="modal">
                 <div class="modal-content">
-                <span class="close" onclick="closeModal('myModalAll')">&times;</span>
+                    <span class="close" onclick="closeModal('myModalAll')">&times;</span>
                     <form id="loginForm" action="finalpackages.php" method="post" enctype="multipart/form-data">
-                        <div id="imageContainer">
-                            <label for="packageImages">Package Images:</label>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required multiple>
-                        </div>
 
                         <label for="packageName">Package Title:</label>
                         <input type="text" id="packageName" name="package_title" required>
@@ -326,7 +327,12 @@ f
                         <label for="duration">Duration:</label>
                         <input type="number" id="duration" name="package_duration" required>
 
-                        <button type="submit">Submit</button>
+                        <div id="imageContainer">
+                            <label for="packageImages">Package Images:</label>
+                            <input type="file" name="package_image" accept=".jpg, .jpeg, .png" required multiple>
+                        </div>
+
+                        <button type="submit" class="button">Submit</button>
                     </form>
                 </div>
             </div>
@@ -357,4 +363,3 @@ f
 </script>
 
 </html>
-

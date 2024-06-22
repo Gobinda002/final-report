@@ -1,7 +1,10 @@
 <?php
 session_start();
-?>
+require '../../connect.php'; // Adjust the path as necessary
 
+$sql = "SELECT package_id, package_title FROM packages"; // Adjust the query as necessary
+$result = $conn->query($sql);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,11 +41,13 @@ session_start();
 
             <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
-                    <li><?php echo $_SESSION['username']; ?></li>
-                    <li><a href="../controller/logout.php">Logout</a></li>
+                <li>
+                    <?php echo $_SESSION['username']; ?>
+                </li>
+                <li><a href="../controller/logout.php">Logout</a></li>
                 <?php } else { ?>
-                    <li><a href="../controller/login.php">Login</a></li>
-                    <li><a href="../controller/register.php">Signup</a></li>
+                <li><a href="../controller/login.php">Login</a></li>
+                <li><a href="../controller/register.php">Signup</a></li>
                 <?php } ?>
             </ul>
         </div>
@@ -52,7 +57,7 @@ session_start();
 
     <section class="packages">
         <div class="allpack">
-            <a href="../routes/packages/everest.html">
+            <!-- <a href="../routes/packages/everest.html">
                 <div class="card">
                     <div class="card-img">
                         <img src="../Data/ebcu.jpg" alt="">
@@ -95,11 +100,28 @@ session_start();
                     </div>                    
                     <h1 class="card-title">aanapurna circuit trek</h1>
                 </div>
-            </a>        
-
+            </a>         -->
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">'; // Adjust the link as necessary
+                    echo '<div class="card">';
+                    echo '<div class="card-img">';
+                    $image_path = '../../../packagesimage' . $row["package_image"]; // Construct the image path
+                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_title"]) . '" style="height: 100%;">'; // Display the image
+                    echo '</div>';
+                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
+                    echo '</div>';
+                    echo '</a>';
+                }
+            } else {
+                echo "No packages found.";
+            }
+            $conn->close();
+            ?>
+            $conn-
 
         </div>
-        </a>
 
 
 
@@ -109,3 +131,35 @@ session_start();
     <script src="../public/main.js"></script>
 
 </html>
+
+
+  <?php
+//for package added
+
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//     // Database connection
+//     require '../../connect.php';
+
+//     $package_title = $_POST['package_title'];
+//     $image_name = $_FILES['image']['name'];
+//     $target_dir = "../uploads/";
+//     $target_file = $target_dir . basename($image_name);
+
+//     // Move uploaded file to the target directory
+//     if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+//         // Insert package data into the database
+//         $sql = "INSERT INTO packages (package_title, image_name) VALUES ('$package_title', '$image_name')";
+//         if ($conn->query($sql) === TRUE) {
+//             echo "Package added successfully!";
+//         } else {
+//             echo "Error: " . $sql . "<br>" . $conn->error;
+//         }
+//     } else {
+//         echo "Error uploading file.";
+//     }
+
+//     // Close database connection
+//     $conn->close();
+// } 
+?>

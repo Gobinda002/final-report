@@ -1,30 +1,24 @@
 <?php
-require '../connect.php'; // Adjust this path based on your file structure and database connection method
+require '../connect.php';
 
-// Function to handle errors
-function handleError($message)
-{
-    echo "<script>alert('$message'); window.location.href='packages.php';</script>";
-    exit;
-}
 
-// Handle deletion of package
+// Handle deletion of ALLpackage
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $delete_query = "DELETE FROM packages WHERE package_id = ?";
     if ($stmt = $conn->prepare($delete_query)) {
         $stmt->bind_param("i", $id);
         if (!$stmt->execute()) {
-            handleError("Error executing statement: " . $stmt->error);
+            echo ("Error executing statement: " . $stmt->error);
         }
         $stmt->close();
-        handleError("Package deleted successfully");
+        echo ("Package deleted successfully");
     } else {
-        handleError("Error preparing statement: " . $conn->error);
+        echo ("Error preparing statement: " . $conn->error);
     }
 }
 
-/// Handle form submission
+/// Handle form submission OF ALLPACKAGE
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data and sanitize inputs
     $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
@@ -46,20 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $targetFile = $targetDir . $filename;
             $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-            // Validate file type
-            $validExtensions = array('jpg', 'jpeg', 'png');
-            if (!in_array($fileType, $validExtensions)) {
-                handleError("Invalid file type: " . $filename);
-            }
-
             if (move_uploaded_file($tmp_name, $targetFile)) {
                 $imagePaths[] = $filename; // Store only the filename in array
             } else {
                 handleError("Error uploading file: " . $filename);
             }
         }
-    } else {
-        handleError("No images uploaded.");
     }
 
     // Convert array of image filenames to JSON string
@@ -75,9 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the statement
     if ($stmt->execute()) {
-        handleError("New record created successfully");
+        echo '
+        <script>
+            Swal.fire("Success!", "Package added successfully!", "success").then(function() {
+                window.location.href = window.location.href; // Refresh the page
+            });
+        </script>';
     } else {
-        handleError("Error: " . $stmt->error);
+        echo ("Error: " . $stmt->error);
     }
 
     // Close statement
@@ -85,18 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
-// Query to fetch popular packages
-$query_popular = 'SELECT * FROM popularpackage LIMIT 6';
-$result_popular = mysqli_query($conn, $query_popular);
-$popular_packages = [];
-
-if ($result_popular) {
-    while ($row = mysqli_fetch_assoc($result_popular)) {
-        $popular_packages[] = $row;
-    }
-} else {
-    handleError("Error fetching popular packages: " . mysqli_error($conn));
-}
 
 // Query to fetch all packages
 $query_all = 'SELECT * FROM packages';
@@ -114,7 +93,6 @@ if ($result_all) {
 // Close connection
 mysqli_close($conn);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -122,13 +100,13 @@ mysqli_close($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packages</title>
-    <!-- <link rel="stylesheet" href="packages.css"> -->
     <link rel="stylesheet" href="finalpack.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
     <header>
-        <h1>NEPTOURSfdfsdf</h1>
+        <h1>NEPTOURS</h1>
         <nav>
             <ul>
                 <li><a href="admin.php"
@@ -146,109 +124,123 @@ mysqli_close($conn);
 
     <section class="packages container">
         <div class="popularpack">
+
+            <!-- php ocde to handle popular packages -->
+
             <?php
             require '../connect.php';
 
+            
+// Handle add popular package request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
+    $target_dir = "image/";
+    $target_file = $target_dir . basename($_FILES["pimage"]["name"]);
 
-            // Handle delete popular package request
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
-                $delete_id = $_POST['delete_id'];
+    // Attempt to move the uploaded file to the designated folder
+    if (move_uploaded_file($_FILES["pimage"]["tmp_name"], $target_file)) {
+        $package_name = $_POST["package_name"];
+        $description = $_POST["pdescription"];
+        $pimage = basename($_FILES["pimage"]["name"]);
 
-                // Delete the package from the database
-                $sql_delete = "DELETE FROM popularpackage WHERE id =?";
-                $stmt_delete = $conn->prepare($sql_delete);
-                $stmt_delete->bind_param("i", $delete_id);
+        // Insert data into the popularpackage table
+        $sql = "INSERT INTO popularpackage (package_name, pdescription, pimage) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sss", $package_name, $description, $pimage);
 
-                if ($stmt_delete->execute()) {
-                    // Success message
-                    echo '<p>Package deleted successfully!</p>';
-                    header('Location: ' . $_SERVER['PHP_SELF']);
-                    exit;
-                } else {
-                    // Error message
-                    echo '<p>Failed to delete package.</p>';
-                    error_log("Failed to delete package: " . $stmt_delete->error);
-                }
-            }
+        if ($stmt->execute()) {
+            // Success message
+            echo '
+            <script>
+                Swal.fire("Success!", "Package added successfully!", "success").then(function() {
+                    location.reload(); // Reload the current page
+                });
+            </script>';
+        } else {
+            // Error message
+            echo '
+            <script>
+                Swal.fire("Error!", "Failed to add package.", "error");
+            </script>';
+            // Log the error
+            error_log("Failed to add package: " . $stmt->error);
+        }
+    } else {
+        // Error message if file upload fails
+        echo '
+        <script>
+            Swal.fire("Error!", "Failed to upload image.", "error");
+        </script>';
+    }
+}
 
-            // Handle add popular package request
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
-                $target_dir = "image/";
-                $target_file = $target_dir . basename($_FILES["pimage"]["name"]);
+// Handle delete popular package request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+    $delete_id = $_POST['delete_id'];
 
-                // Attempt to move the uploaded file to the designated folder
-                if (move_uploaded_file($_FILES["pimage"]["tmp_name"], $target_file)) {
-                    $package_name = $_POST["package_name"];
-                    $description = $_POST["pdescription"];
-                    $pimage = basename($_FILES["pimage"]["name"]);
+    // Delete the package from the database
+    $sql_delete = "DELETE FROM popularpackage WHERE id = ?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    $stmt_delete->bind_param("i", $delete_id);
 
-                    // Insert data into the database
-                    $sql = "INSERT INTO popularpackage (package_name, pdescription, pimage) VALUES (?, ?, ?)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sss", $package_name, $description, $pimage);
-                    if ($stmt->execute()) {
-                        // Success message
-                        echo '
-                <script>
-                    Swal.fire("Success!", "Package added successfully!", "success").then(function() {
-                        window.location.href = window.location.href; // Refresh the page
-                    });
-                </script>';
-                    } else {
-                        // Error message
-                        echo '
-                <script>
-                    Swal.fire("Error!", "Failed to add package.", "error");
-                </script>';
-                        // Log the error
-                        error_log("Failed to add package: " . $stmt->error);
-                    }
-                }
-            }
+    if ($stmt_delete->execute()) {
+        // Success message
+        echo '<p>Package deleted successfully!</p>';
+        header('Location: ' . $_SERVER['PHP_SELF']); // Refresh the page after deletion
+        exit;
+    } else {
+        // Error message
+        echo '<p>Failed to delete package.</p>';
+        error_log("Failed to delete package: " . $stmt_delete->error);
+    }
+}
 
-            // Fetch data from the database
+// Fetch data for popular packages
+$query_popular = 'SELECT * FROM popularpackage LIMIT 6';
+$result_popular = mysqli_query($conn, $query_popular);
+$popular_packages = [];
+
+if ($result_popular) {
+    while ($row = mysqli_fetch_assoc($result_popular)) {
+        $popular_packages[] = $row;
+    }
+} else {
+    echo("Error fetching popular packages: " . mysqli_error($conn));
+}
+
+
+
             $sql = "SELECT * FROM popularpackage LIMIT 6";
             $result = $conn->query($sql);
 
             // Display data in cards
             if ($result->num_rows > 0) {
-                // Output data of each row
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="card">';
-                    echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
+                    echo '<img src="image/' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
                     echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
                     echo '<div class="card-buttons">';
                     echo '<button class="edit-button">Edit</button>';
-
-                    // Add confirmation dialog to delete button
                     echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
                     echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
-                    echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
                     echo '<button type="submit" class="delete-button">Delete</button>';
                     echo '</form>';
-
                     echo '</div>';
                     echo '</div>';
                 }
 
-                // Display "Add Package" button for remaining cards
                 $remainingCards = 6 - $result->num_rows;
                 for ($i = 0; $i < $remainingCards; $i++) {
                     echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
                 }
             } else {
-                // Show 6 "Add Package" buttons if no data is found
                 for ($i = 0; $i < 6; $i++) {
                     echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
                 }
             }
 
-            // Close database connection
             $conn->close();
-
             ?>
 
-            <!-- The Modal -->
             <div id="myModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeModal('myModal')">&times;</span>
@@ -258,21 +250,17 @@ mysqli_close($conn);
                         <input type="text" id="name" name="package_name" required>
                         <label for="description">Description</label>
                         <textarea id="description" name="pdescription" required></textarea>
-                        <input type="file" id="fileInput" name="pimage" required>
+                        <input type="file" id="fileInput" name="pimage" accept=".jpg, .jpeg, .png" required>
                         <button type="submit" class="button-submit">Submit</button>
                     </form>
                 </div>
             </div>
-
-            <!-- JavaScript function for confirmation dialog -->
-
         </div>
-
 
         <div class="allpack" style="display: none;">
             <div class="package-list">
                 <h2>Package List</h2>
-                <button class="button addpack">Add Packages</button>
+                <button class="button addpack" onclick="openModal('myModalAll')">Add Packages</button>
                 <table>
                     <thead>
                         <tr>
@@ -295,7 +283,7 @@ mysqli_close($conn);
                                     $images = json_decode($package['package_image'], true);
                                     if (!empty($images)) {
                                         foreach ($images as $image) {
-                                            echo "<img src='image/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
+                                            echo "<img src='uploads/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
                                         }
                                     }
                                     ?>
@@ -313,7 +301,6 @@ mysqli_close($conn);
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
         </div>
@@ -324,10 +311,9 @@ mysqli_close($conn);
         </div>
     </section>
 
-    <!-- Pop up to add package-->
-    <div id="myModal" class="modal">
+    <div id="myModalAll" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal('myModalAll')">&times;</span>
             <form id="loginForm" action="packages.php" method="post" enctype="multipart/form-data">
                 <div id="imageContainer">
                     <label for="packageImages">Package Images:</label>
@@ -348,7 +334,7 @@ mysqli_close($conn);
         </div>
     </div>
 
- <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>
