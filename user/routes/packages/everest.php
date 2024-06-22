@@ -1,3 +1,15 @@
+<?php
+// Check if the user is not logged in
+session_start(); // Start or resume the session
+if (!isset($_SESSION['user_id'])) {
+    // User is not logged in, redirect to login page
+    header('Location: ../../controller/login.php');
+    exit(); // Stop further execution
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
