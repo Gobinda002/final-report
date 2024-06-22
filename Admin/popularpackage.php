@@ -57,7 +57,7 @@
 
             // Handle add popular package request
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['package_name'])) {
-                $target_dir = "image/";
+                $target_dir = "../packagesimage/";
                 $target_file = $target_dir . basename($_FILES["pimage"]["name"]);
 
                 // Attempt to move the uploaded file to the designated folder
@@ -99,7 +99,7 @@
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="card">';
-                    echo '<img src="image/' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
+                    echo '<img src="../packagesimage/' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
                     echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
                     echo '<div class="card-buttons">';
                     echo '<button class="edit-button">Edit</button>';

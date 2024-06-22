@@ -2,8 +2,9 @@
 session_start();
 require '../../connect.php'; // Adjust the path as necessary
 
-$sql = "SELECT package_id, package_title FROM packages"; // Adjust the query as necessary
+$sql = "SELECT package_id, package_title, package_image FROM packages"; // Adjust the query to include package_image
 $result = $conn->query($sql);
+?>
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +58,7 @@ $result = $conn->query($sql);
 
     <section class="packages">
         <div class="allpack">
-            <!-- <a href="../routes/packages/everest.html">
+             <!-- <a href="../routes/packages/everest.html">
                 <div class="card">
                     <div class="card-img">
                         <img src="../Data/ebcu.jpg" alt="">
@@ -65,8 +66,8 @@ $result = $conn->query($sql);
                     <h1 class="card-title">Everest Base camp</h1>                  
                 </div>
             </a>
-
-            <a href="#">
+         -->
+            <!-- <a href="#">
                 <div class="card">
                     <div class="card-img">
                         <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
@@ -100,14 +101,15 @@ $result = $conn->query($sql);
                     </div>                    
                     <h1 class="card-title">aanapurna circuit trek</h1>
                 </div>
-            </a>         -->
+            </a>    -->
+              
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">'; // Adjust the link as necessary
                     echo '<div class="card">';
                     echo '<div class="card-img">';
-                    $image_path = '../../../packagesimage' . $row["package_image"]; // Construct the image path
+                    $image_path = '../../packagesimage' . $row["package_image"]; // Construct the image path
                     echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_title"]) . '" style="height: 100%;">'; // Display the image
                     echo '</div>';
                     echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
@@ -119,7 +121,6 @@ $result = $conn->query($sql);
             }
             $conn->close();
             ?>
-            $conn-
 
         </div>
 

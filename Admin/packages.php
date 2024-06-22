@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "uploads/";
+    $targetDir = "../packagesimage/";
 
     // Create the upload directory if it doesn't exist
     if (!is_dir($targetDir)) {

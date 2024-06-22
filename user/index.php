@@ -1,5 +1,9 @@
 <?php
 session_start();
+require '../connect.php'; // Adjust the path as necessary
+
+$sql = "SELECT id, package_name, pimage, pdescription FROM popularpackage";
+$result = $conn->query($sql);
 ?>
 
 
@@ -95,106 +99,27 @@ session_start();
         </h1>
 
         <div class="allpack grid-layout">
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/everest basecamp.jpg" alt="">
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title">everest base camp</h1>
-                    <p>They call it the “steps to heaven” for a good reason. You will look at the scenery that's so
-                        breathtakingly stunning and unlike any mountainous terrain that you have ever seen before
-                        changing from lush green farmland, dense forest, and glistening blue fast-flowing rivers to the
-                        barren land and glacial pools the higher you climb that you realize </p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="card">';
+                    echo '<div class="card-img">';
+                    $image_path = '../packagesimage/' . $row["pimage"]; // Construct the image path
+                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_name"]) . '" style="height: 100%;">'; // Display the image
+                    echo '</div>';
+                    echo '<div class="card-body">';
+                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_name"]) . '</h1>';
+                    echo '<p>' . htmlspecialchars($row["pdescription"]) . '</p>';
+                    echo '<a href="package_details.php?id=' . $row["id"] . '" id="see">See More</a>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "No packages found.";
+            }
+            $conn->close();
+            ?>
 
-                </div>
-
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/ebc.jpg" alt="" style="height: 100%;">
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                    <p>This is one of the most popular treks in the world, famous for dramatic deep gorges, desolate
-                        high mountain passes, fantastic viewpoints (Poon Hill), hot springs, Buddhist and Hindu temples,
-                        delightful farming villages, and stunning views of Annapurna summits</p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/The_Muktinath_Temple.jpg" alt="">
-                </div>
-
-                <div class="card-body">
-                    <h1 class="card-title"> muktinath</h1>
-
-                    <p>Muktinath Temple holds immense spiritual significance for Hindus, as it is one of the 108 Divya
-                        Desams or holy abodes of Lord Vishnu, the god of preservation. The temple is dedicated to Lord
-                        Vishnu in the form of a Saligram, a sacred black stone that represents the deity</p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/Pathivara.jpg" alt="">
-                </div>
-
-                <div class="card-body">
-                    <h1 class="card-title">pathivara tour</h1>
-                    <p>Its a tour that leads you to one of the prominent Shakti Peeth of Pathibhara Devi, located at
-                        3794m altitude above sea level. The Holy shrine of Pathibhara Bhagwati is the epitome of
-                        religious tolerance among Nepalese as Pathibhara is equally venerated by Buddhist and Hindu
-                        Devotees</p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/Pokhara.jpg" alt="">
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title">pokhara</h1>
-                    <p>Pokhara is popular for its beautiful landscapes in and around. A valley surrounded by hills and
-                        famous landmarks like Begnas Lake and Phewa Lake where the elevation suddenly changes taking you
-                        to a hilltop like Sarangkot; ideal spot to observe the thirst healing sunrise falling on giant
-                        Himalayan Ranges.</p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
-                </div>
-
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="Data/lumbini.jpg" alt="" style="height: 100%;">
-                </div>
-
-                <div class="card-body">
-                    <h1 class="card-title">lumbini</h1>
-                    <p>Walk in the footsteps of Buddha as you explore the region where he spent his childhood as Prince
-                        Siddhartha. The exact spot where Buddha was born is marked here in Lumbini and the site has
-                        understandably become one of the world's most important holy sites.</p>
-                    <a href="routes/packages/everest.html" id="see">
-                        See More
-                    </a>
-                </div>
-
-            </div>
         </div>
     </section>
 
