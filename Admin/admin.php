@@ -24,7 +24,7 @@
 		</nav>
 	</header>
 
-	<div class="content">
+	<div class="content">fd
 		<div class="box blue">
 			<h1>Total Bookings</h1>
 			
