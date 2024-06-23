@@ -3,6 +3,8 @@ session_start();
 
 require '../../connect.php';
 
+
+
 // Retrieve package ID and name from query string
 $package_id = isset($_GET['package_id']) ? $_GET['package_id'] : '';
 $package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) : '';
@@ -12,14 +14,14 @@ $package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Retrieve form data
-    $destination = $_POST["package_id"];
+    // $destination = $_POST["package_id"];
     $date = $_POST["packageAvailable_id"];
     $participants = $_POST["num_people"];
     $package_cost = $_POST["package_cost"];
 
     // Prepare SQL statement to insert data into the database
-    $sql = "INSERT INTO bookings (package_id, num_people, PackageAvailable_id, package_cost) 
-            VALUES ('$destination', '$participants', '$date', '$package_cost')";
+    $sql = "INSERT INTO bookings ( num_people, package_cost) 
+            VALUES ( '$participants',  '$package_cost')";
 
     // Execute the SQL statement
     if ($conn->query($sql) === TRUE) {
@@ -32,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="" method="POST">
         <div class="form-group">
                 <label for="destination">Destination:</label>
-                <input type="text" id="destination" name="package_id" value="<?php echo $destination; ?>" required readonly>
+                <input type="text" id="destination" name="package_id" >
+
+                <!-- value="<?php echo $destination; ?>" required readonly -->
             </div>
             <div class="form-group">
                 <label for="date">Available Dates:</label>
