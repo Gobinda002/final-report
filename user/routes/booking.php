@@ -14,14 +14,14 @@ $package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Retrieve form data
-    // $destination = $_POST["package_id"];
+    $destination = $_POST["package_id"];
     $date = $_POST["packageAvailable_id"];
     $participants = $_POST["num_people"];
     $package_cost = $_POST["package_cost"];
 
     // Prepare SQL statement to insert data into the database
-    $sql = "INSERT INTO bookings ( num_people, package_cost) 
-            VALUES ( '$participants',  '$package_cost')";
+    $sql = "INSERT INTO bookings ( package_id,num_people, package_cost) 
+            VALUES ( '$destination' ,'$participants',  '$package_cost')";
 
     // Execute the SQL statement
     if ($conn->query($sql) === TRUE) {
