@@ -1,17 +1,5 @@
 <?php
-// // Connect to database
-// $servername = "localhost";
-// $username = "root";
-// $password = "";
-// $dbname = "tat";
-
-// $conn = new mysqli($servername, $username, $password, $dbname);
-
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// }
-
-
+include '../connect.php';
 // Check if form is submitted
 if (isset($_POST["submit"])) {
     // Retrieve data from form
@@ -21,7 +9,7 @@ if (isset($_POST["submit"])) {
     $schedule = $_POST["schedule"];
 
     // Update booking details in database
-    $sql = "UPDATE book_list SET user_id='$user_id', package_id='$package_id', status='$status', schedule='$schedule' WHERE Id=" . $_GET["edit_id"];
+    $sql = "UPDATE bookings SET user_id='$user_id', package_title='$package_id', status='$status', schedule='$schedule' WHERE Id=" . $_GET["edit_id"];
     $result = $conn->query($sql);
 
     if ($result === true) {

@@ -4,28 +4,26 @@ session_start();
 require '../../connect.php';
 
 
-
-// Retrieve package ID and name from query string
-$package_id = isset($_GET['package_id']) ? $_GET['package_id'] : '';
-$package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) : '';
-
-
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Retrieve form data
-    $destination = $_POST["package_id"];
+    $destination = $_POST["package_title"];
     $date = $_POST["packageAvailable_id"];
     $participants = $_POST["num_people"];
     $package_cost = $_POST["package_cost"];
 
     // Prepare SQL statement to insert data into the database
-    $sql = "INSERT INTO bookings ( package_id,num_people, package_cost) 
+    $sql = "INSERT INTO bookings (package_title, num_people, package_cost) 
             VALUES ( '$destination' ,'$participants',  '$package_cost')";
 
     // Execute the SQL statement
     if ($conn->query($sql) === TRUE) {
-        echo "Booking successful! Thank you for booking with us.";
+        echo "<script>
+                alert('Booking successful! Thank you for booking with us.');
+                window.location.href = '../index.php'; // Redirect to index.php
+                // You can also use window.location.reload(); to refresh the current page
+              </script>";
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -43,6 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Booking</title>
     <link rel="stylesheet" href="../public/CSS/booking.css">
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -50,24 +51,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h1>Book Your Trek or Hike</h1>
         <form action="" method="POST">
-        <div class="form-group">
+            <div class="form-group">
                 <label for="destination">Destination:</label>
-                <input type="text" id="destination" name="package_id" >
+                <input type="text" id="destination" name="package_title">
 
                 <!-- value="<?php echo $destination; ?>" required readonly -->
             </div>
-            <div class="form-group">
-                <label for="date">Available Dates:</label>
-                <select id="date" name="packageAvailable_id" required>
-                    <option value="2024-04-19">April 19, 2024</option>
-                    <option value="2024-04-20">April 20, 2024</option>
-                    <option value="2024-04-21">April 21, 2024</option>
-                    <!-- Add more options for available dates -->
-                </select>
-            </div>
+
             <div class="form-group">
                 <label for="participants">Number of Participants:</label>
-                <input type="number" id="participants" name="num_people" min="1" value="1" required oninput="updatePrice()">
+                <input type="number" id="participants" name="num_people" min="1" value="1" required
+                    oninput="updatePrice()">
             </div>
             <div class="form-group">
                 <label>Trek or Hike Package:</label>

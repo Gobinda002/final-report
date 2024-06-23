@@ -35,12 +35,12 @@
   
 // display the bookings in a table
 echo "<table>";
-echo "<tr><th>ID</th><th>User ID</th><th>Package ID</th><th>Number of People</th><th>Total Cost</th><th>Status</th></tr>";
+echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People</th><th>Total Cost</th><th>Status</th></tr>";
 while ($row = mysqli_fetch_array($result)) {
   echo "<tr>";
   echo "<td>" . $row['booking_id'] . "</td>";
   echo "<td>" . $row['user_id'] . "</td>";
-  echo "<td>" . $row['package_id'] . "</td>";
+  echo "<td>" . $row['package_title'] . "</td>";
   echo "<td>" . $row['num_people'] . "</td>";
   echo "<td>" . $row['package_cost'] . "</td>";
   echo "<td>";
@@ -50,7 +50,6 @@ while ($row = mysqli_fetch_array($result)) {
   echo "<option value='pending'" . ($row['state'] == 'pending' ? ' selected' : '') . ">Pending</option>";
   echo "<option value='confirmed'" . ($row['state'] == 'confirmed' ? ' selected' : '') . ">Confirmed</option>";
   echo "<option value='cancelled'" . ($row['state'] == 'cancelled' ? ' selected' : '') . ">Cancelled</option>";
-  echo "<option value='completed'" . ($row['state'] == 'completed' ? ' selected' : '') . ">Completed</option>";
   echo "</select>";
   echo "<button type='submit'>Update</button>";
   echo "</form>";

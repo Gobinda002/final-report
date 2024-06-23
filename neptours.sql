@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 20, 2024 at 11:32 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jun 23, 2024 at 08:31 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,6 +58,13 @@ CREATE TABLE `bookings` (
   `bookingVerifyBy` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `user_id`, `package_id`, `num_people`, `packageAvailable_id`, `package_cost`, `booking_status`, `bookingVerifyBy`) VALUES
+(14, NULL, NULL, '14', NULL, '28000', 'Pending', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -86,6 +93,20 @@ CREATE TABLE `packages` (
   `package_creator` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `packages`
+--
+
+INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `package_creator`) VALUES
+(72, 'asd', '[\"ebc4.jpg\"]', 'asd', '32', 0),
+(143, 'ebc', '[\"ebcu.jpg\"]', 'asdasfdszdfdszfzsdfczsdc', '4', 0),
+(144, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 0),
+(145, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 0),
+(153, 'pokhara', '[]', 'dsfdsgsdfvsd', '4', 0),
+(155, '', '[]', '', '0', 0),
+(156, '', '[]', '', '0', 0),
+(157, '', '[]', '', '0', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -104,10 +125,10 @@ CREATE TABLE `popularpackage` (
 --
 
 INSERT INTO `popularpackage` (`id`, `package_name`, `pimage`, `pdescription`) VALUES
-(2, 'asd', 'asd', 'asd'),
-(3, 'asda', 'asdasd', 'asdad'),
-(8, 'rere', 'er werwer', 'gfdgdfdfsdfsdfs'),
-(22, 'fgfgfdg', 'viber_image_2024-04-30_16-47-58-617.jpg', '');
+(100, 'sdf', 'gsk2.jpg', 'sadf'),
+(101, 'Rara Lake', 'rara-lake-trekking-2.jpg', 'Lake Rara is situated in the western part of Nepal, at about 300 km northwest of Kathamndu, the capital of Nepal. It is a warm, oligotrophic lake with a monomictic type of water circulation. It is surrounded by hills and mountains from which more than 30 '),
+(104, 'pokhara', 'Pokhara.jpg', 'Pokhara’s tranquil beauty has been the subject of inspiration for many travel writers. Its pristine air, spectacular backdrop of snowy peaks, blue lakes and surrounding greenery make it ‘the jewel in the Himalaya’, a place of remarkable natural dispositio'),
+(111, 'rara', 'rara-lake-trekking-2.jpg', 'raradkgjdfgj sdjfgh seadkjd;sjkakj.gh erwsghslad;z');
 
 -- --------------------------------------------------------
 
@@ -130,16 +151,6 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `username`, `user_phone`, `user_email`, `user_password`) VALUES
 (3, 'banana', '123123', 'zxc@gmail.com', '$2y$10$3lMw2p4bsOpMtdF6ApBD..NLSEw/LZtzGefg6G4aBt3VK/4voidfC'),
 (4, 'gobinda', '9865329832', 'gobinda@gmail.com', '$2y$10$D1AJy7C.7H3Kp1wRLxKggeOQOTe4K1qDtpamZHzZqLSCu.0BRkPce');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `userbook`
---
-
-CREATE TABLE `userbook` (
-  `id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -189,12 +200,6 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `user_email` (`user_email`);
 
 --
--- Indexes for table `userbook`
---
-ALTER TABLE `userbook`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -208,7 +213,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `packageavailable`
@@ -220,25 +225,19 @@ ALTER TABLE `packageavailable`
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT for table `popularpackage`
 --
 ALTER TABLE `popularpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `userbook`
---
-ALTER TABLE `userbook`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
