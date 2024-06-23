@@ -1,14 +1,8 @@
 <?php
-require '../connect.php'; // Adjust this path based on your file structure and database connection method
+require '../connect.php'; 
 
-// // Function to handle errors
-// function handleError($message)
-// {
-//     echo "<script>alert('$message'); window.location.href='finalpackages.php';</script>";
-//     exit;
-// }
 
-// Handle deletion of package
+// Handle deletion of Allpackage
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $delete_query = "DELETE FROM packages WHERE package_id = ?";
@@ -18,72 +12,75 @@ if (isset($_GET['delete'])) {
             handleError("Error executing statement: " . $stmt->error);
         }
         $stmt->close();
-        handleError("Package deleted successfully");
+        echo("Package deleted successfully");
     } else {
         handleError("Error preparing statement: " . $conn->error);
     }
 }
 
+// Handle addition of Allpackages
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get form data and sanitize inputs
+    $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
+    $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
+    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
 
-/// Handle form submission
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     // Get form data and sanitize inputs
-//     $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
-//     $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
-//     $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
+    // Handle file upload
+    $imagePaths = [];
+    $targetDir = "uploads/";
 
-//     // Handle file upload
-//     $imagePaths = [];
-//     $targetDir = "uploads/";
+    // Create the upload directory if it doesn't exist
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
 
-//     // Create the upload directory if it doesn't exist
-//     if (!is_dir($targetDir)) {
-//         mkdir($targetDir, 0777, true);
-//     }
+    if (isset($_FILES['images'])) {
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+            $filename = basename($_FILES['images']['name'][$key]);
+            $targetFile = $targetDir . $filename;
+            $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-//     if (isset($_FILES['images'])) {
-//         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-//             $filename = basename($_FILES['images']['name'][$key]);
-//             $targetFile = $targetDir . $filename;
-//             $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            // Validate file type
+            $validExtensions = array('jpg', 'jpeg', 'png');
+            if (!in_array($fileType, $validExtensions)) {
+                handleError("Invalid file type: " . $filename);
+            }
 
-//             // Validate file type
-//             $validExtensions = array('jpg', 'jpeg', 'png');
-//             if (!in_array($fileType, $validExtensions)) {
-//                 handleError("Invalid file type: " . $filename);
-//             }
+            if (move_uploaded_file($tmp_name, $targetFile)) {
+                $imagePaths[] = $filename; // Store only the filename in array
+            } else {
+                handleError("Error uploading file: " . $filename);
+            }
+        }
+    } 
 
-//             if (move_uploaded_file($tmp_name, $targetFile)) {
-//                 $imagePaths[] = $filename; // Store only the filename in array
-//             } else {
-//                 handleError("Error uploading file: " . $filename);
-//             }
-//         }
-//     } else {
-//         handleError("No images uploaded.");
-//     }
+    // Convert array of image filenames to JSON string
+    $images_json = json_encode($imagePaths);
 
-//     // Convert array of image filenames to JSON string
-//     $images_json = json_encode($imagePaths);
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image) VALUES (?, ?, ?, ?)");
+    if (!$stmt) {
+        handleError("Error preparing statement: " . $conn->error);
+    }
 
-//     // Prepare and bind
-//     $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image) VALUES (?, ?, ?, ?)");
-//     if (!$stmt) {
-//         handleError("Error preparing statement: " . $conn->error);
-//     }
+    $stmt->bind_param("ssis", $package_title, $package_description, $package_duration, $images_json);
 
-//     $stmt->bind_param("ssis", $package_title, $package_description, $package_duration, $images_json);
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo '
+            <script>
+                Swal.fire("Success!", "Package added successfully!", "success").then(function() {
+                    window.location.href = window.location.href; // Refresh the page
+                });
+            </script>';
+    } else {
+        handleError("Error: " . $stmt->error);
+    }
 
-//     // Execute the statement
-//     if ($stmt->execute()) {
-//         handleError("New record created successfully");
-//     } else {
-//         handleError("Error: " . $stmt->error);
-//     }
+    // Close statement
+    $stmt->close();
+}
 
-//     // Close statement
-//     $stmt->close();
-// }
 
 // Query to fetch all packages
 $query_all = 'SELECT * FROM packages';
@@ -194,50 +191,50 @@ mysqli_close($conn);
                 }
             }
 
-            // Fetch data from the database
+            // Fetch POPULARPACKAGES from the database
             
-$sql = "SELECT * FROM popularpackage LIMIT 6";
-$result = $conn->query($sql);
-$popular_packages = [];
+            $sql = "SELECT * FROM popularpackage LIMIT 6";
+            $result = $conn->query($sql);
+            $popular_packages = [];
 
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $popular_packages[] = $row;
-    }
-}
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $popular_packages[] = $row;
+                }
+            }
 
-// Display data in cards
-if (!empty($popular_packages)) {
-    foreach ($popular_packages as $row) {
-        echo '<div class="card">';
-        echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
-        echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
-        echo '<div class="card-buttons">';
-        echo '<button class="edit-button">Edit</button>';
+            // Display data in cards
+            if (!empty($popular_packages)) {
+                foreach ($popular_packages as $row) {
+                    echo '<div class="card">';
+                    echo '<img src="' . $row["pimage"] . '" alt="' . $row["package_name"] . '">';
+                    echo '<h1 class="card-title">' . $row["package_name"] . '</h1>';
+                    echo '<div class="card-buttons">';
+                    echo '<button class="edit-button">Edit</button>';
 
-        // Add confirmation dialog to delete button
-        echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
-        echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
-        echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
-        echo '<button type="submit" class="delete-button">Delete</button>';
-        echo '</form>';
+                    // Add confirmation dialog to delete button
+                    echo '<form method="POST" style="display:inline-block;" onsubmit="return confirmDelete()">';
+                    echo '<input type="hidden" name="delete_id" value="' . $row["id"] . '">';
+                    echo '<input type="hidden" name="confirm_delete" id="confirm_delete" value="">'; // Hidden input for confirmation
+                    echo '<button type="submit" class="delete-button">Delete</button>';
+                    echo '</form>';
 
-        echo '</div>';
-        echo '</div>';
-    }
+                    echo '</div>';
+                    echo '</div>';
+                }
 
-    // Display "Add Package" button for remaining cards
-    $remainingCards = 6 - count($popular_packages);
-    for ($i = 0; $i < $remainingCards; $i++) {
-        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-    }
-} else {
-    // Show 6 "Add Package" buttons if no data is found
-    for ($i = 0; $i < 6; $i++) {
-        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-    }
-}
-?>
+                // Display "Add Package" button for remaining cards
+                $remainingCards = 6 - count($popular_packages);
+                for ($i = 0; $i < $remainingCards; $i++) {
+                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+                }
+            } else {
+                // Show 6 "Add Package" buttons if no data is found
+                for ($i = 0; $i < 6; $i++) {
+                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+                }
+            }
+            ?>
 
 
 
@@ -266,7 +263,7 @@ if (!empty($popular_packages)) {
         <div class="allpack">
             <div class="package-list">
                 <h2>Package Lists</h2>
-                <button class="button addpack" onclick="openModal('myModalAll')">Add Packages</button>
+                <button class="button addpack" href="#" onclick="openModal('myModalAll')">Add Packages</button>
 
                 <table>
                     <thead>
@@ -339,6 +336,8 @@ if (!empty($popular_packages)) {
 
 
         </div>
+
+
 
         <div class="btn-field">
             <button type="button" class="packbutton popular">Popular Tour</button>

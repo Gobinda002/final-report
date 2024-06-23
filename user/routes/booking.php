@@ -3,9 +3,9 @@ session_start();
 
 require '../../connect.php';
 
-// Retrieve package ID and name from query string
-$package_id = isset($_GET['package_id']) ? $_GET['package_id'] : '';
-$package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) : '';
+// // Retrieve package ID and name from query string
+// $package_id = isset($_GET['package_id']) ? $_GET['package_id'] : '';
+// $package_name = isset($_GET['package_name']) ? urldecode($_GET['package_name']) : '';
 
 
 // Check if the form is submitted
