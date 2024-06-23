@@ -1,4 +1,7 @@
-
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['username']);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Include SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.min.css">
+
+    <!-- Include SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -23,7 +33,7 @@
                 NepTours</a>
 
             <ul class="navbar">
-                <li><a href="../../index.html">home</a></li>
+                <li><a href="../../user/index.php">home</a></li>
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
                 <li><a href="#">Review</a></li>
@@ -31,8 +41,15 @@
             </ul>
 
             <ul class="inout">
-                <li><a href="../../controller/login.php">Login</a></li>
-                <li><a href="../../controller/register.php"> Signup</a></li>
+                <?php if (isset($_SESSION['username'])) { ?>
+                <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;">
+                    <?php echo $_SESSION['username']; ?>
+                </li>
+                <li><a href="../controller/logout.php">Logout</a></li>
+                <?php } else { ?>
+                <li><a href="../controller/login.php">Login</a></li>
+                <li><a href="../controller/register1.php">Signup</a></li>
+                <?php } ?>
             </ul>
         </div>
     </header>
@@ -68,9 +85,9 @@
             </div>
 
             <div class="booking">
-                <a href="../../routes/booking.php">
-                    <button class="btn">Proceed To Book</button>
-                </a>
+
+                <button class="btn" id="proceedToBookBtn" href="booking.php?package_id=1&package_name=Trekking%20Adventure">Proceed To Book</button>
+
             </div>
         </div>
         <hr class="longline">
@@ -277,21 +294,40 @@
         overview_btn.onclick = () => {
             overview.style.display = 'inline-block';
             policies.style.display = 'none';
-             // for button color change
+            // for button color change
             overview_btn.style.color = '#fc7c12';
             policy_btn.style.color = '';
         }
 
         policy_btn.onclick = () => {
-            overview.style.display = 'none';            
+            overview.style.display = 'none';
             policies.style.display = 'block';
             // for button color change
             overview_btn.style.color = '';
             policy_btn.style.color = '#fc7c12';
         }
 
+        // for checking user id login or not
+        // Handle "Proceed To Book" button click
+        var isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
 
+        document.getElementById('proceedToBookBtn').onclick = function () {
+            if (isLoggedIn) {
+                window.location.href = "booking.php";
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Please login first',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "../controller/login.php";
+                    }
+                });
+            }
+        };
     </script>
+
 </body>
 
 </html>

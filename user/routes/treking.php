@@ -39,15 +39,14 @@ $result = $conn->query($sql);
                 <li><a href="../routes/contact.php">contact</a></li>
             </ul>
 
+
             <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
-                <li>
-                    <?php echo $_SESSION['username']; ?>
-                </li>
-                <li><a href="../controller/logout.php">Logout</a></li>
+                    <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;"><?php echo $_SESSION['username']; ?></li>
+                    <li><a href="../controller/logout.php">Logout</a></li>
                 <?php } else { ?>
-                <li><a href="../controller/login.php">Login</a></li>
-                <li><a href="../controller/register.php">Signup</a></li>
+                    <li><a href="controller/login.php">Login</a></li>
+                    <li><a href="controller/register1.php">Signup</a></li>
                 <?php } ?>
             </ul>
         </div>
