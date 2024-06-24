@@ -178,31 +178,6 @@ header {
 
 }
 
-
-/* Slider container */
-.slider-container {
-    position: relative;
-    max-width: 1000px;
-
-    overflow: hidden;
-}
-
-/* Slide images */
-.slides {
-    display: flex;
-    height: 299px;
-    width: 1000px;
-}
-
-
-.slide {
-    height: 299px;
-    width: 570px;
-    display: none;
-    border-radius: 5px;
-
-}
-
 .image .imgone {
     height: 299px;
     width: 570px;

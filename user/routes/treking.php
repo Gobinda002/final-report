@@ -56,51 +56,7 @@ $result = $conn->query($sql);
 
     <section class="packages">
         <div class="allpack">
-             <!-- <a href="../routes/packages/everest.html">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/ebcu.jpg" alt="">
-                    </div>                    
-                    <h1 class="card-title">Everest Base camp</h1>                  
-                </div>
-            </a>
-         -->
-            <!-- <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>        
-
-            <a href="#">
-                <div class="card">
-                    <div class="card-img">
-                        <img src="../Data/annapurna circuit trek.jpg" alt="" style="height: 100%;">
-                    </div>                    
-                    <h1 class="card-title">aanapurna circuit trek</h1>
-                </div>
-            </a>    -->
-              
+                          
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
