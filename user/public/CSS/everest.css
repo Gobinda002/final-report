@@ -25,7 +25,8 @@ a {
 li {
     list-style: none;
 }
-img{
+
+img {
     width: 100%;
 }
 
@@ -36,7 +37,7 @@ img{
     /* margin: 0 350px; */
 }
 
-section{
+section {
     padding: 0rem 0 3rem;
 }
 
@@ -168,6 +169,7 @@ header {
 .gallary {
     padding-top: 10rem;
 }
+
 .image {
     height: 299px;
     width: 1235px;
@@ -198,12 +200,16 @@ header {
     width: 570px;
     display: none;
     border-radius: 5px;
-    
+
 }
 
+.image .imgone {
+    height: 299px;
+    width: 570px;
+}
 
 .image .imgtwo {
-    height: 298px;
+    height: 299px;
     width: 410px;
 
     & .imagee {
@@ -213,12 +219,17 @@ header {
     }
 }
 
-.image .imgthree {
-    height: 276px;
+.imagethfo {
+    height: 299px;
     width: 410px;
 
+    & .imgthree {
+        height: 149px;
+        width: 215px;
+        border-radius: 5px;
+    }
 
-    & img {
+    & .imgfour {
         height: 149px;
         width: 215px;
         border-radius: 5px;
@@ -229,23 +240,24 @@ header {
 
 .topic {
     margin-top: 1rem;
-    
-    
+
+
 }
 
-.sticky{
+.sticky {
     display: flex;
     gap: 53rem;
     position: sticky;
     top: 8rem;
-    z-index: 1000; 
-   background-color: #fff; 
+    z-index: 1000;
+    background-color: #fff;
+    justify-content: space-between;
 }
 
 .two-topic--btn {
     display: flex;
     gap: 2rem;
-    
+
 
     & button {
         background: white;
@@ -264,14 +276,14 @@ header {
     }
 }
 
-.booking .btn{
+.booking .btn {
     padding: 1rem;
     background-color: #fc7c12;
-   font-size: 18px;
-   font-weight: 500;
-   border-radius: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 5px;
 
-    &:hover{
+    &:hover {
         color: #fff;
     }
 }
@@ -280,53 +292,57 @@ header {
 
 .longline {
     border: none;
-    border-top: 2px solid #000; /* Adjust color and thickness as needed */
-    margin-top: 1rem; /* Adjust margin as needed */
+    border-top: 2px solid #000;
+    /* Adjust color and thickness as needed */
+    margin-top: 1rem;
+    /* Adjust margin as needed */
     position: sticky;
     top: 13rem;
     z-index: 1000;
-   
+
 }
 
-.pagecont {    
+.pagecont {
     margin-top: 3rem;
 }
 
 /* overview section */
 
-.content{
+.content {
     display: flex;
     gap: 3rem;
 }
-.details{
+
+.details {
     width: 78rem;
-    & .title{
+
+    & .title {
         font-size: 3rem;
     }
 
-    & p{
-        margin-top:1rem ;
+    & p {
+        margin-top: 1rem;
         font-size: 18px;
     }
 }
 
 .star {
     display: inline-block;
-    font-size: 24px; 
+    font-size: 24px;
 }
 
 
-.map{    
+.map {
     width: 40rem;
     cursor: pointer;
 
-    & img{
+    & img {
         height: 30rem;
         width: 40rem;
         border-radius: 12px;
-    } 
+    }
 
-    & h1{
+    & h1 {
         background-color: #f1faee;
         text-align: center;
         padding: 15px 2px;
@@ -335,38 +351,38 @@ header {
     }
 }
 
-.quickinfo{
+.quickinfo {
     margin-top: 1.5rem;
     margin-left: 12px;
 
-    & .qtitle{
+    & .qtitle {
         font-size: 25px;
         font-weight: 400;
     }
 }
 
 
-.info{
+.info {
     display: flex;
     width: 60%;
     padding: 7px 10px;
     align-items: center;
     gap: 1rem;
-    
 
-    & h1{
+
+    & h1 {
         font-size: 1.8rem;
         font-weight: 500;
     }
 
-    & i{
+    & i {
         font-size: 2.5rem;
     }
 }
 
 /* itineary  section */
 
-.itineary{
+.itineary {
     display: none;
 
     & .itineary-title {
@@ -397,7 +413,7 @@ header {
         position: sticky;
         top: 20rem;
         background-color: #fc7c12;
-        
+
     }
 
     & .addinfo {
@@ -443,5 +459,3 @@ header {
         font-size: 17px;
     }
 }
-
-

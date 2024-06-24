@@ -273,7 +273,6 @@ mysqli_close($conn);
                             <th>Package Image</th>
                             <th>Package Description</th>
                             <th>Package Duration</th>
-                            <th>Package Creator</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -294,7 +293,6 @@ mysqli_close($conn);
                                 </td>
                                 <td><?php echo $package['package_description']; ?></td>
                                 <td><?php echo $package['package_duration']; ?> Days</td>
-                                <td><?php echo $package['package_creator']; ?></td>
                                 <td>
                                     <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
                                         class="button edit">Edit</a>

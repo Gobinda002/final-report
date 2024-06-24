@@ -57,21 +57,25 @@ $isLoggedIn = isset($_SESSION['username']);
     <!-- Random Text Section -->
     <section class="gallary container">
         <div class="image">
-            <div class="slider-container">
+            <!-- <div class="slider-container">
                 <div class="slides">
                     <img class="slide" src="../Data/ebc.jpg" alt="Image 1">
                     <img class="slide" src="../Data/ebc1.jpg" alt="Image 2">
                     <img class="slide" src="../Data/ebc2.jpg" alt="Image 3">
                     <img class="slide" src="../Data/ebc3.jpg" alt="Image 4">
                 </div>
+            </div> -->
+
+
+            <img class="imgone" src="../../Data/ebc4.jpg" class="imagee" alt="">
+            <img class="imgtwo" src="../../Data/ebc4.jpg" class="imagee" alt="">
+           
+            <div class="imagethfo">
+                <img class="imgthree" src="../../Data/ebc4.jpg" class="imagee" alt="">
+                <img class="imgfour" src="../../Data/ebc4.jpg" class="imagee" alt="">
             </div>
-            <div class="imgtwo">
-                <img src="../../Data/ebc4.jpg" class="imagee" alt="">
-            </div>
-            <div class="imgthree">
-                <img src="../../Data/ebc5.jpg" alt="">
-                <img src="../../Data/ebc6.jpg" alt="">
-            </div>
+
+
         </div>
     </section>
 
@@ -85,8 +89,7 @@ $isLoggedIn = isset($_SESSION['username']);
             </div>
 
             <div class="booking">
-
-                <button class="btn" id="proceedToBookBtn" href="booking.php?package_id=1&package_name=Trekking%20Adventure">Proceed To Book</button>
+                <button class="btn" id="proceedToBookBtn">Proceed To Book</button>
 
             </div>
         </div>
@@ -109,7 +112,7 @@ $isLoggedIn = isset($_SESSION['username']);
                             changes into frozen form offering spectacular views to its visitors.
                         </p>
 
-                        <div class="quickinfo">
+                        <!-- <div class="quickinfo">
                             <h1 class="qtitle">Quick Infos :</h1>
                             <ul class="infoList">
                                 <li>
@@ -153,7 +156,7 @@ $isLoggedIn = isset($_SESSION['username']);
                         <img src="../../Data/goaikunda-trek-map2.png" alt="">
                         <h1>Route</h1>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <div class="policies">
@@ -264,23 +267,23 @@ $isLoggedIn = isset($_SESSION['username']);
 
     <script>
 
-        // for gallary image slider
+        // // for gallary image slider
 
-        let slideIndex = 0;
-        showSlide();
+        // let slideIndex = 0;
+        // showSlide();
 
-        function showSlide() {
-            const slides = document.getElementsByClassName("slide");
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) {
-                slideIndex = 1;
-            }
-            slides[slideIndex - 1].style.display = "block";
-            setTimeout(showSlide, 3000); // Change slide every 5 seconds
-        }
+        // function showSlide() {
+        //     const slides = document.getElementsByClassName("slide");
+        //     for (let i = 0; i < slides.length; i++) {
+        //         slides[i].style.display = "none";
+        //     }
+        //     slideIndex++;
+        //     if (slideIndex > slides.length) {
+        //         slideIndex = 1;
+        //     }
+        //     slides[slideIndex - 1].style.display = "block";
+        //     setTimeout(showSlide, 3000); // Change slide every 5 seconds
+        // }
 
 
         // for toogle between itineary and policies
