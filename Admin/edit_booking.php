@@ -3,13 +3,13 @@ include '../connect.php';
 // Check if form is submitted
 if (isset($_POST["submit"])) {
     // Retrieve data from form
-    $user_id = $_POST["user_id"];
+    $username = $_POST["username"];
     $package_id = $_POST["package_id"];
     $status = $_POST["status"];
     $schedule = $_POST["schedule"];
 
     // Update booking details in database
-    $sql = "UPDATE bookings SET user_id='$user_id', package_title='$package_id', status='$status', schedule='$schedule' WHERE Id=" . $_GET["edit_id"];
+    $sql = "UPDATE bookings SET username='$username', package_title='$package_id', status='$status', schedule='$schedule' WHERE Id=" . $_GET["edit_id"];
     $result = $conn->query($sql);
 
     if ($result === true) {
@@ -22,7 +22,7 @@ if (isset($_POST["submit"])) {
 }
 
 // Query to retrieve booking details
-$sql = "SELECT Id, user_id, package_id, status, schedule, date_created FROM book_list WHERE Id=" . $_GET["edit_id"];
+$sql = "SELECT booking_id, username, package_title, status, schedule, date_created FROM bookings WHERE Id=" . $_GET["edit_id"];
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows == 1) {
@@ -31,8 +31,8 @@ if ($result !== false && $result->num_rows == 1) {
     ?>
     <h1>Edit Booking</h1>
     <form method="POST">
-        <label for="user_id">User ID:</label>
-        <input type="text" name="user_id" value="<?php echo $row["user_id"]; ?>"><br>
+        <label for="username">User ID:</label>
+        <input type="text" name="username" value="<?php echo $row["username"]; ?>"><br>
 
         <label for="package_id">Package ID:</label>
         <input type="text" name="package_id" value="<?php echo $row["package_id"]; ?>"><br>

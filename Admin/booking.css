@@ -14,7 +14,7 @@
 		background-size: cover;
 		background-position: center;
 		overflow: hidden;
-		min-height: 102vh;
+		min-height: 100%;
 		animation: body-animation 30s infinite;
 	  }
 header {

@@ -39,7 +39,7 @@ echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People
 while ($row = mysqli_fetch_array($result)) {
   echo "<tr>";
   echo "<td>" . $row['booking_id'] . "</td>";
-  echo "<td>" . $row['user_id'] . "</td>";
+  echo "<td>" . $row['username'] . "</td>";
   echo "<td>" . $row['package_title'] . "</td>";
   echo "<td>" . $row['num_people'] . "</td>";
   echo "<td>" . $row['package_cost'] . "</td>";
