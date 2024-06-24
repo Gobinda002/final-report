@@ -16,7 +16,7 @@
         <li><a href="user.php"
             class="<?php echo basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active' : ''; ?>">Users</a></li>
         <li><a href="packages.php">Packages</a></li>
-        <li><a href="../Login.php">Logout</a></li>
+        <li><a href="Logout.php">Logout</a></li>
       </ul>
     </nav>
   </header>
@@ -34,7 +34,7 @@
   // Handle delete action if requested
   if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $query = "DELETE FROM user WHERE id=$id";
+    $query = "DELETE FROM user WHERE user_id=$id";
     mysqli_query($conn, $query);
   }
 

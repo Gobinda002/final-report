@@ -16,7 +16,7 @@
             class="<?php echo basename($_SERVER['PHP_SELF']) == 'bookings.php' ? 'active' : ''; ?>">Bookings</a></li>
         <li><a href="user.php">Users</a></li>
         <li><a href="packages.php">Packages</a></li>
-        <li><a href="../login.php">Logout</a></li>
+        <li><a href="logout.php">Logout</a></li>
       </ul>
     </nav>
   </header>
@@ -35,7 +35,7 @@
   
 // display the bookings in a table
 echo "<table>";
-echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People</th><th>Total Cost</th><th>Status</th></tr>";
+echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People</th><th>Total Cost</th></tr>";
 while ($row = mysqli_fetch_array($result)) {
   echo "<tr>";
   echo "<td>" . $row['booking_id'] . "</td>";
@@ -43,15 +43,9 @@ while ($row = mysqli_fetch_array($result)) {
   echo "<td>" . $row['package_title'] . "</td>";
   echo "<td>" . $row['num_people'] . "</td>";
   echo "<td>" . $row['package_cost'] . "</td>";
-  echo "<td>";
+ 
   echo "<form action='update_booking_status.php' method='post'>";
   echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'>";
-  echo "<select name='state'>";
-  echo "<option value='pending'" . ($row['state'] == 'pending' ? ' selected' : '') . ">Pending</option>";
-  echo "<option value='confirmed'" . ($row['state'] == 'confirmed' ? ' selected' : '') . ">Confirmed</option>";
-  echo "<option value='cancelled'" . ($row['state'] == 'cancelled' ? ' selected' : '') . ">Cancelled</option>";
-  echo "</select>";
-  echo "<button type='submit'>Update</button>";
   echo "</form>";
   echo "</td>";
   echo "</tr>";

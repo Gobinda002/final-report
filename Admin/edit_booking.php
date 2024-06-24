@@ -4,12 +4,11 @@ include '../connect.php';
 if (isset($_POST["submit"])) {
     // Retrieve data from form
     $username = $_POST["username"];
-    $package_id = $_POST["package_id"];
+    $package_title = $_POST["package_title"];
     $status = $_POST["status"];
-    $schedule = $_POST["schedule"];
 
     // Update booking details in database
-    $sql = "UPDATE bookings SET username='$username', package_title='$package_id', status='$status', schedule='$schedule' WHERE Id=" . $_GET["edit_id"];
+    $sql = "UPDATE bookings SET username='$username', package_title='$package_title', status='$status' WHERE booking_id=" . $_GET["edit_id"];
     $result = $conn->query($sql);
 
     if ($result === true) {
@@ -22,7 +21,7 @@ if (isset($_POST["submit"])) {
 }
 
 // Query to retrieve booking details
-$sql = "SELECT booking_id, username, package_title, status, schedule, date_created FROM bookings WHERE Id=" . $_GET["edit_id"];
+$sql = "SELECT booking_id, username, package_title, status FROM bookings WHERE booking_id=" . $_GET["edit_id"];
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows == 1) {
