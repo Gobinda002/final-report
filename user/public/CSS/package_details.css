@@ -277,18 +277,12 @@ header {
 
 }
 
-.pagecont {
-    margin-top: 3rem;
-}
 
 /* overview section */
-
-.content {
+.overview{
+    margin-top: 3rem;
     display: flex;
     gap: 3rem;
-}
-
-.details {
     width: 78rem;
 
     & .title {
@@ -300,6 +294,8 @@ header {
         font-size: 18px;
     }
 }
+
+
 
 .star {
     display: inline-block;

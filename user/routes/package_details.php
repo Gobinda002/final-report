@@ -1,6 +1,38 @@
 <?php
 session_start();
 $isLoggedIn = isset($_SESSION['username']);
+
+
+
+?>
+
+
+<?php
+require '../../connect.php'; // Adjust the path as necessary
+
+if (isset($_GET['package_id']) && is_numeric($_GET['package_id'])) {
+    $package_id = intval($_GET['package_id']);
+
+    // Prepare and execute the SQL statement
+    $stmt = $conn->prepare("SELECT * FROM packages WHERE package_id = ?");
+    $stmt->bind_param("i", $package_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Check if a package with the given ID exists
+    if ($result->num_rows > 0) {
+        $package = $result->fetch_assoc();
+    } else {
+        echo "Package not found.";
+        exit();
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    echo "Invalid package ID.";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +42,7 @@ $isLoggedIn = isset($_SESSION['username']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../public/CSS/everest.css">
+    <link rel="stylesheet" href="../public/CSS/package_details.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -65,9 +97,10 @@ $isLoggedIn = isset($_SESSION['username']);
                     <img class="slide" src="../Data/ebc3.jpg" alt="Image 4">
                 </div>
             </div> -->
+            <img src="../../packagesimage/<?php echo htmlspecialchars($package['package_image']); ?>" class="imgone"
+                alt="<?php echo htmlspecialchars($package['package_title']); ?>" style="width:100%;height:auto;">
 
 
-            <img class="imgone" src="../../Data/ebc4.jpg" class="imagee" alt="">
             <img class="imgtwo" src="../../Data/ebc4.jpg" class="imagee" alt="">
 
             <div class="imagethfo">
@@ -98,188 +131,115 @@ $isLoggedIn = isset($_SESSION['username']);
 
         <div class="pagecont">
 
-
-
             <div class="overview">
-                <div class="content">
-                    <div class="details">
 
-                        <?php
-                        require '../../connect.php';
-
-
-                        // Fetch data from the package table
-                        $sql = "SELECT package_title, package_description FROM packages";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows > 0) {
-                            // Output data of each row
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<h1 class='title'>" . $row["package_title"] . "</h1>";
-                                echo "<p class='paragraph'>" . $row["package_description"] . "</p>";
-                            }
-                        } else {
-                            echo "0 results";
-                        }
-
-                        $conn->close();
-                        ?>
-                        <!-- <h1 class="title">Everest Base Camp</h1>
-                        <p class="paragraph">
-                            Gosaikunda Trek is religiously vital and naturally richer activity in the northern part
-                            of Nepal fallen under Langtang National Park. Situated at an altitude of 4,380 meters,
-                            Gosaikunda is the name of a sacred Kunda (Lake) and the main source of the popular
-                            Trishuli River. Usually from January to June for about half year the Gosaikunda Lake
-                            changes into frozen form offering spectacular views to its visitors.
-                        </p> -->
-
-                        <!-- <div class="quickinfo">
-                            <h1 class="qtitle">Quick Infos :</h1>
-                            <ul class="infoList">
-                                <li>
-                                    <div class="info">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <h1>Duration: 4 days</h1>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="info">
-                                        <i class="fa-solid fa-mountain"></i>
-                                        <h1>Max Elevation: 4380 M</h1>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="info">
-                                        <i class="fa-solid fa-cloud-bolt"></i>
-                                        <h1>Best Seasons: Spring and Autumn </h1>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="info">
-                                        <i class="fa-solid fa-signal"></i>
-                                        <h1>Trip Grade: Moderate</h1>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="info"></div>
-                                </li>
-                                <li>
-                                    <div class="info"></div>
-                                </li>
-
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    <div class="map">
-                        <img src="../../Data/goaikunda-trek-map2.png" alt="">
-                        <h1>Route</h1>
-                    </div>
-                </div> -->
-                    </div>
-
-                    <div class="policies">
-                        <h1 class="policyTitle">Terms and Conditions</h1>
-
-                        <div class="allpolicies">
-
-                            <h2>Important information</h2>
-                            <ul class="contentList">
-                                <li>
-                                    <p>Please Note: Jeep Safari / Elephant Safari, canoeing, nature walks, bird
-                                        watching and other adventure activities offered by the resort are not
-                                        included in the package. They can be booked on direct payment basis with the
-                                        hotel.</p>
-                                </li>
-                                <li>
-                                    <p>INR 1000 and INR 500 denomination Indian notes are banned in Nepal. Indian
-                                        Rupees of the denomination of Rs. 500 & Rs. 1000 are not a valid tender
-                                        currency in Nepal. They are strictly banned (punishable under Nepal law if
-                                        any one possessing this is found). Hence, it is not advised to carry them.
-                                        You may carry INR 100 notes and debit/credit card.</p>
-                                </li>
-                                <li>
-                                    <p>Sightseeing Hours: Half day sightseeing will be of around 03 hour and full
-                                        day sightseeing will be of around 06 hours</p>
-                                </li>
-                                <li>
-                                    <p>Documents Required for Adults ? A valid Indian passport or an election Id is
-                                        the only valid document for adults (18 yrs & above) for travel to Kathmandu.
-                                    </p>
-                                </li>
-                                <li>
-                                    <p>Documents Required for Children ? For children below the age of 18 years the
-                                        school or college id suffices. The id should clearly reflect the traveler's
-                                        picture, school or college name, date of birth as well as the class in which
-                                        the student is studying. For Children below below 12 years, please carry
-                                        birth certificate and School id.</p>
-                                </li>
-                                <li>
-                                    <p>Check-in: 13:00 hrs. / Check-out time is 11:00 hrs</p>
-                                </li>
-                            </ul>
-
-                        </div>
-
-                        <div class="allpolicies">
-                            <h2>Exclusions</h2>
-                            <ul class="contentList">
-                                <li>
-                                    <p>Vehicle included is as per the Itinerary and not at disposal </p>
-                                </li>
-                                <li>
-                                    <p>Entrance fees to the monuments and guide charges are not included </p>
-                                </li>
-                                <li>
-                                    <p>Airline seats and hotel rooms are subject to availability at the time of booking.
-                                    </p>
-                                </li>
-                                <li>
-                                    <p>Please Note: Jeep Safari / Elephant Safari, canoeing, nature walks, bird watching
-                                        and other adventure activities offered by the resort are not included in the
-                                        package. They can be booked on direct payment basis with the hotel.</p>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="allpolicies">
-                            <h2>Terms and Conditions</h2>
-
-                            <ul class="contentList">
-                                <li>Standard check-in time at the hotel is normally 1:00 pm and check-out is 11:00 am.
-                                    An early check-in, or a late check-out is solely based on the discretion of the
-                                    hotel.</li>
-                                <li>A maximum of 3 adults are allowed in one room. The third occupant shall be provided
-                                    a mattress/rollaway bed</li>
-                                <li>The itinerary is fixed and cannot be modified. Transportation shall be provided as
-                                    per the itinerary and will not be at disposal.</li>
-                                <li>AC will not be functional anywhere in cool or hilly areas.</li>
-                                <li>For children below the age of 18 years, the school or college id will be enough for
-                                    travel to Nepal. The id should reflect the travellers photograph, school or college
-                                    name, date of birth as well as the class in which the student is studying. </li>
-                                <li>Booking rates are subject to change without prior notice.</li>
-                                <li>In case of unavailability in the listed hotels, arrangement for an alternate
-                                    accommodation will be made in a hotel of similar standard.</li>
-                                <li>In case your package needs to be cancelled due to any natural calamity, weather
-                                    conditions etc. NEPTOURS shall strive to give you the maximum possible refund
-                                    subject to the agreement made with our trade partners/vendors.</li>
-                                <li>The booking price does not include: Expenses of personal nature, such as laundry,
-                                    telephone calls, room service, alcoholic beverages, mini bar charges, tips, portage,
-                                    camera fees etc.</li>
-                                <li>The package price doesn't include special dinner or mandatory charges at time levied
-                                    by the hotels especially during New Year and Christmas or any special occasions.
-                                </li>
-                                <li>As per section 206CCA of Income Tax Act 1961, w.e.f. 01-Jul-21 onwards, TCS will be
-                                    charged @10% on overseas tour packages in case you.</li>
-                            </ul>
-                        </div>
-
-                    </div>
-
+                <div class="details">
+                    <h1><?php echo htmlspecialchars($package['package_title']); ?></h1>
+                    <p><?php echo nl2br(htmlspecialchars($package['package_description'])); ?></p>
 
                 </div>
+            </div>
+            <div class="policies">
+                <h1 class="policyTitle">Terms and Conditions</h1>
+
+                <div class="allpolicies">
+
+                    <h2>Important information</h2>
+                    <ul class="contentList">
+                        <li>
+                            <p>Please Note: Jeep Safari / Elephant Safari, canoeing, nature walks, bird
+                                watching and other adventure activities offered by the resort are not
+                                included in the package. They can be booked on direct payment basis with the
+                                hotel.</p>
+                        </li>
+                        <li>
+                            <p>INR 1000 and INR 500 denomination Indian notes are banned in Nepal. Indian
+                                Rupees of the denomination of Rs. 500 & Rs. 1000 are not a valid tender
+                                currency in Nepal. They are strictly banned (punishable under Nepal law if
+                                any one possessing this is found). Hence, it is not advised to carry them.
+                                You may carry INR 100 notes and debit/credit card.</p>
+                        </li>
+                        <li>
+                            <p>Sightseeing Hours: Half day sightseeing will be of around 03 hour and full
+                                day sightseeing will be of around 06 hours</p>
+                        </li>
+                        <li>
+                            <p>Documents Required for Adults ? A valid Indian passport or an election Id is
+                                the only valid document for adults (18 yrs & above) for travel to Kathmandu.
+                            </p>
+                        </li>
+                        <li>
+                            <p>Documents Required for Children ? For children below the age of 18 years the
+                                school or college id suffices. The id should clearly reflect the traveler's
+                                picture, school or college name, date of birth as well as the class in which
+                                the student is studying. For Children below below 12 years, please carry
+                                birth certificate and School id.</p>
+                        </li>
+                        <li>
+                            <p>Check-in: 13:00 hrs. / Check-out time is 11:00 hrs</p>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="allpolicies">
+                    <h2>Exclusions</h2>
+                    <ul class="contentList">
+                        <li>
+                            <p>Vehicle included is as per the Itinerary and not at disposal </p>
+                        </li>
+                        <li>
+                            <p>Entrance fees to the monuments and guide charges are not included </p>
+                        </li>
+                        <li>
+                            <p>Airline seats and hotel rooms are subject to availability at the time of booking.
+                            </p>
+                        </li>
+                        <li>
+                            <p>Please Note: Jeep Safari / Elephant Safari, canoeing, nature walks, bird watching
+                                and other adventure activities offered by the resort are not included in the
+                                package. They can be booked on direct payment basis with the hotel.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="allpolicies">
+                    <h2>Terms and Conditions</h2>
+
+                    <ul class="contentList">
+                        <li>Standard check-in time at the hotel is normally 1:00 pm and check-out is 11:00 am.
+                            An early check-in, or a late check-out is solely based on the discretion of the
+                            hotel.</li>
+                        <li>A maximum of 3 adults are allowed in one room. The third occupant shall be provided
+                            a mattress/rollaway bed</li>
+                        <li>The itinerary is fixed and cannot be modified. Transportation shall be provided as
+                            per the itinerary and will not be at disposal.</li>
+                        <li>AC will not be functional anywhere in cool or hilly areas.</li>
+                        <li>For children below the age of 18 years, the school or college id will be enough for
+                            travel to Nepal. The id should reflect the travellers photograph, school or college
+                            name, date of birth as well as the class in which the student is studying. </li>
+                        <li>Booking rates are subject to change without prior notice.</li>
+                        <li>In case of unavailability in the listed hotels, arrangement for an alternate
+                            accommodation will be made in a hotel of similar standard.</li>
+                        <li>In case your package needs to be cancelled due to any natural calamity, weather
+                            conditions etc. NEPTOURS shall strive to give you the maximum possible refund
+                            subject to the agreement made with our trade partners/vendors.</li>
+                        <li>The booking price does not include: Expenses of personal nature, such as laundry,
+                            telephone calls, room service, alcoholic beverages, mini bar charges, tips, portage,
+                            camera fees etc.</li>
+                        <li>The package price doesn't include special dinner or mandatory charges at time levied
+                            by the hotels especially during New Year and Christmas or any special occasions.
+                        </li>
+                        <li>As per section 206CCA of Income Tax Act 1961, w.e.f. 01-Jul-21 onwards, TCS will be
+                            charged @10% on overseas tour packages in case you.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+        </div>
     </section>
 
 
