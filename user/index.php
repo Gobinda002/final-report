@@ -1,11 +1,21 @@
 <?php
-session_start();
-require '../connect.php'; // Adjust the path as necessary
+require '../connect.php';
 
-$sql = "SELECT id, package_name, pimage, pdescription FROM popularpackage";
-$result = $conn->query($sql);
+// Fetch popular packages
+$popular_query = 'SELECT * FROM packages WHERE is_popular = 1';
+$result = $conn->query($popular_query);
+$popular_packages = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $popular_packages[] = $row;
+    }
+} else {
+    $popular_packages = [];
+}
+
+$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -100,8 +110,8 @@ $result = $conn->query($sql);
 
         <div class="allpack grid-layout">
             <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
+            if (!empty($popular_packages)) {
+                foreach ($popular_packages as $row) {
                     echo '<div class="card">';
                     echo '<div class="card-img">';
                     $image_path = '../packagesimage/' . $row["pimage"]; // Construct the image path
@@ -110,16 +120,14 @@ $result = $conn->query($sql);
                     echo '<div class="card-body">';
                     echo '<h1 class="card-title">' . htmlspecialchars($row["package_name"]) . '</h1>';
                     echo '<p>' . htmlspecialchars($row["pdescription"]) . '</p>';
-                    echo '<a href="package_details.php?id=' . $row["id"] . '" id="see">See More</a>';
+                    echo '<a href="package_details.php?id=' . $row["package_id"] . '" id="see">See More</a>';
                     echo '</div>';
                     echo '</div>';
                 }
             } else {
-                echo "No packages found.";
+                echo "No popular packages found.";
             }
-            $conn->close();
             ?>
-
         </div>
     </section>
 
