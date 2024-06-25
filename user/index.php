@@ -114,12 +114,12 @@ $conn->close();
                 foreach ($popular_packages as $row) {
                     echo '<div class="card">';
                     echo '<div class="card-img">';
-                    $image_path = '../packagesimage/' . $row["pimage"]; // Construct the image path
-                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_name"]) . '" style="height: 100%;">'; // Display the image
+                    $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
+                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_title"]) . '" style="height: 100%;">'; // Display the image
                     echo '</div>';
                     echo '<div class="card-body">';
-                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_name"]) . '</h1>';
-                    echo '<p>' . htmlspecialchars($row["pdescription"]) . '</p>';
+                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
+                    echo '<p>' . htmlspecialchars($row["package_description"]) . '</p>';
                     echo '<a href="package_details.php?id=' . $row["package_id"] . '" id="see">See More</a>';
                     echo '</div>';
                     echo '</div>';
