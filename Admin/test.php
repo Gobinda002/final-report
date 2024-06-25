@@ -160,12 +160,16 @@ mysqli_close($conn);
 
             if (!empty($popular_packages)) {
                 foreach ($popular_packages as $row) {
+                    $images = json_decode($row["package_image"], true);
                     echo '<div class="card">';
-                    echo '<img src="' . $row["package_image"] . '" alt="' . $row["package_title"] . '">';
+                    if (!empty($images)) {
+                        foreach ($images as $image) {
+                            echo "<img src='uploads/{$image}' alt='{$row["package_title"]}' class='card-image'>";
+                        }
+                    }
                     echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
                     echo '<div class="card-buttons">';
-                    echo '<button class="edit-button">Edit</button>';
-                    echo '<a href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</a>';
+                    echo '<button href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</button>';
                     echo '</div>';
                     echo '</div>';
                 }
@@ -227,7 +231,7 @@ mysqli_close($conn);
 
             <div id="myModalAll" class="modal">
                 <div class="modal-content">
-                    <span class="close" onclick="closeModal('myModalAll')">&times;</span>
+                    <span class="close" onclick="closeModal('myModalAll')">×</span>
                     <form id="loginForm" action="test.php" method="post" enctype="multipart/form-data">
                         <label for="packageName">Package Title:</label>
                         <input type="text" id="packageName" name="package_title" required>
