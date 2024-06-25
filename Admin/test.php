@@ -231,7 +231,7 @@ mysqli_close($conn);
 
             <div id="myModalAll" class="modal">
                 <div class="modal-content">
-                    <span class="close" onclick="closeModal('myModalAll')">×</span>
+                    <span class="close" onclick="closeModal('myModalAll')">x</span>
                     <form id="loginForm" action="test.php" method="post" enctype="multipart/form-data">
                         <label for="packageName">Package Title:</label>
                         <input type="text" id="packageName" name="package_title" required>
@@ -241,9 +241,19 @@ mysqli_close($conn);
                         <input type="number" id="duration" name="package_duration" required>
                         <div id="imageContainer">
                             <label for="packageImages">Package Images:</label>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required multiple>
+                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
+                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
+                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
+                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
                         </div>
-                        <button type="submit" class="button">Submit</button>
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" required>
+                            <option value="hiking">Hiking</option>
+                            <option value="tours">Tours</option>
+                            <option value="jungledafari">Jungle Safari</option>
+                            <option value="rafting">Rafting</option>
+                        </select>
+                        <button type="submit" class="buton">Submit</button>
                     </form>
                 </div>
             </div>

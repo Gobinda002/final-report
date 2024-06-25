@@ -183,7 +183,7 @@ nav ul li a:hover {
 
 .modal-content {
     background-color: #f1f1f1;
-    margin: 15% auto;
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 30%;
@@ -223,7 +223,7 @@ input[type="file"] {
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 40px; 
+    height: 40px;
 }
 
 .close {
@@ -327,7 +327,9 @@ input[type="file"] {
     cursor: pointer;
     font-size: 14px;
     margin: 4px 2px;
+    
 }
+
 
 .button:hover {
     background-color: #0056b3;
@@ -347,4 +349,30 @@ input[type="file"] {
 
 .delete:hover {
     background-color: #c82333;
+}
+
+#category {
+    padding: 9px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* submit button in form */
+.buton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 4rem;
+    
+}
+
+
+.buton:hover {
+    background-color: #0056b3;
 }
