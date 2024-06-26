@@ -57,13 +57,15 @@ $conn->close();
 
 
 
-           <ul class="inout">
+            <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
-                    <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;"><?php echo $_SESSION['username']; ?></li>
-                    <li><a href="controller/logout.php">Logout</a></li>
+                <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;">
+                    <?php echo $_SESSION['username']; ?>
+                </li>
+                <li><a href="controller/logout.php">Logout</a></li>
                 <?php } else { ?>
-                    <li><a href="controller/login.php">Login</a></li>
-                    <li><a href="controller/register1.php">Signup</a></li>
+                <li><a href="controller/login.php">Login</a></li>
+                <li><a href="controller/register1.php">Signup</a></li>
                 <?php } ?>
             </ul>
 
@@ -107,19 +109,22 @@ $conn->close();
             <span>e</span>
             <span>s</span>
         </h1>
-
+        
         <div class="allpack grid-layout">
             <?php
             if (!empty($popular_packages)) {
                 foreach ($popular_packages as $row) {
                     echo '<div class="card">';
                     echo '<div class="card-img">';
+
                     $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
-                    echo '<img src="' . $image_path . '" alt="' . htmlspecialchars($row["package_title"]) . '" style="height: 100%;">'; // Display the image
+            
+                    echo '<img src="' . $image_path . '" alt="' . $row["package_title"] . '" style="height: 100%;">'; // Display the image
+            
                     echo '</div>';
                     echo '<div class="card-body">';
-                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
-                    echo '<p>' . htmlspecialchars($row["package_description"]) . '</p>';
+                    echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
+                    echo '<p>' . $row["package_description"] . '</p>';
                     echo '<a href="package_details.php?id=' . $row["package_id"] . '" id="see">See More</a>';
                     echo '</div>';
                     echo '</div>';
@@ -129,34 +134,35 @@ $conn->close();
             }
             ?>
         </div>
+
     </section>
 
 
     <!-- ******* Cateogry Section *********** --->
 
     <section class="category container">
-    <div class="cat-title">
-        <h2>Start Your Vacation <br> with lots of Services!</h2>
-    </div>
-    <div class="row-item grid-layout">
-        <a href="routes/packages.php?category=hiking" class="item">
-            <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
-            <h2>Hiking</h2>
-        </a>
-        <a href="routes/packages.php?category=tours" class="item">
-            <img src="Data/tours1.png" alt="Tours" id="cat-pic">
-            <h2>Tours</h2>
-        </a>
-        <a href="routes/packages.php?category=junglesafari" class="item">
-            <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
-            <h2>Jungle Safari</h2>
-        </a>
-        <a href="routes/packages.php?category=rafting" class="item">
-            <img src="Data/rafting-removebg-preview.png" alt="Rafting" id="cat-pic">
-            <h2>Rafting</h2>
-        </a>
-    </div>
-</section>
+        <div class="cat-title">
+            <h2>Start Your Vacation <br> with lots of Services!</h2>
+        </div>
+        <div class="row-item grid-layout">
+            <a href="routes/packages.php?category=hiking" class="item">
+                <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
+                <h2>Hiking</h2>
+            </a>
+            <a href="routes/packages.php?category=tours" class="item">
+                <img src="Data/tours1.png" alt="Tours" id="cat-pic">
+                <h2>Tours</h2>
+            </a>
+            <a href="routes/packages.php?category=junglesafari" class="item">
+                <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
+                <h2>Jungle Safari</h2>
+            </a>
+            <a href="routes/packages.php?category=rafting" class="item">
+                <img src="Data/rafting-removebg-preview.png" alt="Rafting" id="cat-pic">
+                <h2>Rafting</h2>
+            </a>
+        </div>
+    </section>
 
     <!-- ******* Cateogry Section End *********** --->
 
