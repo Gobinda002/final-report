@@ -134,29 +134,30 @@ $conn->close();
 
     <!-- ******* Cateogry Section *********** --->
 
-    <section class="cateogry container">
-        <div class="cat-title">
-            <h2>Start Your Vacation <br> with lots of Services !</h2>
-        </div>
-        <div class="row-item grid-layout">
-            <a href="routes/treking.php" class="item">
-                <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
-                <h2>Hiking</h2>
-            </a>
-            <a href="routes/treking.html" class="item">
-                <img src="Data/tours1.png" alt="Tours" id="cat-pic">
-                <h2>Tours</h2>
-            </a>
-            <a href="routes/treking.html" class="item">
-                <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
-                <h2>Jungle Safari</h2>
-            </a>
-            <a href="routes/treking.html" class="item">
-                <img src="Data/rafting-removebg-preview.png" alt="Rafting" id="cat-pic">
-                <h2>Rafting</h2>
-            </a>
-        </div>
-    </section>
+    <section class="category container">
+    <div class="cat-title">
+        <h2>Start Your Vacation <br> with lots of Services!</h2>
+    </div>
+    <div class="row-item grid-layout">
+        <a href="packages.php?category=hiking" class="item">
+            <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
+            <h2>Hiking</h2>
+        </a>
+        <a href="packages.php?category=tours" class="item">
+            <img src="Data/tours1.png" alt="Tours" id="cat-pic">
+            <h2>Tours</h2>
+        </a>
+        <a href="packages.php?category=jungle Safari" class="item">
+            <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
+            <h2>Jungle Safari</h2>
+        </a>
+        <a href="packages.php?category=rafting" class="item">
+            <img src="Data/rafting-removebg-preview.png" alt="Rafting" id="cat-pic">
+            <h2>Rafting</h2>
+        </a>
+    </div>
+</section>
+
 
     <!-- ******* Cateogry Section End *********** --->
 

@@ -2,7 +2,12 @@
 session_start();
 require '../../connect.php'; // Adjust the path as necessary
 
-$sql = "SELECT package_id, package_title, package_image FROM packages"; // Adjust the query to include package_image
+$category = isset($_GET['category']) ? $_GET['category'] : '';
+
+$sql = "SELECT package_id, package_title, package_image FROM packages";
+if ($category) {
+    $sql .= " WHERE category = '" . $conn->real_escape_string($category) . "'";
+}
 $result = $conn->query($sql);
 ?>
 
@@ -12,19 +17,15 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Packages</title>
     <link rel="stylesheet" href="../public/CSS/trekingf.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
 
-    <!--**********  Navbar Section *********--->
+    <!--********** Navbar Section *********--->
     <header class="nav-section">
         <div class="nav ">
             <a href="#" class="logo">
@@ -39,7 +40,6 @@ $result = $conn->query($sql);
                 <li><a href="../routes/contact.php">contact</a></li>
             </ul>
 
-
             <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
                     <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;"><?php echo $_SESSION['username']; ?></li>
@@ -52,11 +52,9 @@ $result = $conn->query($sql);
         </div>
     </header>
 
-    <!-- *****all section***** -->
-
+    <!-- ***** All Packages Section ***** -->
     <section class="packages">
         <div class="allpack">
-                          
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
@@ -76,15 +74,14 @@ $result = $conn->query($sql);
             $conn->close();
             ?>
         </div>
-
-
-
-        </div>
     </section>
 
     <script src="../public/main.js"></script>
 
+</body>
+
 </html>
+
 
 
   <?php
