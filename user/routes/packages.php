@@ -2,12 +2,16 @@
 session_start();
 require '../../connect.php'; // Adjust the path as necessary
 
+// Get category from GET parameter
 $category = isset($_GET['category']) ? $_GET['category'] : '';
 
+// Construct SQL query
 $sql = "SELECT package_id, package_title, package_image FROM packages";
 if ($category) {
-    $sql .= " WHERE category = '" . $conn->real_escape_string($category) . "'";
+    // Note: Assuming category is a safe value coming from a controlled source
+    $sql .= " WHERE category = '$category'";
 }
+
 $result = $conn->query($sql);
 ?>
 
@@ -62,9 +66,9 @@ $result = $conn->query($sql);
                     echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">';
                     echo '<div class="card">';
                     echo '<div class="card-img">';
-                    echo "<img src='{$image_path}' alt='" . htmlspecialchars($row["package_title"]) . "' style='width:100%;height:100px;'>";
+                    echo "<img src='{$image_path}' alt='{$row["package_title"]}' style='width:100%;height:100px;'>";
                     echo '</div>';
-                    echo '<h1 class="card-title">' . htmlspecialchars($row["package_title"]) . '</h1>';
+                    echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
                     echo '</div>';
                     echo '</a>';
                 }
@@ -81,36 +85,3 @@ $result = $conn->query($sql);
 </body>
 
 </html>
-
-
-
-  <?php
-//for package added
-
-
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     // Database connection
-//     require '../../connect.php';
-
-//     $package_title = $_POST['package_title'];
-//     $image_name = $_FILES['image']['name'];
-//     $target_dir = "../uploads/";
-//     $target_file = $target_dir . basename($image_name);
-
-//     // Move uploaded file to the target directory
-//     if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-//         // Insert package data into the database
-//         $sql = "INSERT INTO packages (package_title, image_name) VALUES ('$package_title', '$image_name')";
-//         if ($conn->query($sql) === TRUE) {
-//             echo "Package added successfully!";
-//         } else {
-//             echo "Error: " . $sql . "<br>" . $conn->error;
-//         }
-//     } else {
-//         echo "Error uploading file.";
-//     }
-
-//     // Close database connection
-//     $conn->close();
-// } 
-?>

@@ -19,16 +19,25 @@ if (isset($_GET['remove_popular'])) {
 // Handle marking a package as popular
 if (isset($_GET['make_popular'])) {
     $id = $_GET['make_popular'];
-    $update_query = "UPDATE packages SET is_popular = 1 WHERE package_id = ?";
-    if ($stmt = $conn->prepare($update_query)) {
-        $stmt->bind_param("i", $id);
-        if (!$stmt->execute()) {
-            handleError("Error executing statement: " . $stmt->error);
-        }
-        $stmt->close();
-        echo "Package marked as popular successfully";
+    $count_query = "SELECT COUNT(*) as popular_count FROM packages WHERE is_popular = 1";
+    $result = $conn->query($count_query);
+    $row = $result->fetch_assoc();
+    $popular_count = $row['popular_count'];
+
+    if ($popular_count >= 6) {
+        echo("Cannot mark more than 6 packages as popular");
     } else {
-        handleError("Error preparing statement: " . $conn->error);
+        $update_query = "UPDATE packages SET is_popular = 1 WHERE package_id = ?";
+        if ($stmt = $conn->prepare($update_query)) {
+            $stmt->bind_param("i", $id);
+            if (!$stmt->execute()) {
+                handleError("Error executing statement: " . $stmt->error);
+            }
+            $stmt->close();
+            echo "Package marked as popular successfully";
+        } else {
+            handleError("Error preparing statement: " . $conn->error);
+        }
     }
 }
 
@@ -50,13 +59,14 @@ if (isset($_GET['delete'])) {
 
 // Handle addition of Allpackages
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $package_title = isset($_POST['package_title']) ? htmlspecialchars(trim($_POST['package_title'])) : '';
-    $package_description = isset($_POST['package_description']) ? htmlspecialchars(trim($_POST['package_description'])) : '';
-    $package_duration = isset($_POST['package_duration']) ? intval($_POST['package_duration']) : '';
+    $package_title = $_POST['package_title'];
+    $package_description = $_POST['package_description'];
+    $package_duration = $_POST['package_duration'];
+    $category = $_POST['category'];
 
     // Handle file upload
     $imagePaths = [];
-    $targetDir = "uploads/";
+    $targetDir = "../packagesimage/";
 
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0777, true);
@@ -83,12 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $images_json = json_encode($imagePaths);
 
-    $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image) VALUES (?, ?, ?, ?)");
-    if (!$stmt) {
-        handleError("Error preparing statement: " . $conn->error);
-    }
-
-    $stmt->bind_param("ssis", $package_title, $package_description, $package_duration, $images_json);
+    $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image,category) VALUES (?, ?, ?, ?,?)");
+    $stmt->bind_param("ssiss", $package_title, $package_description, $package_duration, $images_json,$category);
 
     if ($stmt->execute()) {
         echo '<script>
@@ -169,7 +175,7 @@ mysqli_close($conn);
                     }
                     echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
                     echo '<div class="card-buttons">';
-                    echo '<button href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</button>';
+                    echo '<a href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</a>';
                     echo '</div>';
                     echo '</div>';
                 }
@@ -198,6 +204,7 @@ mysqli_close($conn);
                             <th>Package Image</th>
                             <th>Package Description</th>
                             <th>Package Duration</th>
+                            <th>Category</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -218,6 +225,7 @@ mysqli_close($conn);
                                 </td>
                                 <td><?php echo $package['package_description']; ?></td>
                                 <td><?php echo $package['package_duration']; ?> Days</td>
+                                <td><?php echo $package['category']; ?> </td>
                                 <td>
                                     <a href="edit_package.php?id=<?php echo $package['package_id']; ?>" class="button edit">Edit</a>
                                     <a href="test.php?delete=<?php echo $package['package_id']; ?>" class="button delete" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>

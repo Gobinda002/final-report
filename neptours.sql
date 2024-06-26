@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2024 at 08:31 PM
+-- Generation Time: Jun 26, 2024 at 05:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,34 +49,25 @@ INSERT INTO `admin` (`adminID`, `admin_name`, `admin_email`, `admin_password`) V
 
 CREATE TABLE `bookings` (
   `booking_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `package_id` int(11) DEFAULT NULL,
-  `num_people` varchar(255) NOT NULL,
-  `packageAvailable_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `package_title` varchar(255) DEFAULT NULL,
+  `num_people` int(11) NOT NULL,
   `package_cost` varchar(255) NOT NULL,
-  `booking_status` enum('Pending','Confirmed','Cancelled','Completed') DEFAULT 'Pending',
-  `bookingVerifyBy` int(11) DEFAULT NULL
+  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`booking_id`, `user_id`, `package_id`, `num_people`, `packageAvailable_id`, `package_cost`, `booking_status`, `bookingVerifyBy`) VALUES
-(14, NULL, NULL, '14', NULL, '28000', 'Pending', NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `packageavailable`
---
-
-CREATE TABLE `packageavailable` (
-  `packageAvailable_id` int(11) NOT NULL,
-  `package_id` int(11) NOT NULL,
-  `pavailable_time` date NOT NULL,
-  `pAvailableCreator` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `bookings` (`booking_id`, `username`, `package_title`, `num_people`, `package_cost`, `status`) VALUES
+(27, 'banana', 'mango', 2, '4000', 'cancelled'),
+(28, 'gobinda', 'dfg', 1, '2000', 'confirmed'),
+(29, 'gobinda', 'sdf', 1, '2000', 'pending'),
+(30, 'gobinda', 'pokhara', 23, '46000', 'pending'),
+(31, 'gobinda', 'hsdaf', 33, '66000', 'pending'),
+(32, 'gobinda', 'pokhara', 5, '10000', 'pending'),
+(33, 'gobinda', 'fds', 14, '28000', 'pending');
 
 -- --------------------------------------------------------
 
@@ -90,22 +81,19 @@ CREATE TABLE `packages` (
   `package_image` varchar(255) DEFAULT NULL,
   `package_description` varchar(255) DEFAULT NULL,
   `package_duration` varchar(255) DEFAULT NULL,
-  `package_creator` int(11) NOT NULL
+  `is_popular` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `packages`
 --
 
-INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `package_creator`) VALUES
-(72, 'asd', '[\"ebc4.jpg\"]', 'asd', '32', 0),
-(143, 'ebc', '[\"ebcu.jpg\"]', 'asdasfdszdfdszfzsdfczsdc', '4', 0),
-(144, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 0),
-(145, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 0),
-(153, 'pokhara', '[]', 'dsfdsgsdfvsd', '4', 0),
-(155, '', '[]', '', '0', 0),
-(156, '', '[]', '', '0', 0),
-(157, '', '[]', '', '0', 0);
+INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `is_popular`) VALUES
+(144, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 1),
+(163, 'sadas', '[\"gsk3.jpg\"]', 'asdas', '3', 1),
+(169, 'pokhara', '[\"Pokhara.jpg\"]', 'dsfsdfsdfsfdsfsdf', '3', 1),
+(171, 'everest base camp', '[\"ebc4.jpg\",\"ebc5.jpg\",\"ebc6.jpg\",\"ebc2.jpg\"]', 'sdsadasdasdasdasdasd', '23', 1),
+(172, 'aacb', '[\"gsk3.jpg\",\"gsk4.jpg\",\"everest basecamp.jpg\",\"dhaulagiri_trek.jpg\"]', 'asdasdadasd', '23', 1);
 
 -- --------------------------------------------------------
 
@@ -119,16 +107,6 @@ CREATE TABLE `popularpackage` (
   `pimage` varchar(255) NOT NULL,
   `pdescription` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `popularpackage`
---
-
-INSERT INTO `popularpackage` (`id`, `package_name`, `pimage`, `pdescription`) VALUES
-(100, 'sdf', 'gsk2.jpg', 'sadf'),
-(101, 'Rara Lake', 'rara-lake-trekking-2.jpg', 'Lake Rara is situated in the western part of Nepal, at about 300 km northwest of Kathamndu, the capital of Nepal. It is a warm, oligotrophic lake with a monomictic type of water circulation. It is surrounded by hills and mountains from which more than 30 '),
-(104, 'pokhara', 'Pokhara.jpg', 'Pokhara’s tranquil beauty has been the subject of inspiration for many travel writers. Its pristine air, spectacular backdrop of snowy peaks, blue lakes and surrounding greenery make it ‘the jewel in the Himalaya’, a place of remarkable natural dispositio'),
-(111, 'rara', 'rara-lake-trekking-2.jpg', 'raradkgjdfgj sdjfgh seadkjd;sjkakj.gh erwsghslad;z');
 
 -- --------------------------------------------------------
 
@@ -149,8 +127,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `username`, `user_phone`, `user_email`, `user_password`) VALUES
-(3, 'banana', '123123', 'zxc@gmail.com', '$2y$10$3lMw2p4bsOpMtdF6ApBD..NLSEw/LZtzGefg6G4aBt3VK/4voidfC'),
-(4, 'gobinda', '9865329832', 'gobinda@gmail.com', '$2y$10$D1AJy7C.7H3Kp1wRLxKggeOQOTe4K1qDtpamZHzZqLSCu.0BRkPce');
+(5, 'gobinda', '9865320124', 'asd@gmail.com', '$2y$10$J4A6UPJlRx2y4AjjgM50QOsPC3VRHZhGUyZWsgsfcHwiutZ8ZSiSy'),
+(6, 'abcv', '456456', 'abc@gmail.com', '$2y$10$e83r1jswDXOXeSN6ppkXX.ubHFBLmbqSAHiT83mEE0QccUoAj1a.C');
 
 --
 -- Indexes for dumped tables
@@ -166,25 +144,13 @@ ALTER TABLE `admin`
 -- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`booking_id`),
-  ADD KEY `idx_user_id` (`user_id`),
-  ADD KEY `idx_package_id` (`package_id`),
-  ADD KEY `idx_packageAvailable_id` (`packageAvailable_id`),
-  ADD KEY `idx_bookingVerifyBy` (`bookingVerifyBy`);
-
---
--- Indexes for table `packageavailable`
---
-ALTER TABLE `packageavailable`
-  ADD PRIMARY KEY (`packageAvailable_id`),
-  ADD KEY `pAvailableCreator_fk` (`package_id`);
+  ADD PRIMARY KEY (`booking_id`);
 
 --
 -- Indexes for table `packages`
 --
 ALTER TABLE `packages`
-  ADD PRIMARY KEY (`package_id`),
-  ADD KEY `package_creator` (`package_creator`);
+  ADD PRIMARY KEY (`package_id`);
 
 --
 -- Indexes for table `popularpackage`
@@ -196,8 +162,7 @@ ALTER TABLE `popularpackage`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `user_email` (`user_email`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -213,51 +178,25 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `packageavailable`
---
-ALTER TABLE `packageavailable`
-  MODIFY `packageAvailable_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
 
 --
 -- AUTO_INCREMENT for table `popularpackage`
 --
 ALTER TABLE `popularpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `bookings`
---
-ALTER TABLE `bookings`
-  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`package_id`) REFERENCES `packages` (`package_id`),
-  ADD CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`packageAvailable_id`) REFERENCES `packageavailable` (`packageAvailable_id`),
-  ADD CONSTRAINT `bookings_ibfk_4` FOREIGN KEY (`bookingVerifyBy`) REFERENCES `admin` (`adminID`);
-
---
--- Constraints for table `packageavailable`
---
-ALTER TABLE `packageavailable`
-  ADD CONSTRAINT `pAvailableCreator_fk` FOREIGN KEY (`package_id`) REFERENCES `admin` (`adminID`),
-  ADD CONSTRAINT `packageavailable_ibfk_1` FOREIGN KEY (`package_id`) REFERENCES `packages` (`package_id`);
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -139,25 +139,24 @@ $conn->close();
         <h2>Start Your Vacation <br> with lots of Services!</h2>
     </div>
     <div class="row-item grid-layout">
-        <a href="packages.php?category=hiking" class="item">
+        <a href="routes/packages.php?category=hiking" class="item">
             <img src="Data/hiking1.png" alt="Hiking" id="cat-pic">
             <h2>Hiking</h2>
         </a>
-        <a href="packages.php?category=tours" class="item">
+        <a href="routes/packages.php?category=tours" class="item">
             <img src="Data/tours1.png" alt="Tours" id="cat-pic">
             <h2>Tours</h2>
         </a>
-        <a href="packages.php?category=jungle Safari" class="item">
+        <a href="routes/packages.php?category=jungle Safari" class="item">
             <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
             <h2>Jungle Safari</h2>
         </a>
-        <a href="packages.php?category=rafting" class="item">
+        <a href="routes/packages.php?category=rafting" class="item">
             <img src="Data/rafting-removebg-preview.png" alt="Rafting" id="cat-pic">
             <h2>Rafting</h2>
         </a>
     </div>
 </section>
-
 
     <!-- ******* Cateogry Section End *********** --->
 
