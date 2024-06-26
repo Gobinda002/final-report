@@ -25,7 +25,15 @@ if (isset($_GET['make_popular'])) {
     $popular_count = $row['popular_count'];
 
     if ($popular_count >= 6) {
-        echo("Cannot mark more than 6 packages as popular");
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Cannot mark more than 6 packages as popular!',
+                }).then(function() {
+                    window.location.href = 'test.php'; // Redirect to the same page after closing alert
+                });
+             </script>";
     } else {
         $update_query = "UPDATE packages SET is_popular = 1 WHERE package_id = ?";
         if ($stmt = $conn->prepare($update_query)) {
@@ -34,7 +42,6 @@ if (isset($_GET['make_popular'])) {
                 handleError("Error executing statement: " . $stmt->error);
             }
             $stmt->close();
-            echo "Package marked as popular successfully";
         } else {
             handleError("Error preparing statement: " . $conn->error);
         }
@@ -273,6 +280,7 @@ mysqli_close($conn);
     </section>
 
     <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/sweetalert2.min.js"></script>
     <script>
         function confirmDelete() {
             return confirm("Are you sure you want to delete this package?");
