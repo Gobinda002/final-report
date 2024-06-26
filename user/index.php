@@ -147,7 +147,7 @@ $conn->close();
             <img src="Data/tours1.png" alt="Tours" id="cat-pic">
             <h2>Tours</h2>
         </a>
-        <a href="routes/packages.php?category=jungle Safari" class="item">
+        <a href="routes/packages.php?category=junglesafari" class="item">
             <img src="Data/safari-removebg-preview.png" alt="Jungle Safari" id="cat-pic">
             <h2>Jungle Safari</h2>
         </a>

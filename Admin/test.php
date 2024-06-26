@@ -51,7 +51,6 @@ if (isset($_GET['delete'])) {
             handleError("Error executing statement: " . $stmt->error);
         }
         $stmt->close();
-        echo "Package deleted successfully";
     } else {
         handleError("Error preparing statement: " . $conn->error);
     }
@@ -256,10 +255,10 @@ mysqli_close($conn);
                         </div>
                         <label for="category">Category:</label>
                         <select id="category" name="category" required>
-                            <option value="hiking">Hiking</option>
-                            <option value="tours">Tours</option>
-                            <option value="jungledafari">Jungle Safari</option>
-                            <option value="rafting">Rafting</option>
+                            <option value="Hiking">Hiking</option>
+                            <option value="Tours">Tours</option>
+                            <option value="Junglesafari">Jungle Safari</option>
+                            <option value="Rafting">Rafting</option>
                         </select>
                         <button type="submit" class="buton">Submit</button>
                     </form>
