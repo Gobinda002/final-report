@@ -1,5 +1,12 @@
 <?php
 require '../connect.php';
+session_start();
+
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+
+}
 
 // Fetch popular packages
 $popular_query = 'SELECT * FROM packages WHERE is_popular = 1';
