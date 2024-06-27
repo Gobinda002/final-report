@@ -16,37 +16,40 @@ if (isset($_GET['remove_popular'])) {
     }
 }
 
+
+
 // Handle marking a package as popular
 if (isset($_GET['make_popular'])) {
     $id = $_GET['make_popular'];
     $count_query = "SELECT COUNT(*) as popular_count FROM packages WHERE is_popular = 1";
     $result = $conn->query($count_query);
-    $row = $result->fetch_assoc();
-    $popular_count = $row['popular_count'];
 
-    if ($popular_count >= 6) {
-        echo "<script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Cannot mark more than 6 packages as popular!',
-                }).then(function() {
-                    window.location.href = 'test.php'; // Redirect to the same page after closing alert
-                });
-             </script>";
-    } else {
-        $update_query = "UPDATE packages SET is_popular = 1 WHERE package_id = ?";
-        if ($stmt = $conn->prepare($update_query)) {
-            $stmt->bind_param("i", $id);
-            if (!$stmt->execute()) {
-                handleError("Error executing statement: " . $stmt->error);
-            }
-            $stmt->close();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $popular_count = $row['popular_count'];
+
+        if ($popular_count >= 6) {
+            echo "You have reached the limit of 6 popular packages.";
         } else {
-            handleError("Error preparing statement: " . $conn->error);
+            $update_query = "UPDATE packages SET is_popular = 1 WHERE package_id = ?";
+            if ($stmt = $conn->prepare($update_query)) {
+                $stmt->bind_param("i", $id);
+                if (!$stmt->execute()) {
+                    handleError("Error executing statement: " . $stmt->error);
+                } else {
+                    echo "Package marked as popular successfully.";
+                }
+                $stmt->close();
+            } else {
+                handleError("Error preparing statement: " . $conn->error);
+            }
         }
+    } else {
+        handleError("Error executing count query: " . $conn->error);
     }
 }
+
+
 
 // Handle deletion of Allpackage
 if (isset($_GET['delete'])) {
