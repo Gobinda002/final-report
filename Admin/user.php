@@ -15,7 +15,7 @@
         <li><a href="bookings.php">Bookings</a></li>
         <li><a href="user.php"
             class="<?php echo basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active' : ''; ?>">Users</a></li>
-        <li><a href="packages.php">Packages</a></li>
+        <li><a href="test.php">Packages</a></li>
         <li><a href="Logout.php">Logout</a></li>
       </ul>
     </nav>

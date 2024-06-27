@@ -41,7 +41,7 @@ $result = $conn->query($sql);
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
                 <li><a href="#">Review</a></li>
-                <li><a href="../routes/contact.php">contact</a></li>
+                <li><a href="contact.php">contact</a></li>
             </ul>
 
             <ul class="inout">

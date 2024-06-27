@@ -60,19 +60,24 @@ $conn->close();
                 <li><a href="#3">Services</a></li>
                 <li><a href="#4">Review</a></li>
                 <li><a href="routes/contact.php">contact</a></li>
+
+                <!-- Add "My Bookings" link -->
+                <?php if (isset($_SESSION['username'])) { ?>
+                    <li><a href="routes/mybookings.php">My Bookings</a></li>
+                <?php } ?>
             </ul>
 
 
 
             <ul class="inout">
                 <?php if (isset($_SESSION['username'])) { ?>
-                <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;">
-                    <?php echo $_SESSION['username']; ?>
-                </li>
-                <li><a href="controller/logout.php">Logout</a></li>
+                    <li style="font-size: 1.6rem; font-weight: 600;color:#fc7c12;">
+                        <?php echo $_SESSION['username']; ?>
+                    </li>
+                    <li><a href="controller/logout.php">Logout</a></li>
                 <?php } else { ?>
-                <li><a href="controller/login.php">Login</a></li>
-                <li><a href="controller/register1.php">Signup</a></li>
+                    <li><a href="controller/login.php">Login</a></li>
+                    <li><a href="controller/register1.php">Signup</a></li>
                 <?php } ?>
             </ul>
 
@@ -93,7 +98,7 @@ $conn->close();
             </div>
 
 
-            <a href="routes/explore.html" class="hbutton">Explore More</a>
+            <!-- <a href="routes/explore.html" class="hbutton">Explore More</a> -->
 
 
 
@@ -116,29 +121,29 @@ $conn->close();
             <span>e</span>
             <span>s</span>
         </h1>
-        
+
         <div class="allpack grid-layout">
-        <?php
-        if (!empty($popular_packages)) {
-            foreach ($popular_packages as $row) {
-                echo '<div class="card">';
-                echo '<div class="card-img">';
-                
-                $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
-                echo '<img src="' . $image_path . '" alt="' . $row["package_title"] . '" style="height: 100%;">'; // Display the image
-                
-                echo '</div>';
-                echo '<div class="card-body">';
-                echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
-                echo '<p>' . $row["package_description"] . '</p>';
-                echo '<a href="routes/package_details.php?package_id=' . $row["package_id"] . '" id="see">See More</a>'; // Link to package_details.php with package_id
-                echo '</div>';
-                echo '</div>';
+            <?php
+            if (!empty($popular_packages)) {
+                foreach ($popular_packages as $row) {
+                    echo '<div class="card">';
+                    echo '<div class="card-img">';
+
+                    $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
+                    echo '<img src="' . $image_path . '" alt="' . $row["package_title"] . '" style="height: 100%;">'; // Display the image
+            
+                    echo '</div>';
+                    echo '<div class="card-body">';
+                    echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
+                    echo '<p>' . $row["package_description"] . '</p>';
+                    echo '<a href="routes/package_details.php?package_id=' . $row["package_id"] . '" id="see">See More</a>'; // Link to package_details.php with package_id
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "No popular packages found.";
             }
-        } else {
-            echo "No popular packages found.";
-        }
-        ?>
+            ?>
         </div>
 
     </section>
@@ -242,8 +247,8 @@ $conn->close();
                         <div class="tl-3"></div>
                     </div>
                 </div> -->
-                <!-- Swiper -->
-                <!-- <div class="swiper mySwiper">
+    <!-- Swiper -->
+    <!-- <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <div class="collabe-bg "

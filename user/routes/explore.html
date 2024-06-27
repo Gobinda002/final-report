@@ -1,32 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<a href="contact.php"></a>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Welcome to Neptours</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .intro h1 {
+            color: #333;
+        }
+
+        .highlights {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            text-align: center;
+            padding: 20px;
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .highlight:hover {
+            transform: scale(1.05);
+        }
+
+        .highlight img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .about {
+            text-align: center;
+        }
+
+        .about h2 {
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>
-   
-   
-    "Welcome to Neptours, your gateway to unparalleled travel experiences. Dive into a world of exploration where every
-    destination holds the promise of adventure and discovery. Our extensive range of tour packages caters to every
-    traveler's passion, whether you're seeking the thrill of scaling towering peaks, the tranquility of secluded
-    beaches, or the charm of ancient cities steeped in history. From the majestic heights of the Himalayas to the
-    sun-kissed shores of tropical paradises, Neptours invites you to embark on a journey of a lifetime."
+    <div class="container">
+        <section class="intro">
+            <h1>Welcome to Neptours</h1>
+            <p>Your gateway to unparalleled travel experiences...</p>
+        </section>
 
-    "At Neptours, we believe that travel is not just about visiting places; it's about immersing yourself in new
-    cultures, forging connections with fellow adventurers, and creating unforgettable memories along the way. Our
-    meticulously crafted itineraries combine must-see landmarks with off-the-beaten-path gems, ensuring that every
-    moment of your journey is filled with wonder and excitement. Whether you're a solo traveler, a couple seeking
-    romance, or a family in search of bonding experiences, Neptours has the perfect adventure waiting for you."
+        <section class="highlights">
+            <div class="highlight">
+                <img src="image1.jpg" alt="Image 1">
+                <h2>Explore Majestic Peaks</h2>
+                <p>Discover the thrill of scaling towering peaks...</p>
+            </div>
 
-    "Discover the world with Neptours and experience the magic of travel like never before. Our team of experienced
-    professionals is dedicated to providing you with seamless service, from the moment you book your tour to the final
-    farewell. With Neptours, you can travel with confidence, knowing that every detail has been taken care of, allowing
-    you to focus on what truly matters - the joy of exploration. So, why wait? Join us on a voyage of discovery, and let
-    Neptours be your companion on the journey of a lifetime."
+            <div class="highlight">
+                <img src="image2.jpg" alt="Image 2">
+                <h2>Relax on Secluded Beaches</h2>
+                <p>Experience the tranquility of secluded beaches...</p>
+            </div>
+
+            <div class="highlight">
+                <img src="image3.jpg" alt="Image 3">
+                <h2>Uncover Ancient Cities</h2>
+                <p>Explore the charm of ancient cities steeped in history...</p>
+            </div>
+        </section>
+
+        <section class="about">
+            <h2>About Neptours</h2>
+            <p>At Neptours, we believe that travel is...</p>
+        </section>
+    </div>
 </body>
 
 </html>

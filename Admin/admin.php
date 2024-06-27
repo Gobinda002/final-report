@@ -16,7 +16,7 @@
 				</li>
 				<li><a href="bookings.php">Bookings</a></li>
 				<li><a href="user.php">Users</a></li>
-				<li><a href="packages.php">Packages</a></li>
+				<li><a href="test.php">Packages</a></li>
 				<li><a href="logout.php">Logout</a></li>
 			</ul>
 		</nav>
