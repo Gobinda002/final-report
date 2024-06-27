@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category = $_POST['category'];
 
     // Handle file upload
-    $targetDir = "uploads/"; // Set your target directory
+    $targetDir = "../packagesimage/"; // Set your target directory
     $imagePath = '';
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
@@ -174,7 +174,7 @@ if (!empty($popular_packages)) {
         // Assuming only one image per package
         $image = $row["package_image"]; // Assuming the column name is package_image
         echo '<div class="card">';
-        echo "<img src='uploads/{$image}' alt='{$row["package_title"]}' class='card-image'>";
+        echo "<img src='../packagesimage/{$image}' alt='{$row["package_title"]}' class='card-image'>";
         echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
         echo '<div class="card-buttons">';
         echo '<a href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</a>';
@@ -219,7 +219,7 @@ if (!empty($popular_packages)) {
                                 <td>
                                     <?php
                                     if (!empty($package['package_image'])) {
-                                        echo "<img src='uploads/{$package['package_image']}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
+                                        echo "<img src='../packagesimage/{$package['package_image']}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
                                     }
                                     ?>
                                 </td>
