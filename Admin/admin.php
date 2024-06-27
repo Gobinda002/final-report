@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
 
@@ -23,76 +25,103 @@
 	</header>
 
 	<div class="content">
-		<div class="box blue">
-			<h1>Total Bookings</h1>
+		<a href="bookings.php">
+			<div class="box blue">
+				<h1>Total Bookings</h1>
+				<?php
+				require '../connect.php';
 
-			<?php
-			require '../connect.php';
+				// Query to retrieve total bookings
+				$sql = "SELECT COUNT(*) as total_bookings FROM bookings";
+				$result = $conn->query($sql);
 
-			// Query to retrieve total bookings
-			$sql = "SELECT COUNT(*) as total_bookings FROM bookings";
-			$result = $conn->query($sql);
-
-			if ($result->num_rows > 0) {
-				// Output data of each row
-				while ($row = $result->fetch_assoc()) {
-					echo "<p>" . $row["total_bookings"] . "</p>";
+				if ($result->num_rows > 0) {
+					// Output data of each row
+					while ($row = $result->fetch_assoc()) {
+						echo "<p>" . $row["total_bookings"] . "</p>";
+					}
+				} else {
+					echo "<p>No bookings found.</p>";
 				}
-			} else {
-				echo "<p>No bookings found.</p>";
-			}
 
-			$conn->close();
-			?>
-		</div>
+				$conn->close();
+				?>
+			</div>
+		</a>
 
-		<div class="box green">
-			<h1>Total Users</h1>
-			<?php
-			require '../connect.php';
+		<a href="user.php">
+			<div class="box green">
+				<h1>Total Users</h1>
+				<?php
+				require '../connect.php';
 
-			// Query to retrieve total users
-			$sql = "SELECT COUNT(*) as total_users FROM user";
-			$result = $conn->query($sql);
+				// Query to retrieve total users
+				$sql = "SELECT COUNT(*) as total_users FROM user";
+				$result = $conn->query($sql);
 
-			if ($result->num_rows > 0) {
-				// Output data of each row
-				while ($row = $result->fetch_assoc()) {
-					echo "<p>" . $row["total_users"] . "</p>";
+				if ($result->num_rows > 0) {
+					// Output data of each row
+					while ($row = $result->fetch_assoc()) {
+						echo "<p>" . $row["total_users"] . "</p>";
+					}
+				} else {
+					echo "<p>No users found.</p>";
 				}
-			} else {
-				echo "<p>No users found.</p>";
-			}
 
-			$conn->close();
-			?>
-		</div>
+				$conn->close();
+				?>
+			</div>
+		</a>
 	</div>
+
 	<div class="container">
-		<div class="box orange">
-			<h1>Total Packages</h1>
-			<?php
+		<a href="test.php">
+			<div class="box orange"  >
+				<h1>Total Packages</h1>
+				<?php
+				require '../connect.php';
 
+				// Query to retrieve total packages
+				$sql = "SELECT COUNT(*) as total_packages FROM packages";
+				$result = $conn->query($sql);
 
-			require '../connect.php';
-
-			// Query to retrieve total packages
-			$sql = "SELECT COUNT(*) as total_packages FROM packages";
-			$result = $conn->query($sql);
-
-			if ($result->num_rows > 0) {
-				// Output data of each row
-				while ($row = $result->fetch_assoc()) {
-					echo "<p>" . $row["total_packages"] . "</p>";
+				if ($result->num_rows > 0) {
+					// Output data of each row
+					while ($row = $result->fetch_assoc()) {
+						echo "<p>" . $row["total_packages"] . "</p>";
+					}
+				} else {
+					echo "<p>No packages found.</p>";
 				}
-			} else {
-				echo "<p>No packages found.</p>";
-			}
 
-			$conn->close();
-			?>
-		</div>
+				$conn->close();
+				?>
+			</div>
+		</a>
 
+		<a href="bookings.php">
+			<div class="box purple">
+				<h1>Pending Packages</h1>
+				<?php
+				require '../connect.php';
+
+				// Query to retrieve total pending packages
+				$sql = "SELECT COUNT(*) as pending_packages FROM bookings WHERE status = 'pending'";
+				$result = $conn->query($sql);
+
+				if ($result->num_rows > 0) {
+					// Output data of each row
+					while ($row = $result->fetch_assoc()) {
+						echo "<p>" . $row["pending_packages"] . "</p>";
+					}
+				} else {
+					echo "<p>No pending packages found.</p>";
+				}
+
+				$conn->close();
+				?>
+			</div>
+		</a>
 	</div>
 
 </body>

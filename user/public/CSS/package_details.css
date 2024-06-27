@@ -32,13 +32,13 @@ img {
 
 /* layout */
 .container {
-    max-width: 125rem;
+    max-width: 100rem;
     margin: 0 auto;
     /* margin: 0 350px; */
 }
 
 section {
-    padding: 0rem 0 3rem;
+    padding: 0rem 0 2.5rem;
 }
 
 /* THEME */
@@ -215,13 +215,10 @@ header {
 
 .topic {
     margin-top: 1rem;
-
-
 }
 
 .sticky {
     display: flex;
-    gap: 53rem;
     position: sticky;
     top: 8rem;
     z-index: 1000;

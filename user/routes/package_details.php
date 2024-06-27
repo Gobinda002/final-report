@@ -2,8 +2,6 @@
 session_start();
 $isLoggedIn = isset($_SESSION['username']);
 
-
-
 ?>
 
 
@@ -65,10 +63,9 @@ if (isset($_GET['package_id']) && is_numeric($_GET['package_id'])) {
                 NepTours</a>
 
             <ul class="navbar">
-                <li><a href="../../user/index.php">home</a></li>
+                <li><a href="../index.php">home</a></li>
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
-                <li><a href="#">Review</a></li>
                 <li><a href="../../routes/contact.html">contact</a></li>
             </ul>
 
@@ -89,25 +86,8 @@ if (isset($_GET['package_id']) && is_numeric($_GET['package_id'])) {
     <!-- Random Text Section -->
     <section class="gallary container">
         <div class="image">
-            <!-- <div class="slider-container">
-                <div class="slides">
-                    <img class="slide" src="../Data/ebc.jpg" alt="Image 1">
-                    <img class="slide" src="../Data/ebc1.jpg" alt="Image 2">
-                    <img class="slide" src="../Data/ebc2.jpg" alt="Image 3">
-                    <img class="slide" src="../Data/ebc3.jpg" alt="Image 4">
-                </div>
-            </div> -->
             <img src="../../packagesimage/<?php echo htmlspecialchars($package['package_image']); ?>" class="imgone"
-                alt="<?php echo htmlspecialchars($package['package_title']); ?>" style="width:100%;height:auto;">
-
-
-            <img class="imgtwo" src="../../Data/ebc4.jpg" class="imagee" alt="">
-
-            <div class="imagethfo">
-                <img class="imgthree" src="../../Data/ebc4.jpg" class="imagee" alt="">
-                <img class="imgfour" src="../../Data/ebc4.jpg" class="imagee" alt="">
-            </div>
-
+                alt="<?php echo htmlspecialchars($package['package_title']); ?>" style="width:80%;height:auto;">
 
         </div>
     </section>

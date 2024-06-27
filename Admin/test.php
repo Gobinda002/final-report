@@ -148,7 +148,7 @@ mysqli_close($conn);
                 <li><a href="test.php"
                         class="<?php echo basename($_SERVER['PHP_SELF']) == 'test.php' ? 'active' : ''; ?>">Packages</a>
                 </li>
-                <li><a href="../login.php">Logout</a></li>
+                <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
     </header>

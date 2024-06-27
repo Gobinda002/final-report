@@ -58,7 +58,6 @@ $conn->close();
                 <li><a href="#">home</a></li>
                 <li><a href="#2">Packages</a></li>
                 <li><a href="#3">Services</a></li>
-                <li><a href="#4">Review</a></li>
                 <li><a href="routes/contact.php">contact</a></li>
 
                 <!-- Add "My Bookings" link -->

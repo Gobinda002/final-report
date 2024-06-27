@@ -1,3 +1,5 @@
+/* Add these styles to your existing admin.css file */
+
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -15,29 +17,11 @@ body {
 	background-position: center;
 	overflow: hidden;
 	min-height: 102vh;
-	animation: body-animation 30s infinite;
+	
+
 }
-
-@keyframes body-animation {
-	0% {
-		background-image: url('1.jpg');
-	}
-
-	25% {
-		background-image: url('6.jpg');
-	}
-
-	50% {
-		background-image: url('7.jpg');
-	}
-
-	75% {
-		background-image: url('4.jpg');
-	}
-
-	100% {
-		background-image: url('5.jpg');
-	}
+a{
+	text-decoration: none;
 }
 
 /* Header Styles */
@@ -83,10 +67,8 @@ header ul li a:hover {
 	align-items: right;
 	flex-wrap: wrap;
 	margin: 50px auto;
-	/* Changed margin to center horizontally */
 	border-radius: 10px;
 	max-width: 1200px;
-	/* Added max-width to limit width of boxes */
 }
 
 .container {
@@ -95,10 +77,9 @@ header ul li a:hover {
 	justify-content: center;
 	align-items: right;
 	margin: -46px auto;
-	/* Changed margin to center horizontally */
 	border-radius: 13px;
 	max-width: 932px;
-	/* Added max-width to limit width of boxes */
+	text-decoration: none; 
 }
 
 .box {
@@ -111,9 +92,17 @@ header ul li a:hover {
 	height: 240px;
 	transition: transform 0.3s ease;
 	max-width: 275px;
-	/* Added max-width to limit width of boxes */
+	color: inherit; 
+
+	&:hover{
+		transform: scale(1.05);
+	}
+
 }
 
+.box:hover {
+	transform: scale(1.05);
+}
 
 .box h1 {
 	margin-top: 0;
@@ -134,7 +123,6 @@ header ul li a:hover {
 .purple {
 	background-color: #8e44ad;
 	border-radius: 10px;
-
 }
 
 .green {
@@ -177,4 +165,3 @@ footer p {
 	background-color: #f5f5f5;
 	text-align: center;
 }
-

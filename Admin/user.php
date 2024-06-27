@@ -22,13 +22,7 @@
   </header>
 
   <?php
-  // // Connect to the database
-// $host = 'localhost';
-// $username = 'root';
-// $password = '';
-// $dbname = 'tat';
-// $conn = mysqli_connnect($host, $username, $password, $dbname);
-  
+
   require '../connect.php';
 
   // Handle delete action if requested
@@ -69,7 +63,6 @@
     $html .= "<td>" . $row['user_email'] . "</td>";
     $html .= "<td>" . $row['user_password'] . "</td>";
     $html .= "<td>";
-    $html .= "<a href='edit_user.php?id=" . $id . "' class='button edit'>Edit</a> ";
     $html .= "<a href='?delete=" . $id . "' class='button delete'>Delete</a>";
     $html .= "</td>";
     $html .= "</tr>";
