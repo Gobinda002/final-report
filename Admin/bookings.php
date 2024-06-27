@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Booking List</title>
   <link rel="stylesheet" type="text/css" href="booking.css">
+  <style>
+
+.complete {
+    color: green;
+    font-weight: bold;
+}
+
+.cancelled {
+    color: red;
+    font-weight: bold;
+}
+  </style>
+
 </head>
 
 <body>
@@ -32,10 +44,8 @@
     $result = mysqli_query($conn, $query);
 
     // display the bookings in a table
-    
-    // display the bookings in a table
     echo "<table>";
-    echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People</th><th>Total Cost</th></tr>";
+    echo "<tr><th>ID</th><th>Username</th><th>Package Title</th><th>Number of People</th><th>Total Cost</th><th>Status</th><th>Action</th></tr>";
     while ($row = mysqli_fetch_array($result)) {
       echo "<tr>";
       echo "<td>" . $row['booking_id'] . "</td>";
@@ -44,15 +54,22 @@
       echo "<td>" . $row['num_people'] . "</td>";
       echo "<td>" . $row['package_cost'] . "</td>";
       echo "<td>";
-      echo "<form action='update_booking_status.php' method='post'>";
-      echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'>";
-      echo "<select name='status'>";
-      echo "<option value='pending' " . ($row['status'] == 'pending' ? 'selected' : '') . ">Pending</option>";
-      echo "<option value='confirmed' " . ($row['status'] == 'confirmed' ? 'selected' : '') . ">Confirmed</option>";
-      echo "<option value='cancelled' " . ($row['status'] == 'cancelled' ? 'selected' : '') . ">Cancelled</option>";
-      echo "</select>";
-      echo "<input type='submit' value='Update'>";
-      echo "</form>";
+      if ($row['status'] == 'confirmed') {
+        echo "<span class='complete'>Complete</span>";
+      } elseif ($row['status'] == 'cancelled') {
+        echo "<span class='cancelled'>Cancelled</span>";
+      } else {
+        echo "<form action='update_booking_status.php' method='post'>";
+        echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'>";
+        echo "<select name='status'>";
+        echo "<option value='pending' " . ($row['status'] == 'pending' ? 'selected' : '') . ">Pending</option>";
+        echo "<option value='confirmed' " . ($row['status'] == 'confirmed' ? 'selected' : '') . ">Confirmed</option>";
+        echo "<option value='cancelled' " . ($row['status'] == 'cancelled' ? 'selected' : '') . ">Cancelled</option>";
+        echo "</select>";
+        echo "</td>";
+        echo "<td><input type='submit' value='Update'></td>";
+        echo "</form>";
+      }
       echo "</tr>";
     }
     echo "</table>"; ?>

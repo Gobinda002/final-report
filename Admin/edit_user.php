@@ -8,7 +8,6 @@
   <title>Edit User</title>
   <style>
     /* Main styles for the edit form */
-
     body {
       background-color: #f5f5f5;
       font-family: sans-serif;
@@ -37,8 +36,8 @@
     }
 
     .edit-user input[type="text"],
-    .edit-user input[type="user_email"],
-    .edit-user input[type="user_password"],
+    .edit-user input[type="email"],
+    .edit-user input[type="password"],
     .edit-user textarea {
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -68,63 +67,83 @@
     .edit-user input[type="submit"]:hover {
       background-color: blue;
     }
+
+    .edit-user button {
+      background-color: #777;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px;
+      margin-left: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .edit-user button:hover {
+      background-color: #555;
+    }
   </style>
 </head>
 
 <body>
 
   <?php
-  
   require '../connect.php';
 
-  // Handle form submission if requested
-  if (isset($_POST['submit'])) {
-    $id = $_POST['user_id'];
-    $username = $_POST['username'];
-    $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
-    $query = "UPDATE user SET username='$username', user_email='$user_email', user_password='$user_password'= NOW() WHERE user_id=$id";
-    mysqli_query($conn, $query);
+// Handle form submission if requested
+if (isset($_POST['submit'])) {
+  $id = intval($_POST['user_id']);
+  $username = mysqli_real_escape_string($conn, $_POST['username']);
+  $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
+  $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
+  
+  // Hash the password before saving
+  $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+  
+  $query = "UPDATE user SET username='$username', user_email='$user_email', user_password='$hashed_password' WHERE user_id=$id";
+  $result = mysqli_query($conn, $query);
 
-    // check if the update was successful
-    if (mysqli_affected_rows($conn) > 0) {
-      echo "Edited successfully";
-    } else {
-      echo "Error updating record: " . mysqli_error($conn);
-    }
-
-    header('location: user.php');
+  // Check if the update was successful
+  if ($result && mysqli_affected_rows($conn) > 0) {
+    echo "<div class='message'>Edited successfully</div>";
+  } else {
+    echo "<div class='message'>Error updating record: " . mysqli_error($conn) . "</div>";
   }
 
+  header('Location: user.php');
+  exit();
+}
 
   // Query the database for user data
-  $user_id = $_GET['id'];
+  $user_id = intval($_GET['id']);
   $query = "SELECT * FROM user WHERE user_id = $user_id";
   $result = mysqli_query($conn, $query);
   $row = mysqli_fetch_assoc($result);
 
-  // Display the HTML for the form or a success message
-  if (isset($message)) {
-    echo '<div class="message">' . $message . '</div>';
+  // Display the HTML for the form
+  if ($row) {
+    echo '
+    <div class="edit-user">
+      <h2>Edit User</h2>
+      <form method="post">
+        <input type="hidden" name="user_id" value="' . $row['user_id'] . '">
+
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="' . htmlspecialchars($row['username']) . '"><br>
+
+        <label for="user_email">E-mail:</label>
+        <input type="email" name="user_email" value="' . htmlspecialchars($row['user_email']) . '"><br>
+
+        <label for="user_password">Password:</label>
+        <input type="password" name="user_password" value="' . htmlspecialchars($row['user_password']) . '"><br>
+
+        <input type="submit" name="submit" value="Update">
+        <a href="user.php"><button type="button">Back</button></a>
+      </form>
+    </div>';
   } else {
-    echo '<div class="edit-user">
-    <h2>Edit User</h2>
-    <form method="post">
-      <input type="hidden" name="user_id" value="' . $row['user_id'] . '">
-
-      <label for="username">Username:</label>
-      <input type="text" name="username" value="' . $row['username'] . '"><br>
-
-      <label for="user_email">E-mail:</label>
-      <input type="email" name="user_email" value="' . $row['user_email'] . '"><br>
-
-      <label for="user_password">user_password:</label>
-      <input type="password" name="user_password" value="' . $row['user_password'] . '"><br>
-
-      <input type="submit" name="submit" value="Update">
-      <a href="user.php"><button type="button">Back</button></a>
-    </form>
-  </div>';
+    echo '<div class="message">User not found.</div>';
   }
 
   // Close the database connection
