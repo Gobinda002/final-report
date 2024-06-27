@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2024 at 05:18 PM
+-- Generation Time: Jun 27, 2024 at 01:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,8 @@ INSERT INTO `bookings` (`booking_id`, `username`, `package_title`, `num_people`,
 (30, 'gobinda', 'pokhara', 23, '46000', 'pending'),
 (31, 'gobinda', 'hsdaf', 33, '66000', 'pending'),
 (32, 'gobinda', 'pokhara', 5, '10000', 'pending'),
-(33, 'gobinda', 'fds', 14, '28000', 'pending');
+(33, 'gobinda', 'fds', 14, '28000', 'pending'),
+(34, 'gobinda', 'sd', 12, '24000', 'pending');
 
 -- --------------------------------------------------------
 
@@ -81,32 +82,17 @@ CREATE TABLE `packages` (
   `package_image` varchar(255) DEFAULT NULL,
   `package_description` varchar(255) DEFAULT NULL,
   `package_duration` varchar(255) DEFAULT NULL,
-  `is_popular` tinyint(1) DEFAULT 0
+  `is_popular` tinyint(1) DEFAULT 0,
+  `category` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `packages`
 --
 
-INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `is_popular`) VALUES
-(144, 'annapurna', '[\"ebc3.jpg\"]', 'fdgxdfgdfsgsdfgsdfg', '5', 1),
-(163, 'sadas', '[\"gsk3.jpg\"]', 'asdas', '3', 1),
-(169, 'pokhara', '[\"Pokhara.jpg\"]', 'dsfsdfsdfsfdsfsdf', '3', 1),
-(171, 'everest base camp', '[\"ebc4.jpg\",\"ebc5.jpg\",\"ebc6.jpg\",\"ebc2.jpg\"]', 'sdsadasdasdasdasdasd', '23', 1),
-(172, 'aacb', '[\"gsk3.jpg\",\"gsk4.jpg\",\"everest basecamp.jpg\",\"dhaulagiri_trek.jpg\"]', 'asdasdadasd', '23', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `popularpackage`
---
-
-CREATE TABLE `popularpackage` (
-  `id` int(11) NOT NULL,
-  `package_name` varchar(255) NOT NULL,
-  `pimage` varchar(255) NOT NULL,
-  `pdescription` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `packages` (`package_id`, `package_title`, `package_image`, `package_description`, `package_duration`, `is_popular`, `category`) VALUES
+(208, 'qweqwe', 'gsk2.jpg', 'asdsad', '3', 1, 'Hiking'),
+(209, 'abc', 'ebc4.jpg', 'dfgsfdgs', '123', 0, 'Tours');
 
 -- --------------------------------------------------------
 
@@ -153,12 +139,6 @@ ALTER TABLE `packages`
   ADD PRIMARY KEY (`package_id`);
 
 --
--- Indexes for table `popularpackage`
---
-ALTER TABLE `popularpackage`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -178,19 +158,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
-
---
--- AUTO_INCREMENT for table `popularpackage`
---
-ALTER TABLE `popularpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
 
 --
 -- AUTO_INCREMENT for table `user`
