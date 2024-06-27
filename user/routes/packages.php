@@ -66,7 +66,7 @@ $result = $conn->query($sql);
                     echo '<a href="package_details.php?package_id=' . $row["package_id"] . '&package_name=' . urlencode($row["package_title"]) . '">';
                     echo '<div class="card">';
                     echo '<div class="card-img">';
-                    echo "<img src='{$image_path}' alt='{$row["package_title"]}' style='width:100%;height:100px;'>";
+                    echo "<img src='{$image_path}' alt='{$row["package_title"]}' style='width:100%;height:100%;'>";
                     echo '</div>';
                     echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
                     echo '</div>';

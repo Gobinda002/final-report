@@ -118,28 +118,27 @@ $conn->close();
         </h1>
         
         <div class="allpack grid-layout">
-            <?php
-            if (!empty($popular_packages)) {
-                foreach ($popular_packages as $row) {
-                    echo '<div class="card">';
-                    echo '<div class="card-img">';
-
-                    $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
-            
-                    echo '<img src="' . $image_path . '" alt="' . $row["package_title"] . '" style="height: 100%;">'; // Display the image
-            
-                    echo '</div>';
-                    echo '<div class="card-body">';
-                    echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
-                    echo '<p>' . $row["package_description"] . '</p>';
-                    echo '<a href="package_details.php?id=' . $row["package_id"] . '" id="see">See More</a>';
-                    echo '</div>';
-                    echo '</div>';
-                }
-            } else {
-                echo "No popular packages found.";
+        <?php
+        if (!empty($popular_packages)) {
+            foreach ($popular_packages as $row) {
+                echo '<div class="card">';
+                echo '<div class="card-img">';
+                
+                $image_path = '../packagesimage/' . $row["package_image"]; // Construct the image path
+                echo '<img src="' . $image_path . '" alt="' . $row["package_title"] . '" style="height: 100%;">'; // Display the image
+                
+                echo '</div>';
+                echo '<div class="card-body">';
+                echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
+                echo '<p>' . $row["package_description"] . '</p>';
+                echo '<a href="routes/package_details.php?package_id=' . $row["package_id"] . '" id="see">See More</a>'; // Link to package_details.php with package_id
+                echo '</div>';
+                echo '</div>';
             }
-            ?>
+        } else {
+            echo "No popular packages found.";
+        }
+        ?>
         </div>
 
     </section>
@@ -230,7 +229,7 @@ $conn->close();
     <!-- ******* Service Section End *********** --->
 
     <!-- ******* Contact  Section *********** --->
-    <section class="mixed" id="4">
+    <!-- <section class="mixed" id="4">
         <div class="ro grid-layout">
             <div class="blo">
                 <div class="head-title">
@@ -242,9 +241,9 @@ $conn->close();
                         <div class="tl-2"></div>
                         <div class="tl-3"></div>
                     </div>
-                </div>
+                </div> -->
                 <!-- Swiper -->
-                <div class="swiper mySwiper">
+                <!-- <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <div class="collabe-bg "
@@ -345,7 +344,7 @@ $conn->close();
             </div>
         </div>
 
-    </section>
+    </section> -->
 
     <!-- ******* Footer  Section  *********** --->
 

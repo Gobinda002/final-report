@@ -71,36 +71,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category = $_POST['category'];
 
     // Handle file upload
-    $imagePaths = [];
-    $targetDir = "../packagesimage/";
+    $targetDir = "uploads/"; // Set your target directory
+    $imagePath = '';
 
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0777, true);
-    }
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        $filename = basename($_FILES['image']['name']);
+        $targetFile = $targetDir . $filename;
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-    if (isset($_FILES['images'])) {
-        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-            $filename = basename($_FILES['images']['name'][$key]);
-            $targetFile = $targetDir . $filename;
-            $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-            $validExtensions = array('jpg', 'jpeg', 'png');
-            if (!in_array($fileType, $validExtensions)) {
-                handleError("Invalid file type: " . $filename);
-            }
-
-            if (move_uploaded_file($tmp_name, $targetFile)) {
-                $imagePaths[] = $filename;
-            } else {
-                handleError("Error uploading file: " . $filename);
-            }
+        // Move the uploaded file
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+            $imagePath = $filename;
+        } else {
+            handleError("Error uploading file: " . $filename);
+            exit;
         }
     }
 
-    $images_json = json_encode($imagePaths);
-
-    $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image,category) VALUES (?, ?, ?, ?,?)");
-    $stmt->bind_param("ssiss", $package_title, $package_description, $package_duration, $images_json,$category);
+    $stmt = $conn->prepare("INSERT INTO packages (package_title, package_description, package_duration, package_image, category) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssiss", $package_title, $package_description, $package_duration, $imagePath, $category);
 
     if ($stmt->execute()) {
         echo '<script>
@@ -114,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 }
+
 
 // Fetch all packages
 $query_all = 'SELECT * FROM packages';
@@ -133,6 +123,7 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -140,15 +131,20 @@ mysqli_close($conn);
     <link rel="stylesheet" href="finalpack.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
+
 <body>
     <header>
         <h1>NEPTOURS</h1>
         <nav>
             <ul>
-                <li><a href="admin.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'active' : ''; ?>">Dashboard</a></li>
+                <li><a href="admin.php"
+                        class="<?php echo basename($_SERVER['PHP_SELF']) == 'admin.php' ? 'active' : ''; ?>">Dashboard</a>
+                </li>
                 <li><a href="bookings.php">Bookings</a></li>
                 <li><a href="user.php">Users</a></li>
-                <li><a href="test.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'test.php' ? 'active' : ''; ?>">Packages</a></li>
+                <li><a href="test.php"
+                        class="<?php echo basename($_SERVER['PHP_SELF']) == 'test.php' ? 'active' : ''; ?>">Packages</a>
+                </li>
                 <li><a href="../login.php">Logout</a></li>
             </ul>
         </nav>
@@ -156,46 +152,44 @@ mysqli_close($conn);
 
     <section class="packages container">
         <div class="popularpack">
-            <?php
-            require '../connect.php';
+        <?php
+require '../connect.php';
 
-            // Fetch popular packages
-            $sql = "SELECT * FROM packages WHERE is_popular = 1 LIMIT 6";
-            $result = $conn->query($sql);
-            $popular_packages = [];
+// Fetch popular packages
+$sql = "SELECT * FROM packages WHERE is_popular = 1 LIMIT 6";
+$result = $conn->query($sql);
+$popular_packages = [];
 
-            if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $popular_packages[] = $row;
-                }
-            }
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $popular_packages[] = $row;
+    }
+}
 
-            if (!empty($popular_packages)) {
-                foreach ($popular_packages as $row) {
-                    $images = json_decode($row["package_image"], true);
-                    echo '<div class="card">';
-                    if (!empty($images)) {
-                        foreach ($images as $image) {
-                            echo "<img src='uploads/{$image}' alt='{$row["package_title"]}' class='card-image'>";
-                        }
-                    }
-                    echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
-                    echo '<div class="card-buttons">';
-                    echo '<a href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</a>';
-                    echo '</div>';
-                    echo '</div>';
-                }
+if (!empty($popular_packages)) {
+    foreach ($popular_packages as $row) {
+        // Assuming only one image per package
+        $image = $row["package_image"]; // Assuming the column name is package_image
+        echo '<div class="card">';
+        echo "<img src='uploads/{$image}' alt='{$row["package_title"]}' class='card-image'>";
+        echo '<h1 class="card-title">' . $row["package_title"] . '</h1>';
+        echo '<div class="card-buttons">';
+        echo '<a href="test.php?remove_popular=' . $row["package_id"] . '" class="delete-button">Remove from Popular</a>';
+        echo '</div>';
+        echo '</div>';
+    }
 
-                $remainingCards = 6 - count($popular_packages);
-                for ($i = 0; $i < $remainingCards; $i++) {
-                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-                }
-            } else {
-                for ($i = 0; $i < 6; $i++) {
-                    echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
-                }
-            }
-            ?>
+    $remainingCards = 6 - count($popular_packages);
+    for ($i = 0; $i < $remainingCards; $i++) {
+        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+    }
+} else {
+    // If no popular packages found, show placeholders
+    for ($i = 0; $i < 6; $i++) {
+        echo '<div class="add-popular" id="addPackageButton"><a href="#" onclick="openModal(\'myModal\')"><i class="fas fa-plus"></i> Add Package</a></div>';
+    }
+}
+?>
         </div>
 
         <div class="allpack">
@@ -221,21 +215,21 @@ mysqli_close($conn);
                                 <td><?php echo $package['package_title']; ?></td>
                                 <td>
                                     <?php
-                                    $images = json_decode($package['package_image'], true);
-                                    if (!empty($images)) {
-                                        foreach ($images as $image) {
-                                            echo "<img src='uploads/{$image}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
-                                        }
+                                    if (!empty($package['package_image'])) {
+                                        echo "<img src='uploads/{$package['package_image']}' alt='{$package['package_title']}' style='width:100px;height:100px;'>";
                                     }
                                     ?>
                                 </td>
                                 <td><?php echo $package['package_description']; ?></td>
                                 <td><?php echo $package['package_duration']; ?> Days</td>
-                                <td><?php echo $package['category']; ?> </td>
+                                <td><?php echo $package['category']; ?></td>
                                 <td>
-                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>" class="button edit">Edit</a>
-                                    <a href="test.php?delete=<?php echo $package['package_id']; ?>" class="button delete" onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
-                                    <a href="test.php?make_popular=<?php echo $package['package_id']; ?>" class="button select-popular">Select as Popular</a>
+                                    <a href="edit_package.php?id=<?php echo $package['package_id']; ?>"
+                                        class="button edit">Edit</a>
+                                    <a href="test.php?delete=<?php echo $package['package_id']; ?>" class="button delete"
+                                        onclick="return confirm('Are you sure you want to delete this package?');">Delete</a>
+                                    <a href="test.php?make_popular=<?php echo $package['package_id']; ?>"
+                                        class="button select-popular">Select as Popular</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -255,10 +249,7 @@ mysqli_close($conn);
                         <input type="number" id="duration" name="package_duration" required>
                         <div id="imageContainer">
                             <label for="packageImages">Package Images:</label>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
-                            <input type="file" name="images[]" accept=".jpg, .jpeg, .png" required>
+                            <input type="file" name="image" accept=".jpg, .jpeg, .png" required>
                         </div>
                         <label for="category">Category:</label>
                         <select id="category" name="category" required>
@@ -287,4 +278,5 @@ mysqli_close($conn);
         }
     </script>
 </body>
+
 </html>
