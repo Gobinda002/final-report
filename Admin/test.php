@@ -239,7 +239,7 @@ if (!empty($popular_packages)) {
                     </tbody>
                 </table>
             </div>
-            df
+            
             <div id="myModalAll" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeModal('myModalAll')">x</span>
